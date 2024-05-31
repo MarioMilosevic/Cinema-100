@@ -1,14 +1,15 @@
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import movieLogo from "../assets/movie-icon-vector.jpg";
 import { useState } from "react";
+import { userType } from "../utils/types";
+import movieLogo from "../assets/movie-icon-vector.jpg";
+import { initialUserState } from "../utils/constants";
 
 const Login = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [user, setUser] = useState<userType>(initialUserState);
 
-    const signIn = async () => {
-      await createUserWithEmailAndPassword(auth, email, password)
+  const signIn = async () => {
+    await createUserWithEmailAndPassword(auth, user.email, user.password);
   };
 
   return (
@@ -24,13 +25,17 @@ const Login = () => {
             type="text"
             placeholder="Email"
             className="p-2 rounded-lg text-gray-950 placeholder:text-gray-700"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setUser((prev) => ({ ...prev, email: e.target.value }))
+            }
           />
           <input
             type="password"
             placeholder="Password"
             className="p-2 rounded-lg text-gray-950 placeholder:text-gray-700"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setUser((prev) => ({ ...prev, password: e.target.value }))
+            }
           />
           <button className="bg-red-500 rounded-lg p-2" onClick={signIn}>
             Log in
