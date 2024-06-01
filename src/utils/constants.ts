@@ -5,6 +5,13 @@ export const initialUserState = {
     password:""
 }
 
+export const initialNewUserState = {
+  name:"",
+  lastName:"",
+  email:"",
+  password:"",
+}
+
 export const data: SingleMovieType[] = [
   {
     rank: 1,

@@ -3,6 +3,13 @@ export type UserType = {
   password: string;
 };
 
+export type NewUserType ={ 
+  name:string;
+  lastName:string;
+  email:string;
+  password:string
+}
+
 export type InputFieldProps = {
   type: string;
   placeholder: string;
