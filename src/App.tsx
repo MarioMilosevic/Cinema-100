@@ -1,7 +1,7 @@
-import Home from "./pages/Home";
+import Authentication from "./pages/Authentication";
 function App() {
   return(
-    <Home/>
+    <Authentication/>
   )
 }
 

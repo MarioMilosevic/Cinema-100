@@ -2,12 +2,16 @@ import { useState } from "react"
 import movieLogo from "../assets/movie-icon-vector.jpg"
 import { NewUserType } from "../utils/types";
 import { initialNewUserState } from "../utils/constants";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInAnonymously } from "firebase/auth";
 import { auth } from "../config/firebase";
 import InputField from "./InputField";
+import { useAppSlice } from "../hooks/useAppSlice";
+import { toggleHasAccount } from "../redux/features/appSlice";
+import { useDispatch } from "react-redux";
 const SignIn = () => {
     const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState);
-
+    const {hasAccount} = useAppSlice()
+    const dispatch = useDispatch()
     const createNewUser = async () => {
         if(newUser.email && newUser.password) {
           try {
@@ -55,23 +59,21 @@ const SignIn = () => {
           Don't have an account ?
           <span
             className="text-red-500 cursor-pointer"
-            onClick={() => setHasAccount((prev) => !prev)}
+            onClick={() => dispatch(toggleHasAccount())}
           >
             Sign up
           </span>
           <br />
         </p>
-        {!hasAccount && 
         <p className="flex justify-center gap-2 text-sm">
           Or,
           <span
             className="text-red-500 cursor-pointer"
-            onClick={signInAnonymouslyHandler}
+            onClick={() => signInAnonymously(auth)}
             >
             Log in as guest
           </span>
         </p>
-          }
       </div>
     </div>
   </div>

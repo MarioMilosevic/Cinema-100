@@ -31,3 +31,7 @@ export type SingleMovieType = {
   writers: string[];
   imdbid: string;
 };
+
+export type AppState = {
+  hasAccount:boolean;
+}

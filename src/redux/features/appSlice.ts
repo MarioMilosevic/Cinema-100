@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
+// import { PayloadAction } from "@reduxjs/toolkit";
+import { AppState } from "../../utils/types";
 
 
-const initialState = {
-    hasAccount : false
+const initialState: AppState = {
+    hasAccount : true
 }
 
 export const appSlice = createSlice({
     name:"app",
     initialState,
     reducers:{
-        toggleHasAccount:(state, action:PayloadAction<boolean>) => {
-            state.hasAccount = action.payload
+        toggleHasAccount:(state) => {
+            state.hasAccount = !state.hasAccount
         }
     }
 })
