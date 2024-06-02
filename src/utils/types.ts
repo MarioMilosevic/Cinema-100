@@ -13,6 +13,7 @@ export type NewUserType ={
 export type InputFieldProps = {
   type: string;
   placeholder: string;
+  value:string;
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 

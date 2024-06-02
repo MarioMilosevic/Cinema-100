@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { collection, getDocs, getFirestore, addDoc } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, getDoc, setDoc, doc } from 'firebase/firestore'
+import { data } from '../utils/constants'
+import { SingleMovieType } from '../utils/types'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,17 +16,40 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
-
 export const db = getFirestore(app)
 
 const colRef = collection(db, 'movies')
 
-getDocs(colRef)
-  .then((snapshot) => {
-    const movies = []
-    snapshot.docs.forEach((doc) => {
-      movies.push({ ...doc.data(), id: doc.id })
-    })
+const flagDocRef = doc(db, "flags", "moviesAddedFlag")
+
+export const fetchMovies = async () => {
+  try {
+    const snapshot = await getDocs(colRef)
+    const movies = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     console.log(movies)
-  })
-  .catch((err) => console.log(err))
+  } catch (err) {
+    console.error('Error fetching documents: ', err)
+  }
+}
+
+const addMovies = async (movies:SingleMovieType[]) => {
+  try {
+    const flagDoc = await getDoc(flagDocRef)
+    if (flagDoc.exists()) {
+      console.log('Movies have already been added.')
+      return
+    }
+
+    for (const movie of movies) {
+      const docRef = await addDoc(colRef, movie)
+      console.log('Document written with ID: ', docRef.id)
+    }
+
+    await setDoc(flagDocRef, { added: true })
+    console.log('Movies added and flag set.')
+  } catch (err) {
+    console.error('Error adding document: ', err)
+  }
+}
+
+addMovies(data)

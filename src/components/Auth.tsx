@@ -20,6 +20,7 @@ const Auth = () => {
   const dispatch = useDispatch()
 
   const createNewUser = async () => {
+    console.log('uslo')
     if (newUser.email && newUser.password) {
       try {
         await createUserWithEmailAndPassword(
@@ -30,6 +31,7 @@ const Auth = () => {
       } catch (error) {
         console.error('Error', error)
       }
+      setNewUser(initialNewUserState)
     }
   }
 
@@ -49,6 +51,7 @@ const Auth = () => {
               <InputField
                 type="text"
                 placeholder="Name"
+                value={newUser.name}
                 changeHandler={(e) =>
                   setNewUser((prev) => ({ ...prev, name: e.target.value }))
                 }
@@ -56,6 +59,7 @@ const Auth = () => {
               <InputField
                 type="text"
                 placeholder="Last Name"
+                value={newUser.lastName}
                 changeHandler={(e) =>
                   setNewUser((prev) => ({ ...prev, lastName: e.target.value }))
                 }
@@ -65,6 +69,7 @@ const Auth = () => {
           <InputField
             type="text"
             placeholder="Email"
+            value={hasAccount ? user.email : newUser.email}
             changeHandler={(e) => {
               ;(hasAccount ? setUser : setNewUser)((prev) => ({
                 ...prev,
@@ -75,6 +80,7 @@ const Auth = () => {
           <InputField
             type="password"
             placeholder="Password"
+            value={hasAccount ? user.password : newUser.password}
             changeHandler={(e) => {
               ;(hasAccount ? setUser : setNewUser)((prev) => ({
                 ...prev,
