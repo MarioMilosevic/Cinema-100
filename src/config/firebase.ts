@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { collection, getDocs, getFirestore, addDoc, getDoc, setDoc, doc } from 'firebase/firestore'
-import { data } from '../utils/constants'
+// import { data } from '../utils/constants'
 import { SingleMovieType } from '../utils/types'
 
 const firebaseConfig = {
@@ -32,10 +32,11 @@ export const fetchMovies = async () => {
   }
 }
 
-const addMovies = async (movies:SingleMovieType[]) => {
+export const addMovies = async (movies:SingleMovieType[]) => {
   try {
     const flagDoc = await getDoc(flagDocRef)
     if (flagDoc.exists()) {
+      console.log(flagDoc)
       console.log('Movies have already been added.')
       return
     }
@@ -52,4 +53,4 @@ const addMovies = async (movies:SingleMovieType[]) => {
   }
 }
 
-addMovies(data)
+// addMovies(data)

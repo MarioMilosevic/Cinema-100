@@ -1,13 +1,10 @@
-import Login from '../components/Login'
-import SignIn from '../components/SignIn'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { getDocs, getDoc, collection } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { useAppSlice } from '../hooks/useAppSlice'
 import Auth from '../components/Auth'
 
 const Authentication = () => {
-  const [movieList, setMovieList] = useState([]);
   const { hasAccount } = useAppSlice()
   const moviesCollectionRef = collection(db, 'movies')
   useEffect(() => {

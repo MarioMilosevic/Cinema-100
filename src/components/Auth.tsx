@@ -5,6 +5,7 @@ import { initialNewUserState, initialUserState } from '../utils/constants'
 import {
   createUserWithEmailAndPassword,
   signInAnonymously,
+  signInWithEmailAndPassword,
   // signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
@@ -14,20 +15,21 @@ import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 
 const Auth = () => {
+  // mozda sam sve mogao u 1 stejt
   const [user, setUser] = useState<UserType>(initialUserState)
   const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState)
   const { hasAccount } = useAppSlice()
   const dispatch = useDispatch()
 
   const createNewUser = async () => {
-    console.log('uslo')
     if (newUser.email && newUser.password) {
       try {
-        await createUserWithEmailAndPassword(
+      const user =  await createUserWithEmailAndPassword(
           auth,
           newUser.email,
           newUser.password,
         )
+        console.log(user.user)
       } catch (error) {
         console.error('Error', error)
       }
@@ -35,10 +37,19 @@ const Auth = () => {
     }
   }
 
+  const signInUser = async () => {
+    try {
+      const existingUser = await signInWithEmailAndPassword(auth, user.email, user.password)
+      console.log(existingUser.user)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const authText = hasAccount ? 'Log In' : 'Sign Up'
 
   return (
-    <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
+    <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8 border">
       <div className="flex items-center gap-4">
         <img src={movieLogo} alt="movie logo" className="w-[75px]" />
         <h1 className="text-2xl font-medium">Cinema 100</h1>
@@ -88,7 +99,10 @@ const Auth = () => {
               }))
             }}
           />
-          <button className="bg-red-500 rounded-lg p-2" onClick={createNewUser}>
+          <button
+            className="bg-red-500 rounded-lg p-2"
+            onClick={hasAccount ? signInUser : createNewUser}
+          >
             {authText}
           </button>
         </div>
@@ -117,6 +131,7 @@ const Auth = () => {
           )}
         </div>
       </div>
+      <p>User not found</p>
     </div>
   )
 }
