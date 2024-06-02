@@ -2,15 +2,15 @@ import { SingleMovieType } from "./types";
 
 export const initialUserState = {
     email: "",
-    password:""
+    password:"",
 }
 
-export const initialNewUserState = {
-  name:"",
-  lastName:"",
-  email:"",
-  password:"",
-}
+// export const initialNewUserState = {
+//   name:"",
+//   lastName:"",
+//   email:"",
+//   password:"",
+// }
 
 export const data: SingleMovieType[] = [
   {

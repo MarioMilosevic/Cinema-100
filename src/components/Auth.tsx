@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import movieLogo from '../assets/movie-icon-vector.jpg'
-import { NewUserType, UserType } from '../utils/types'
-import { initialNewUserState, initialUserState } from '../utils/constants'
+import { UserType } from '../utils/types'
+import { initialUserState } from '../utils/constants'
 import {
   createUserWithEmailAndPassword,
   signInAnonymously,
   signInWithEmailAndPassword,
-  // signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
 import InputField from './InputField'
@@ -15,31 +14,29 @@ import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 
 const Auth = () => {
-  // mozda sam sve mogao u 1 stejt
   const [user, setUser] = useState<UserType>(initialUserState)
-  const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState)
   const { hasAccount } = useAppSlice()
   const dispatch = useDispatch()
 
   const createNewUser = async () => {
-    if (newUser.email && newUser.password) {
+    if (user.email && user.password) {
       try {
-      const user =  await createUserWithEmailAndPassword(
-          auth,
-          newUser.email,
-          newUser.password,
-        )
-        console.log(user.user)
+        const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password )
+        console.log(newUser)
       } catch (error) {
         console.error('Error', error)
       }
-      setNewUser(initialNewUserState)
+      setUser(initialUserState)
     }
   }
 
   const signInUser = async () => {
     try {
-      const existingUser = await signInWithEmailAndPassword(auth, user.email, user.password)
+      const existingUser = await signInWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password,
+      )
       console.log(existingUser.user)
     } catch (error) {
       console.error(error)
@@ -49,7 +46,7 @@ const Auth = () => {
   const authText = hasAccount ? 'Log In' : 'Sign Up'
 
   return (
-    <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8 border">
+    <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
       <div className="flex items-center gap-4">
         <img src={movieLogo} alt="movie logo" className="w-[75px]" />
         <h1 className="text-2xl font-medium">Cinema 100</h1>
@@ -62,17 +59,17 @@ const Auth = () => {
               <InputField
                 type="text"
                 placeholder="Name"
-                value={newUser.name}
+                value={user.name}
                 changeHandler={(e) =>
-                  setNewUser((prev) => ({ ...prev, name: e.target.value }))
+                  setUser((prev) => ({ ...prev, name: e.target.value }))
                 }
               />
               <InputField
                 type="text"
                 placeholder="Last Name"
-                value={newUser.lastName}
+                value={user.lastName}
                 changeHandler={(e) =>
-                  setNewUser((prev) => ({ ...prev, lastName: e.target.value }))
+                  setUser((prev) => ({ ...prev, lastName: e.target.value }))
                 }
               />
             </>
@@ -80,30 +77,28 @@ const Auth = () => {
           <InputField
             type="text"
             placeholder="Email"
-            value={hasAccount ? user.email : newUser.email}
-            changeHandler={(e) => {
-              ;(hasAccount ? setUser : setNewUser)((prev) => ({
+            value={hasAccount ? user.email : user.email}
+            changeHandler={(e) => setUser((prev) => ({
                 ...prev,
                 email: e.target.value,
               }))
-            }}
+            }
           />
           <InputField
             type="password"
             placeholder="Password"
-            value={hasAccount ? user.password : newUser.password}
-            changeHandler={(e) => {
-              ;(hasAccount ? setUser : setNewUser)((prev) => ({
+            value={hasAccount ? user.password : user.password}
+            changeHandler={(e) =>setUser((prev) => ({
                 ...prev,
                 password: e.target.value,
               }))
-            }}
+            }
           />
           <button
             className="bg-red-500 rounded-lg p-2"
             onClick={hasAccount ? signInUser : createNewUser}
           >
-            {authText}
+            {hasAccount ? "Log In" : "Sign Up"}
           </button>
         </div>
         <div className="flex flex-col gap-2">
@@ -115,7 +110,7 @@ const Auth = () => {
               className="text-red-500 cursor-pointer"
               onClick={() => dispatch(toggleHasAccount())}
             >
-              {hasAccount ? 'Sign Up' : 'Log In'}
+              {authText}
             </span>
           </p>
           {hasAccount && (
@@ -131,9 +126,10 @@ const Auth = () => {
           )}
         </div>
       </div>
-      <p>User not found</p>
+      {/* <p>User not found</p> */}
     </div>
   )
 }
 
 export default Auth
+

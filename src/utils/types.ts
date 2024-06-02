@@ -1,19 +1,21 @@
 export type UserType = {
   email: string;
   password: string;
+  name?:string;
+  lastName?:string;
 };
 
-export type NewUserType ={ 
-  name:string;
-  lastName:string;
-  email:string;
-  password:string
-}
+// export type NewUserType ={ 
+//   name:string;
+//   lastName:string;
+//   email:string;
+//   password:string
+// }
 
 export type InputFieldProps = {
   type: string;
   placeholder: string;
-  value:string;
+  value:string | undefined;
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
