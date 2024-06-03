@@ -16,12 +16,14 @@ import { useAppSlice } from '../hooks/useAppSlice'
 import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { useAuth } from '../hooks/useAuth'
+import { useNavigate } from 'react-router'
 
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
   const { hasAccount } = useAppSlice()
   const { auth } = useAuth()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const form = useForm<UserFormFormValues>({
     defaultValues: {
@@ -48,6 +50,7 @@ const Auth = () => {
           user.password,
         )
         console.log(newUser)
+        navigate('/home')
       } catch (error) {
         console.error('Error', error)
       }
@@ -63,6 +66,7 @@ const Auth = () => {
         user.password,
       )
       console.log(existingUser.user)
+      if (existingUser) navigate('/home')
     } catch (error) {
       console.error(error)
     }
@@ -72,15 +76,14 @@ const Auth = () => {
     try {
       const guest = await signInAnonymously(auth)
       console.log(guest)
+      navigate('/home')
     } catch (error) {
       console.error(error)
     }
   }
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-
+  const onSubmit = () => hasAccount ? signInUser() : createNewUser()
+  
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
       <div className="flex items-center gap-4">
@@ -198,7 +201,10 @@ const Auth = () => {
       </div>
       {errors && (
         <p className="text-red-500 text-sm py-1">
-          {errors.name?.message || errors.lastName?.message || errors.email?.message || errors.password?.message}
+          {errors.name?.message ||
+            errors.lastName?.message ||
+            errors.email?.message ||
+            errors.password?.message}
         </p>
       )}
     </div>
