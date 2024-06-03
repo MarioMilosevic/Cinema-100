@@ -82,8 +82,8 @@ const Auth = () => {
     }
   }
 
-  const onSubmit = () => hasAccount ? signInUser() : createNewUser()
-  
+  const onSubmit = () => (hasAccount ? signInUser() : createNewUser())
+
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
       <div className="flex items-center gap-4">
@@ -200,12 +200,11 @@ const Auth = () => {
         </div>
       </div>
       {errors && (
-        <p className="text-red-500 text-sm py-1">
-          {errors.name?.message ||
-            errors.lastName?.message ||
-            errors.email?.message ||
-            errors.password?.message}
-        </p>
+        <div className="text-red-500 text-sm py-1">
+          {Object.values(errors).map((error, index) => (
+            <p key={index}>{error.message}</p>
+          ))}
+        </div>
       )}
     </div>
   )
