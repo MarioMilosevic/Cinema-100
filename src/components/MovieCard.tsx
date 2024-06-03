@@ -2,13 +2,13 @@ import { FaStar } from 'react-icons/fa'
 const MovieCard = ({ movie }) => {
   console.log(movie)
   return (
-    <div className="border mt-32">
+    <div className="w-[300px]">
       <img
         src={movie.image}
         alt={movie.image}
-        className="w-[170px] h-[250px] object-cover"
+        className="w-full h-[380px] object-cover"
       />
-      <h2>{movie.title}</h2>
+      <h2 className='text-md'>{movie.title}</h2>
       <div className="flex text-sm gap-2 items-center">
         <span>{movie.year}</span>
         <FaStar color="orange" />

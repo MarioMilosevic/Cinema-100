@@ -27,9 +27,13 @@ const Home = () => {
   }, [db]) 
 
   if(movies.length === 0) return
-  const mario = movies[0]
+  const mario = movies[54]
   return (
-    <div className="max-w-[1300px] mx-auto border">
+    <div className="max-w-[1300px] mx-auto border grid grid-cols-4 gap-4">
+        <MovieCard movie={mario}/>
+        <MovieCard movie={mario}/>
+        <MovieCard movie={mario}/>
+        <MovieCard movie={mario}/>
         <MovieCard movie={mario}/>
     </div>
   )
