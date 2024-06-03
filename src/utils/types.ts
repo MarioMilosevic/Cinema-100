@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+
 export type UserType = {
   email: string;
   password: string;
@@ -10,6 +12,7 @@ export type InputFieldProps = {
   placeholder: string;
   value:string | undefined;
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  zod:UseFormRegisterReturn
 };
 
 export type SingleMovieType = {

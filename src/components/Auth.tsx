@@ -2,6 +2,10 @@ import { useState } from 'react'
 import movieLogo from '../assets/movie-icon-vector.jpg'
 import { UserType } from '../utils/types'
 import { initialUserState } from '../utils/constants'
+import { authenticationSchema, UserFormFormValues } from '../utils/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+
 import {
   createUserWithEmailAndPassword,
   signInAnonymously,
@@ -16,8 +20,24 @@ import { useAuth } from '../hooks/useAuth'
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
   const { hasAccount } = useAppSlice()
-  const {auth} = useAuth()
+  const { auth } = useAuth()
   const dispatch = useDispatch()
+
+  const form = useForm<UserFormFormValues>({
+    defaultValues: {
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
+    },
+    resolver: zodResolver(authenticationSchema),
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form
 
   const createNewUser = async () => {
     if (user.email && user.password) {
@@ -57,6 +77,10 @@ const Auth = () => {
     }
   }
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
       <div className="flex items-center gap-4">
@@ -64,8 +88,8 @@ const Auth = () => {
         <h1 className="text-2xl font-medium">Cinema 100</h1>
       </div>
       <div className="bg-gray-800 w-[400px] mx-auto p-10 flex flex-col text-sm gap-8 rounded-lg">
-        <h2 className="text-2xl">{hasAccount ? "Log In" : "Sign Up"}</h2>
-        <div className="flex flex-col gap-4">
+        <h2 className="text-2xl">{hasAccount ? 'Log In' : 'Sign Up'}</h2>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           {!hasAccount && (
             <>
               <InputField
@@ -75,6 +99,14 @@ const Auth = () => {
                 changeHandler={(e) =>
                   setUser((prev) => ({ ...prev, name: e.target.value }))
                 }
+                zod={{
+                  ...register('name', {
+                    required: {
+                      value: true,
+                      message: 'Name is required',
+                    },
+                  }),
+                }}
               />
               <InputField
                 type="text"
@@ -83,6 +115,14 @@ const Auth = () => {
                 changeHandler={(e) =>
                   setUser((prev) => ({ ...prev, lastName: e.target.value }))
                 }
+                zod={{
+                  ...register('lastName', {
+                    required: {
+                      value: true,
+                      message: 'Last Name is required',
+                    },
+                  }),
+                }}
               />
             </>
           )}
@@ -96,6 +136,14 @@ const Auth = () => {
                 email: e.target.value,
               }))
             }
+            zod={{
+              ...register('email', {
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+              }),
+            }}
           />
           <InputField
             type="password"
@@ -107,6 +155,14 @@ const Auth = () => {
                 password: e.target.value,
               }))
             }
+            zod={{
+              ...register('password', {
+                required: {
+                  value: true,
+                  message: 'Password is required',
+                },
+              }),
+            }}
           />
           <button
             className="bg-red-500 rounded-lg p-2"
@@ -114,7 +170,7 @@ const Auth = () => {
           >
             {hasAccount ? 'Log In' : 'Sign Up'}
           </button>
-        </div>
+        </form>
         <div className="flex flex-col gap-2">
           <p className="flex justify-center gap-2">
             {hasAccount
@@ -124,7 +180,7 @@ const Auth = () => {
               className="text-red-500 cursor-pointer"
               onClick={() => dispatch(toggleHasAccount())}
             >
-              {hasAccount ? "Sign Up" : "Log In"}
+              {hasAccount ? 'Sign Up' : 'Log In'}
             </span>
           </p>
           {hasAccount && (
@@ -140,7 +196,11 @@ const Auth = () => {
           )}
         </div>
       </div>
-      {/* <p>User not found</p> */}
+      {errors && (
+        <p className="text-red-500 text-sm py-1">
+          {errors.name?.message || errors.lastName?.message || errors.email?.message || errors.password?.message}
+        </p>
+      )}
     </div>
   )
 }
