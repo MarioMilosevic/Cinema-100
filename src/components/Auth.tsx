@@ -7,21 +7,26 @@ import {
   signInAnonymously,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { auth } from '../config/firebase'
 import InputField from './InputField'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
+import { useAuth } from '../hooks/useAuth'
 
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
   const { hasAccount } = useAppSlice()
+  const {auth} = useAuth()
   const dispatch = useDispatch()
 
   const createNewUser = async () => {
     if (user.email && user.password) {
       try {
-        const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password )
+        const newUser = await createUserWithEmailAndPassword(
+          auth,
+          user.email,
+          user.password,
+        )
         console.log(newUser)
       } catch (error) {
         console.error('Error', error)
@@ -43,7 +48,14 @@ const Auth = () => {
     }
   }
 
-  const authText = hasAccount ? 'Log In' : 'Sign Up'
+  const signInGuest = async () => {
+    try {
+      const guest = await signInAnonymously(auth)
+      console.log(guest)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
@@ -52,7 +64,7 @@ const Auth = () => {
         <h1 className="text-2xl font-medium">Cinema 100</h1>
       </div>
       <div className="bg-gray-800 w-[400px] mx-auto p-10 flex flex-col text-sm gap-8 rounded-lg">
-        <h2 className="text-2xl">{authText}</h2>
+        <h2 className="text-2xl">{hasAccount ? "Log In" : "Sign Up"}</h2>
         <div className="flex flex-col gap-4">
           {!hasAccount && (
             <>
@@ -78,7 +90,8 @@ const Auth = () => {
             type="text"
             placeholder="Email"
             value={hasAccount ? user.email : user.email}
-            changeHandler={(e) => setUser((prev) => ({
+            changeHandler={(e) =>
+              setUser((prev) => ({
                 ...prev,
                 email: e.target.value,
               }))
@@ -88,7 +101,8 @@ const Auth = () => {
             type="password"
             placeholder="Password"
             value={hasAccount ? user.password : user.password}
-            changeHandler={(e) =>setUser((prev) => ({
+            changeHandler={(e) =>
+              setUser((prev) => ({
                 ...prev,
                 password: e.target.value,
               }))
@@ -98,7 +112,7 @@ const Auth = () => {
             className="bg-red-500 rounded-lg p-2"
             onClick={hasAccount ? signInUser : createNewUser}
           >
-            {hasAccount ? "Log In" : "Sign Up"}
+            {hasAccount ? 'Log In' : 'Sign Up'}
           </button>
         </div>
         <div className="flex flex-col gap-2">
@@ -110,7 +124,7 @@ const Auth = () => {
               className="text-red-500 cursor-pointer"
               onClick={() => dispatch(toggleHasAccount())}
             >
-              {authText}
+              {hasAccount ? "Sign Up" : "Log In"}
             </span>
           </p>
           {hasAccount && (
@@ -118,7 +132,7 @@ const Auth = () => {
               Or,
               <span
                 className="text-red-500 cursor-pointer"
-                onClick={() => signInAnonymously(auth)}
+                onClick={signInGuest}
               >
                 Log in as guest
               </span>
@@ -132,4 +146,3 @@ const Auth = () => {
 }
 
 export default Auth
-
