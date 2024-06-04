@@ -1,12 +1,11 @@
 import { FaStar } from 'react-icons/fa'
 const MovieCard = ({ movie }) => {
-  console.log(movie)
   return (
-    <div className="w-[300px]">
+    <div className="w-[300px] flex flex-col ">
       <img
         src={movie.image}
         alt={movie.image}
-        className="w-full h-[380px] object-cover"
+        className="w-full h-[380px] object-cover pb-4"
       />
       <h2 className='text-md'>{movie.title}</h2>
       <div className="flex text-sm gap-2 items-center">
