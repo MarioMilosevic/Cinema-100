@@ -12,7 +12,7 @@ import {
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
-import { calculatePageButtons } from '../utils/constants'
+import { calculatePageButtons } from '../utils/helperFunctions'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 
@@ -43,8 +43,25 @@ const Home = () => {
     }
   }
 
+  const createQuery = (startPoint, endPoint) => {
+    const moviesCollection = collection(db, 'movies')
+    let q = query(
+      moviesCollection,
+      orderBy(field, 'desc'),
+      limit(pageSize)
+    )
+    if (startPoint) {
+      q = query(q, startAfter(startPoint))
+    }
+    if (endPoint) {
+      q = query(q, endBefore(endPoint), limitToLast(pageSize))
+    }
+    return q
+  }
+
   useEffect(() => {
-    const moviesCollection = collection(db, 'movies');
+    // const initialQuery = createQuery(100,12)
+    const moviesCollection = collection(db, 'movies')
     const initialQuery = query(
       moviesCollection,
       orderBy(field, 'desc'),
@@ -55,8 +72,6 @@ const Home = () => {
 
   const nextPage = () => {
     if (lastVisible) {
-      console.log(lastVisible)
-      console.log('uslo')
       const moviesCollection = collection(db, 'movies')
       const nextQuery = query(
         moviesCollection,
@@ -69,7 +84,6 @@ const Home = () => {
   }
 
   const previousPage = () => {
-    console.log('prethodna')
     if (firstVisible) {
       const moviesCollection = collection(db, 'movies')
       const prevQuery = query(
@@ -82,13 +96,16 @@ const Home = () => {
     }
   }
 
-  const totalPageButtons = calculatePageButtons(100, 12)
-  const pageButtons = [];
-  for (let i = 0; i < totalPageButtons; i++) {
-    pageButtons.push(i);
-  }
-  console.log(pageButtons)
+/*
+const funkcija = (index) => {
+setActivePageIndex(index);
+// 0,1,2,3,4,5,6,7,8
+}
 
+*/
+
+  const totalPageButtons = calculatePageButtons(100, 12)
+  console.log(totalPageButtons)
 
   if (movies.length === 0) return null
 
@@ -99,13 +116,22 @@ const Home = () => {
           <MovieCard key={movie.id} {...movie} />
         ))}
       </div>
-      <div className="border flex justify-center items-center gap-2">
-        <button className='bg-gray-800 text-gray-100 px-4 py-2 rounded-lg transition-all duration-100 hover:bg-gray-300 hover:text-gray-900'>
-        <FaArrowLeft />
+
+      <div className="py-8 flex justify-center items-center gap-2">
+        <button className='px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900' onClick={previousPage}>
+          <FaArrowLeft />
         </button>
-        {pageButtons.map((el) => <PageButton clickHandler={() => console.log('ce ra')}>{el + 1}</PageButton>)}
-        <button className='bg-gray-800 text-gray-100 px-4 py-2 rounded-lg transition-all duration-100 hover:bg-gray-300 hover:text-gray-900'>
-        <FaArrowRight />
+        {totalPageButtons.map((el, index) => (
+          <PageButton
+            key={index}
+            clickHandler={() => setactivePageIndex(index)}
+            isActive={activePageIndex === index ? 'true' : 'false'}
+          >
+            {el + 1}
+          </PageButton>
+        ))}
+         <button className='px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900' onClick={nextPage}>
+          <FaArrowRight />
         </button>
       </div>
     </div>
@@ -114,17 +140,4 @@ const Home = () => {
 
 export default Home
 
-// export const renderPageButtons = (arr, list) => {
-//   list.innerHTML = "";
-//   const length = arr.length;
-//   const totalButtons = length / 24;
-//   for (let i = 0; i < totalButtons; i++) {
-//     const button = document.createElement("button");
-//     button.classList.add("listBtn");
-//     button.id = i + 1;
-//     button.textContent = i + 1;
-//     list.appendChild(button);
-//   }
-//   const pageBtn = document.querySelector('.listBtn')
-//   pageBtn.classList.add("clickedDark", "clicked");
-// };
+

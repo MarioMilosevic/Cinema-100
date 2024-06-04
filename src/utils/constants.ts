@@ -5,7 +5,7 @@ export const initialUserState = {
   password: '',
 }
 
-export const calculatePageButtons = (totalItems:number, divisor:number) => Math.ceil(totalItems / divisor)
+
 
 
 export const data: SingleMovieType[] = [

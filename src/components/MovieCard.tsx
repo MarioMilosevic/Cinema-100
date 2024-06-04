@@ -3,6 +3,7 @@ import { SingleMovieType } from '../utils/types'
 import { useState } from 'react'
 const MovieCard = ({ image, title, year, rating, genre }: SingleMovieType) => {
   const [visible, setVisible] = useState<boolean>(false)
+  const mario = title.length > 36 ? `${title.slice(0, 36)}...` : title
   return (
     <div className="w-[300px] flex flex-col">
       {/*  */}
@@ -23,7 +24,7 @@ const MovieCard = ({ image, title, year, rating, genre }: SingleMovieType) => {
         </div>
       </div>
       {/*  */}
-      <h2 className="text-md">{title}</h2>
+      <h2 className="text-base font-medium">{mario}</h2>
       <div className="flex text-sm gap-2 items-center">
         <span>{year}</span>
         <FaStar color="orange" />
