@@ -50,6 +50,8 @@ const Home = () => {
 
   const nextPage = () => {
     if (lastVisible) {
+      console.log(lastVisible)
+      console.log("uslo")
       const moviesCollection = collection(db, 'movies')
       const nextQuery = query(
         moviesCollection,
@@ -78,7 +80,7 @@ const Home = () => {
   if (movies.length === 0) return null
 
   return (
-    <div className="max-w-[1300px] mx-auto border">
+    <div className="max-w-[1300px] mx-auto">
       <div className="grid grid-cols-4 gap-4">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
