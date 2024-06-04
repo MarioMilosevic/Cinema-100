@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 export type UserType = {
@@ -33,4 +34,9 @@ export type SingleMovieType = {
 
 export type AppState = {
   hasAccount:boolean;
+}
+
+export type PageButtonProps = {
+  children: ReactNode;
+  clickHandler:() => void;
 }
