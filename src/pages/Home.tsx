@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
   getDocs,
-  collection,
   query,
   orderBy,
   startAfter,
@@ -9,6 +8,8 @@ import {
   limit,
   limitToLast,
   startAt,
+  Query,
+  DocumentData,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
@@ -19,16 +20,15 @@ import PageButton from '../components/PageButton'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
-  const [firstVisible, setFirstVisible] = useState(null)
-  const [lastVisible, setLastVisible] = useState(null)
+  const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
+  const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
-  const { db } = useAuth()
+  const { moviesCollection } = useAuth()
   const pageSize = 12
   const field = 'rating'
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
-      const moviesCollection = collection(db, 'movies')
       const initialQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
@@ -37,9 +37,9 @@ const Home = () => {
       await fetchMovies(initialQuery)
     }
     fetchInitialMovies()
-  }, [db])
+  }, [moviesCollection])
 
-  const fetchMovies = async (queryRef) => {
+  const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
       const data = await getDocs(queryRef)
       const filteredData = data.docs.map((doc) => ({
@@ -53,10 +53,9 @@ const Home = () => {
       console.error(error)
     }
   }
-
   const nextPage = async () => {
+    if (activePageIndex === totalPageButtons.length - 1) return
     if (lastVisible) {
-      const moviesCollection = collection(db, 'movies')
       const nextQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
@@ -67,10 +66,10 @@ const Home = () => {
       setActivePageIndex((prevIndex) => prevIndex + 1)
     }
   }
-
+console.log('a')
   const previousPage = async () => {
+    if (activePageIndex === 0) return
     if (firstVisible) {
-      const moviesCollection = collection(db, 'movies')
       const prevQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
@@ -83,8 +82,6 @@ const Home = () => {
   }
 
   const jumpToPage = async (pageIndex: number) => {
-    const moviesCollection = collection(db, 'movies')
-    console.log(moviesCollection)
     let queryRef = query(
       moviesCollection,
       orderBy(field, 'desc'),
@@ -117,7 +114,6 @@ const Home = () => {
         <button
           className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
           onClick={previousPage}
-          disabled={activePageIndex === 0}
         >
           <FaArrowLeft />
         </button>
@@ -133,7 +129,6 @@ const Home = () => {
         <button
           className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
           onClick={nextPage}
-          disabled={activePageIndex === 9 - 1}
         >
           <FaArrowRight />
         </button>

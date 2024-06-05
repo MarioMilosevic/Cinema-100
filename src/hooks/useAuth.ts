@@ -1,11 +1,14 @@
-import { firebaseConfig } from '../config/firebase'
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { useMemo } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, collection } from 'firebase/firestore';
+import { firebaseConfig } from '../config/firebase';
 
 export const useAuth = () => {
-  const app = initializeApp(firebaseConfig)
-  const auth = getAuth(app)
-  const db = getFirestore(app)
-  return { app, auth, db }
-}
+  const app = useMemo(() => initializeApp(firebaseConfig), []);
+  const auth = useMemo(() => getAuth(app), [app]);
+  const db = useMemo(() => getFirestore(app), [app]);
+  const moviesCollection = useMemo(() => collection(db, 'movies'), [db]);
+
+  return { app, auth, db, moviesCollection };
+};
