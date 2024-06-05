@@ -20,11 +20,23 @@ const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
   const [firstVisible, setFirstVisible] = useState(null)
   const [lastVisible, setLastVisible] = useState(null)
-  const [activePageIndex, setactivePageIndex] = useState<number>(0)
+  const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const { db } = useAuth()
   const pageSize = 12
   const field = 'rating'
-  console.log('red')
+
+  useEffect(() => {
+    const fetchInitialMovies = async () => {
+      const moviesCollection = collection(db, 'movies')
+      const initialQuery = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize),
+      )
+      await fetchMovies(initialQuery)
+    }
+    fetchInitialMovies()
+  }, [db])
 
   const fetchMovies = async (queryRef) => {
     try {
@@ -33,44 +45,15 @@ const Home = () => {
         ...doc.data(),
         id: doc.id,
       }))
-      if (filteredData.length > 0) {
-        setFirstVisible(data.docs[0])
-        setLastVisible(data.docs[data.docs.length - 1])
-      }
+      setFirstVisible(data.docs[0])
+      setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const createQuery = (startPoint, endPoint) => {
-    const moviesCollection = collection(db, 'movies')
-    let q = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      limit(pageSize)
-    )
-    if (startPoint) {
-      q = query(q, startAfter(startPoint))
-    }
-    if (endPoint) {
-      q = query(q, endBefore(endPoint), limitToLast(pageSize))
-    }
-    return q
-  }
-
-  useEffect(() => {
-    // const initialQuery = createQuery(100,12)
-    const moviesCollection = collection(db, 'movies')
-    const initialQuery = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      limit(pageSize),
-    )
-    fetchMovies(initialQuery)
-  }, [db])
-
-  const nextPage = () => {
+  const nextPage = async () => {
     if (lastVisible) {
       const moviesCollection = collection(db, 'movies')
       const nextQuery = query(
@@ -79,12 +62,14 @@ const Home = () => {
         startAfter(lastVisible),
         limit(pageSize),
       )
-      fetchMovies(nextQuery)
+      await fetchMovies(nextQuery)
+      setActivePageIndex((prevIndex) => prevIndex + 1)
     }
   }
 
-  const previousPage = () => {
+  const previousPage = async () => {
     if (firstVisible) {
+      console.log('uslo')
       const moviesCollection = collection(db, 'movies')
       const prevQuery = query(
         moviesCollection,
@@ -92,20 +77,36 @@ const Home = () => {
         endBefore(firstVisible),
         limitToLast(pageSize),
       )
-      fetchMovies(prevQuery)
+      await fetchMovies(prevQuery)
+      setActivePageIndex((prevIndex) => prevIndex - 1)
     }
   }
 
-/*
-const funkcija = (index) => {
-setActivePageIndex(index);
-// 0,1,2,3,4,5,6,7,8
-}
-
-*/
+  // ova ispod radi
+  const jumpToPage = async (pageIndex: number) => {
+    const moviesCollection = collection(db, 'movies')
+    console.log(moviesCollection)
+    // u queryRef ubaci onoliko koliko ih je ukupno do te stranice
+    let queryRef = query(
+      moviesCollection,
+      orderBy(field, 'desc'),
+      limit(pageSize * (pageIndex + 1)),
+    )
+    console.log(queryRef)
+    // u datu ih awaita
+    const data = await getDocs(queryRef)
+    console.log(data)
+    queryRef = query(
+      moviesCollection,
+      orderBy(field, 'desc'),
+      startAfter(data.docs[pageIndex * pageSize]),
+      limit(pageSize),
+    )
+    await fetchMovies(queryRef)
+    setActivePageIndex(pageIndex)
+  }
 
   const totalPageButtons = calculatePageButtons(100, 12)
-  console.log(totalPageButtons)
 
   if (movies.length === 0) return null
 
@@ -118,19 +119,27 @@ setActivePageIndex(index);
       </div>
 
       <div className="py-8 flex justify-center items-center gap-2">
-        <button className='px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900' onClick={previousPage}>
+        <button
+          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+          onClick={previousPage}
+          disabled={activePageIndex === 0}
+        >
           <FaArrowLeft />
         </button>
         {totalPageButtons.map((el, index) => (
           <PageButton
             key={index}
-            clickHandler={() => setactivePageIndex(index)}
+            clickHandler={() => jumpToPage(index)}
             isActive={activePageIndex === index ? 'true' : 'false'}
           >
             {el + 1}
           </PageButton>
         ))}
-         <button className='px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900' onClick={nextPage}>
+        <button
+          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+          onClick={nextPage}
+          disabled={activePageIndex === 9 - 1}
+        >
           <FaArrowRight />
         </button>
       </div>
@@ -139,5 +148,3 @@ setActivePageIndex(index);
 }
 
 export default Home
-
-
