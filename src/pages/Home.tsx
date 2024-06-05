@@ -8,6 +8,7 @@ import {
   endBefore,
   limit,
   limitToLast,
+  startAt,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
@@ -69,7 +70,6 @@ const Home = () => {
 
   const previousPage = async () => {
     if (firstVisible) {
-      console.log('uslo')
       const moviesCollection = collection(db, 'movies')
       const prevQuery = query(
         moviesCollection,
@@ -82,24 +82,19 @@ const Home = () => {
     }
   }
 
-  // ova ispod radi
   const jumpToPage = async (pageIndex: number) => {
     const moviesCollection = collection(db, 'movies')
     console.log(moviesCollection)
-    // u queryRef ubaci onoliko koliko ih je ukupno do te stranice
     let queryRef = query(
       moviesCollection,
       orderBy(field, 'desc'),
       limit(pageSize * (pageIndex + 1)),
     )
-    console.log(queryRef)
-    // u datu ih awaita
     const data = await getDocs(queryRef)
-    console.log(data)
     queryRef = query(
       moviesCollection,
       orderBy(field, 'desc'),
-      startAfter(data.docs[pageIndex * pageSize]),
+      startAt(data.docs[pageIndex * pageSize]),
       limit(pageSize),
     )
     await fetchMovies(queryRef)
