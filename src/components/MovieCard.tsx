@@ -40,6 +40,7 @@ const navigate = useNavigate()
           </div>
         </div>
       </div>
+      
       <h2 className="text-base font-medium">{trimmedTitle}</h2>
       <div className="flex text-sm gap-2 items-center">
         <span>{year}</span>
