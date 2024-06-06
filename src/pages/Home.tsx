@@ -37,7 +37,7 @@ const Home = () => {
       await fetchMovies(initialQuery)
     }
     fetchInitialMovies()
-  }, [moviesCollection])
+  }, [])
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
@@ -66,7 +66,7 @@ const Home = () => {
       setActivePageIndex((prevIndex) => prevIndex + 1)
     }
   }
-console.log('a')
+
   const previousPage = async () => {
     if (activePageIndex === 0) return
     if (firstVisible) {

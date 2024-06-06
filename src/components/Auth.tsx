@@ -44,12 +44,7 @@ const Auth = () => {
   const createNewUser = async () => {
     if (user.email && user.password) {
       try {
-        const newUser = await createUserWithEmailAndPassword(
-          auth,
-          user.email,
-          user.password,
-        )
-        console.log(newUser)
+        await createUserWithEmailAndPassword(auth, user.email, user.password)
         navigate('/home')
       } catch (error) {
         console.error('Error', error)
@@ -65,7 +60,6 @@ const Auth = () => {
         user.email,
         user.password,
       )
-      console.log(existingUser.user)
       if (existingUser) navigate('/home')
     } catch (error) {
       console.error(error)
@@ -74,8 +68,7 @@ const Auth = () => {
 
   const signInGuest = async () => {
     try {
-      const guest = await signInAnonymously(auth)
-      console.log(guest)
+      await signInAnonymously(auth)
       navigate('/home')
     } catch (error) {
       console.error(error)
