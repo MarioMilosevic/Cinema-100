@@ -37,7 +37,7 @@ const Home = () => {
       await fetchMovies(initialQuery)
     }
     fetchInitialMovies()
-  }, [])
+  }, [moviesCollection])
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {

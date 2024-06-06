@@ -18,18 +18,18 @@ export type InputFieldProps = {
 
 export type SingleMovieType = {
   id: string
-  rank?: number
-  title?: string
-  thumbnail?: string
-  rating?: string
-  year?: number
-  image?: string
-  description?: string
-  trailer?: string
-  genre?: string[]
-  director?: string[]
-  writers?: string[]
-  imdbid?: string
+  rank: number
+  title: string
+  thumbnail: string
+  rating: string
+  year: number
+  image: string
+  description: string
+  trailer: string
+  genre: string[]
+  director: string[]
+  writers: string[]
+  imdbid: string
 }
 
 export type AppState = {

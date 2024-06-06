@@ -1,22 +1,22 @@
 import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
 import { useState } from 'react'
-import { doc, getDoc } from 'firebase/firestore'
-import { useAuth } from '../hooks/useAuth'
-const MovieCard = ({ image, title, year, rating, genre, id }: SingleMovieType) => {
-const {db} = useAuth()
-
+import { useNavigate } from 'react-router'
+const MovieCard = ({
+  image,
+  title,
+  year,
+  rating,
+  genre,
+  id,
+}: SingleMovieType) => {
+const navigate = useNavigate()
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
-  const findMovie = async (id:string) => {
-     const docRef = doc(db, "movies", id);
-       const docSnap = await getDoc(docRef);
-       const filteredMovie = docSnap.data()
-       console.log(filteredMovie)
-      //  console.log(docSnap)
+  const findMovie = async (id: string) => {
+    navigate(`/home/${id}`)
   }
-
 
   return (
     <div className="w-[300px] flex flex-col">
@@ -31,7 +31,10 @@ const {db} = useAuth()
             className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
             onClick={() => setIsBookmarked((prev) => !prev)}
           />
-          <div className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100" onClick={() => findMovie(id)}>
+          <div
+            className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100"
+            onClick={() => findMovie(id)}
+          >
             <span>See more</span>
             <FaSearch />
           </div>

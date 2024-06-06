@@ -3,12 +3,11 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore, collection } from 'firebase/firestore'
 import { firebaseConfig } from '../config/firebase'
 
-export const useAuth = () => {
-  const firebaseApp = initializeApp(firebaseConfig)
-  const auth = getAuth(firebaseApp)
-  const db = getFirestore(firebaseApp)
-  const moviesCollection = collection(db, 'movies')
+const firebaseApp = initializeApp(firebaseConfig)
+const auth = getAuth(firebaseApp)
+const db = getFirestore(firebaseApp)
+const moviesCollection = collection(db, 'movies')
 
+export const useAuth = () => {
   return { firebaseApp, db, auth, moviesCollection }
 }
-
