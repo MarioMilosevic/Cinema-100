@@ -10,7 +10,7 @@ const MovieCard = ({
   genre,
   id,
 }: SingleMovieType) => {
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
@@ -40,7 +40,7 @@ const navigate = useNavigate()
           </div>
         </div>
       </div>
-      
+
       <h2 className="text-base font-medium">{trimmedTitle}</h2>
       <div className="flex text-sm gap-2 items-center">
         <span>{year}</span>
