@@ -2,8 +2,18 @@ import { Outlet } from 'react-router'
 import movieLogo from '../assets/movie-icon-vector.jpg'
 import { RiShutDownLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import { signOut } from 'firebase/auth'
+import { useAuth } from '../hooks/useAuth'
 
 const SharedLayout = () => {
+  const { auth } = useAuth()
+  const signOutUser = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error('Error signing out ', error)
+    }
+  }
   return (
     <>
       <div className="bg-gray-900 px-24 py-4">
@@ -22,7 +32,12 @@ const SharedLayout = () => {
             <span>Welcome back, Guest</span>
             <div className="flex items-center gap-4">
               <span>Log Out</span>
-              <RiShutDownLine className="cursor-pointer w-6 h-6" />
+              <Link to={"/"}>
+              <RiShutDownLine
+                className="cursor-pointer w-6 h-6"
+                onClick={() => signOutUser()}
+                />
+                </Link>
             </div>
           </div>
         </div>
