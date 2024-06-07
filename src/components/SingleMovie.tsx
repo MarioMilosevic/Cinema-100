@@ -31,7 +31,7 @@ const SingleMovie = () => {
 
   if (!singleMovie) return
   return (
-    <div className="max-w-[1200px] mx-auto py-8">
+    <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen pb-4">
       <div className="flex justify-between">
         <div className="py-4">
           <h2 className="font-semibold">{singleMovie?.title}</h2>

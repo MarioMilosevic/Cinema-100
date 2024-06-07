@@ -103,7 +103,7 @@ const Home = () => {
   if (movies.length === 0) return null
 
   return (
-    <div className="max-w-[1300px] mx-auto py-20">
+    <div className="max-w-[1300px] mx-auto pt-20 pb-4">
       <div className="grid grid-cols-4 gap-4">
         {movies.map((movie) => (
           <MovieCard key={movie.id} {...movie} />
