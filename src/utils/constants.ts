@@ -2038,4 +2038,4 @@ export const data: SingleMovieType[] = [
   },
 ]
 
-export const allGenres = new Set(data.flatMap(movie => movie.genre))
+export const allGenres = [...new Set(data.flatMap((movie) => movie.genre))]

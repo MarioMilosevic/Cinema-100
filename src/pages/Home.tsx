@@ -12,12 +12,14 @@ import {
   DocumentData,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
 import { calculatePageButtons } from '../utils/helperFunctions'
 import { SlMagnifier } from 'react-icons/sl'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
+import { allGenres } from '../utils/constants'
+import { FaHouse } from 'react-icons/fa6'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -118,11 +120,13 @@ const Home = () => {
           />
         </div>
 
-        <div>
-          <select name="category" id="category" className='text-black'>
+        <div className='flex items-center gap-4'>
+          <select name="category" id="category" className='text-black rounded-full px-2'>
             <option value="All">All</option>
-            <option value="All"></option>
+            {allGenres.map((genre) => <option key={genre} value={genre}>{genre}</option>)}
           </select>
+          <FaBookmark size={25} className='cursor-pointer' />
+          <FaHouse size={25} className='cursor-pointer'/>
         </div>
       </div>
 
