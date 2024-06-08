@@ -105,14 +105,24 @@ const Home = () => {
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
-      <div className="bg-gray-900 px-3 py-4 rounded-lg">
+      <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
         <div className="relative w-[250px]">
           <input
             type="text"
             placeholder="Search"
             className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
           />
-          <SlMagnifier className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer" color='black' />
+          <SlMagnifier
+            className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
+            color="black"
+          />
+        </div>
+
+        <div>
+          <select name="category" id="category" className='text-black'>
+            <option value="All">All</option>
+            <option value="All"></option>
+          </select>
         </div>
       </div>
 

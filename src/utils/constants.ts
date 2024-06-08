@@ -5,9 +5,6 @@ export const initialUserState = {
   password: '',
 }
 
-
-
-
 export const data: SingleMovieType[] = [
   {
     rank: 1,
@@ -2040,3 +2037,5 @@ export const data: SingleMovieType[] = [
     imdbid: 'tt0052357',
   },
 ]
+
+export const allGenres = new Set(data.flatMap(movie => movie.genre))
