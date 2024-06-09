@@ -27,7 +27,7 @@ const Home = () => {
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
-  const [pagesCount, setPagesCount] = useState<number>(0)
+  const [pagesCount, setPagesCount] = useState<number[]>([])
   const { moviesCollection } = useAuth()
   const pageSize = 12
   const field = 'rating'
@@ -39,8 +39,9 @@ const Home = () => {
         orderBy(field, 'desc'),
         limit(pageSize),
       )
-      console.log(moviesCollection)
       await fetchMovies(initialQuery)
+      const totalPageButtons = calculatePageButtons(100, 12)
+      setPagesCount(totalPageButtons)
     }
     fetchInitialMovies()
   }, [moviesCollection])
@@ -52,7 +53,6 @@ const Home = () => {
         ...doc.data(),
         id: doc.id,
       }))
-      console.log(filteredData)
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
@@ -105,29 +105,40 @@ const Home = () => {
     setActivePageIndex(pageIndex)
   }
 
-  const searchMovies = async (e) => {
+  const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.toLowerCase()
-    try {
+    if (inputValue.length > 0) {
+      try {
+        const searchQuery = query(moviesCollection, orderBy('title', 'desc'))
+        const data = await getDocs(searchQuery)
+        const filteredData = data.docs
+          .map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+          .filter((doc) => doc.title.toLowerCase().includes(inputValue))
+        const totalPages = calculatePageButtons(100, data.size)
+        setPagesCount(totalPages)
+        setMovies(filteredData)
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
       const searchQuery = query(
         moviesCollection,
-        orderBy('title', "desc"),
-        limit(pageSize)
+        orderBy(field, 'desc'),
+        limit(pageSize),
       )
       const data = await getDocs(searchQuery)
-      const filteredData = data.docs
-        .map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-        .filter((doc) => doc.title.toLowerCase().includes(inputValue))
-      console.log(filteredData)
-      // setMovies(filteredData)
-    } catch (error) {
-      console.error(error)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      const totalPages = calculatePageButtons(100, data.size)
+      setPagesCount(totalPages)
+      setMovies(filteredData)
     }
   }
-
-  const totalPageButtons = calculatePageButtons(100, 12)
 
   if (movies.length === 0) return null
 
@@ -178,7 +189,7 @@ const Home = () => {
         >
           <FaArrowLeft />
         </button>
-        {totalPageButtons.map((el, index) => (
+        {pagesCount.map((el, index) => (
           <PageButton
             key={index}
             clickHandler={() => jumpToPage(index)}
