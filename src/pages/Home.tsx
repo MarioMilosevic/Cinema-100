@@ -10,6 +10,7 @@ import {
   startAt,
   Query,
   DocumentData,
+  where,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
@@ -26,6 +27,7 @@ const Home = () => {
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
+  const [pagesCount, setPagesCount] = useState<number>(0)
   const { moviesCollection } = useAuth()
   const pageSize = 12
   const field = 'rating'
@@ -37,6 +39,7 @@ const Home = () => {
         orderBy(field, 'desc'),
         limit(pageSize),
       )
+      console.log(moviesCollection)
       await fetchMovies(initialQuery)
     }
     fetchInitialMovies()
@@ -49,6 +52,7 @@ const Home = () => {
         ...doc.data(),
         id: doc.id,
       }))
+      console.log(filteredData)
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
@@ -101,6 +105,28 @@ const Home = () => {
     setActivePageIndex(pageIndex)
   }
 
+  const searchMovies = async (e) => {
+    const inputValue = e.target.value.toLowerCase()
+    try {
+      const searchQuery = query(
+        moviesCollection,
+        orderBy('title', "desc"),
+        limit(pageSize)
+      )
+      const data = await getDocs(searchQuery)
+      const filteredData = data.docs
+        .map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+        .filter((doc) => doc.title.toLowerCase().includes(inputValue))
+      console.log(filteredData)
+      // setMovies(filteredData)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const totalPageButtons = calculatePageButtons(100, 12)
 
   if (movies.length === 0) return null
@@ -113,6 +139,7 @@ const Home = () => {
             type="text"
             placeholder="Search"
             className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
+            onChange={(e) => searchMovies(e)}
           />
           <SlMagnifier
             className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
@@ -120,13 +147,21 @@ const Home = () => {
           />
         </div>
 
-        <div className='flex items-center gap-4'>
-          <select name="category" id="category" className='text-black rounded-full px-2'>
+        <div className="flex items-center gap-4">
+          <select
+            name="category"
+            id="category"
+            className="text-black rounded-full px-2"
+          >
             <option value="All">All</option>
-            {allGenres.map((genre) => <option key={genre} value={genre}>{genre}</option>)}
+            {allGenres.map((genre) => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
+            ))}
           </select>
-          <FaBookmark size={25} className='cursor-pointer' />
-          <FaHouse size={25} className='cursor-pointer'/>
+          <FaBookmark size={25} className="cursor-pointer" />
+          <FaHouse size={25} className="cursor-pointer" />
         </div>
       </div>
 
