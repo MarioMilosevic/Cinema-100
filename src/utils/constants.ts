@@ -5,6 +5,10 @@ export const initialUserState = {
   password: '',
 }
 
+export const pageSize = 12
+export const field = 'rating'
+
+
 export const data: SingleMovieType[] = [
   {
     rank: 1,

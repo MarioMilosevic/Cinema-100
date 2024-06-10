@@ -11,6 +11,8 @@ import {
   Query,
   DocumentData,
   where,
+  collection,
+  getDoc
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
@@ -19,7 +21,7 @@ import { calculatePageButtons } from '../utils/helperFunctions'
 import { SlMagnifier } from 'react-icons/sl'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
-import { allGenres } from '../utils/constants'
+import { allGenres, pageSize, field } from '../utils/constants'
 import { FaHouse } from 'react-icons/fa6'
 
 const Home = () => {
@@ -28,27 +30,28 @@ const Home = () => {
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
-  const { moviesCollection } = useAuth()
-  const pageSize = 12
-  const field = 'rating'
+  const { moviesCollection, db } = useAuth()
+  
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
+      const collectionRef = await getDocs(collection(db, "movies"))
       const initialQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
         limit(pageSize),
       )
       await fetchMovies(initialQuery)
-      const totalPageButtons = calculatePageButtons(100, 12)
+      const totalPageButtons = calculatePageButtons(collectionRef.size, pageSize)
       setPagesCount(totalPageButtons)
     }
     fetchInitialMovies()
-  }, [moviesCollection])
+  }, [moviesCollection,db])
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
       const data = await getDocs(queryRef)
+      console.log(data)
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -61,7 +64,7 @@ const Home = () => {
     }
   }
   const nextPage = async () => {
-    if (activePageIndex === totalPageButtons.length - 1) return
+    if (activePageIndex === pagesCount.length - 1) return
     if (lastVisible) {
       const nextQuery = query(
         moviesCollection,
