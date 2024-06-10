@@ -12,17 +12,17 @@ import {
   DocumentData,
   where,
   collection,
-  getDoc
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
+import { FaHouse } from 'react-icons/fa6'
 import { SingleMovieType } from '../utils/types'
 import { calculatePageButtons } from '../utils/helperFunctions'
 import { SlMagnifier } from 'react-icons/sl'
+import { allGenres, pageSize, field } from '../utils/constants'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
-import { allGenres, pageSize, field } from '../utils/constants'
-import { FaHouse } from 'react-icons/fa6'
+import Slider from '../components/Slider'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -31,27 +31,30 @@ const Home = () => {
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const { moviesCollection, db } = useAuth()
-  
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
-      const collectionRef = await getDocs(collection(db, "movies"))
+      const collectionRef = await getDocs(collection(db, 'movies'))
       const initialQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
         limit(pageSize),
       )
       await fetchMovies(initialQuery)
-      const totalPageButtons = calculatePageButtons(collectionRef.size, pageSize)
+      const totalPageButtons = calculatePageButtons(
+        collectionRef.size,
+        pageSize,
+      )
       setPagesCount(totalPageButtons)
     }
     fetchInitialMovies()
-  }, [moviesCollection,db])
+  }, [moviesCollection, db])
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
       const data = await getDocs(queryRef)
       console.log(data)
+      // vrati querySnapshot koji ima duzinu [12]
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -63,6 +66,7 @@ const Home = () => {
       console.error(error)
     }
   }
+
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
     if (lastVisible) {
@@ -91,6 +95,42 @@ const Home = () => {
     }
   }
 
+  const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.toLowerCase()
+    if (inputValue.length > 0) {
+      try {
+        const searchQuery = query(moviesCollection, orderBy('title', 'desc'))
+        await fetchMovies(searchQuery)
+        const data = await getDocs(searchQuery)
+        const filteredData = data.docs
+          .map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+          .filter((doc) => doc.title.toLowerCase().includes(inputValue))
+        const totalPages = calculatePageButtons(filteredData.length, pageSize)
+        setPagesCount(totalPages)
+        setMovies(filteredData)
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      const searchQuery = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize),
+      )
+      const data = await getDocs(searchQuery)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      console.log(filteredData)
+      const totalPages = calculatePageButtons(100, data.size)
+      setPagesCount(totalPages)
+      setMovies(filteredData)
+    }
+  }
   const jumpToPage = async (pageIndex: number) => {
     let queryRef = query(
       moviesCollection,
@@ -108,45 +148,12 @@ const Home = () => {
     setActivePageIndex(pageIndex)
   }
 
-  const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.toLowerCase()
-    if (inputValue.length > 0) {
-      try {
-        const searchQuery = query(moviesCollection, orderBy('title', 'desc'))
-        const data = await getDocs(searchQuery)
-        const filteredData = data.docs
-          .map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-          .filter((doc) => doc.title.toLowerCase().includes(inputValue))
-        const totalPages = calculatePageButtons(100, data.size)
-        setPagesCount(totalPages)
-        setMovies(filteredData)
-      } catch (error) {
-        console.error(error)
-      }
-    } else {
-      const searchQuery = query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        limit(pageSize),
-      )
-      const data = await getDocs(searchQuery)
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
-      const totalPages = calculatePageButtons(100, data.size)
-      setPagesCount(totalPages)
-      setMovies(filteredData)
-    }
-  }
 
   if (movies.length === 0) return null
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
+      <Slider movies={movies}/>
       <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
         <div className="relative w-[250px]">
           <input
