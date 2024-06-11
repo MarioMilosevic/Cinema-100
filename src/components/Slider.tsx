@@ -18,7 +18,7 @@ const Slider = ({ movies }) => {
 
   const nextSlide = () => {
     if (activeSlideIndex < divsArray.length - 1) {
-      setActiveSlideIndex(prev => prev + 1)
+      setActiveSlideIndex((prev) => prev + 1)
     } else {
       setActiveSlideIndex(0)
     }
@@ -28,11 +28,9 @@ const Slider = ({ movies }) => {
     if (activeSlideIndex === 0) {
       setActiveSlideIndex(divsArray.length - 1)
     } else {
-      setActiveSlideIndex(prev => prev - 1)
+      setActiveSlideIndex((prev) => prev - 1)
     }
   }
-
-
 
   return (
     <div className="w-[100%] pt-12 pb-20 flex flex-col gap-4 relative">
@@ -45,7 +43,7 @@ const Slider = ({ movies }) => {
             return (
               <div
                 key={div.key}
-                className={`h-[10px] w-[20px] ${color} rounded-sm`}
+                className={`h-[10px] w-[20px] ${color} rounded-sm transition-all duration-200`}
               ></div>
             )
           })}
@@ -57,11 +55,24 @@ const Slider = ({ movies }) => {
           className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90"
           onClick={previousSlide}
         />
-        {movies.map((movie) => (
-          <div key={movie.id} className="w-1/3">
-            <MovieCard {...movie} />
-          </div>
-        ))}
+        <div className="relative h-[450px] w-full">
+          {movies.map((movie, index) => {
+            const calculation = 100 * (index - activeSlideIndex)
+            const translate =
+              calculation > 0
+                ? `translateX(${calculation}%)`
+                : `translateX(-${Math.abs(calculation)}%)`
+            return (
+              <div
+                key={movie.id}
+                className="absolute top-0 transition-all duration-200 w-1/4"
+                style={{ transform: translate }}
+              >
+                <MovieCard {...movie} />
+              </div>
+            )
+          })}
+        </div>
         <HiArrowCircleRight
           size={60}
           className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90"

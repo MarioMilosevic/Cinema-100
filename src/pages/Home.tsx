@@ -53,7 +53,6 @@ const Home = () => {
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
       const data = await getDocs(queryRef)
-      console.log(data)
       // vrati querySnapshot koji ima duzinu [12]
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
