@@ -96,6 +96,14 @@ const Home = () => {
   }
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    /*
+    da ubacim searchValue u stejt, na svaki taj onChange da uzmem sve iz baze, pa filterujem i renderujem
+    u next i previous da kazem if(searchValue !== "") da radi sto je radilo iz cijele baze to, 
+    else da uzme sve iz baze,
+     filteruje na osnovu slova, 
+     izracuna koliko ih ima, odredi broj stranica,
+     i nekako prikaze nzm bas kako
+    */
     const inputValue = e.target.value.toLowerCase()
     if (inputValue.length > 0) {
       try {
