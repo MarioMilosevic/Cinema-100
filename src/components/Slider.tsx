@@ -1,4 +1,3 @@
-
 import MovieCard from './MovieCard'
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState } from 'react'
@@ -24,12 +23,14 @@ const Slider = ({ movies }) => {
     }
   }
 
+  const dots = [...Array(totalSlides).keys()]
+
   return (
     <div className="w-full pt-12 pb-20 flex flex-col gap-4 relative">
       <div className="w-[90%] mx-auto flex items-center justify-between">
         <h2>Currently Trending</h2>
         <div className="flex gap-1 items-center">
-          {[...Array(totalSlides)].map((_, index) => {
+          {dots.map((index) => {
             const color =
               activeSlideIndex === index ? 'bg-orange-500' : 'bg-gray-100'
             return (
@@ -44,7 +45,7 @@ const Slider = ({ movies }) => {
       <div className="w-[90%] mx-auto flex items-center relative">
         <HiArrowCircleLeft
           size={60}
-          className="absolute left-0 -translate-x-full cursor-pointer transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90 z-10"
+          className="absolute left-0 -translate-x-full bottom-1/2 cursor-pointer transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90 z-10"
           onClick={previousSlide}
         />
         <div className="relative h-[450px] w-full overflow-hidden">
@@ -61,7 +62,7 @@ const Slider = ({ movies }) => {
         </div>
         <HiArrowCircleRight
           size={60}
-          className="absolute right-0 cursor-pointer translate-x-full transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90 z-10"
+          className="absolute right-0 bottom-1/2 cursor-pointer translate-x-full transition-all duration-200 hover:text-orange-500 active:text-red-500 active:scale-90 z-10"
           onClick={nextSlide}
         />
       </div>
