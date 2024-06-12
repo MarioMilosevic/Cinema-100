@@ -95,64 +95,15 @@ const Home = () => {
   }
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    /*
-    da ubacim searchValue u stejt, na svaki taj onChange da uzmem sve iz baze, pa filterujem i renderujem
-    u next i previous da kazem if(searchValue !== "") da radi sto je radilo iz cijele baze to, 
-    else da uzme sve iz baze,
-     filteruje na osnovu slova, 
-     izracuna koliko ih ima, odredi broj stranica,
-     i nekako prikaze nzm bas kako
-    */
-    const inputValue = e.target.value.toLowerCase()
-    if (inputValue.length > 0) {
-      try {
-        const searchQuery = query(moviesCollection, orderBy('title', 'desc'))
-        await fetchMovies(searchQuery)
-        const data = await getDocs(searchQuery)
-        const filteredData = data.docs
-          .map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-          .filter((doc) => doc.title.toLowerCase().includes(inputValue))
-        const totalPages = calculatePageButtons(filteredData.length, pageSize)
-        setPagesCount(totalPages)
-        setMovies(filteredData)
-      } catch (error) {
-        console.error(error)
-      }
-    } else {
-      const searchQuery = query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        limit(pageSize),
-      )
-      const data = await getDocs(searchQuery)
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
-      console.log(filteredData)
-      const totalPages = calculatePageButtons(100, data.size)
-      setPagesCount(totalPages)
-      setMovies(filteredData)
-    }
-  }
-  const jumpToPage = async (pageIndex: number) => {
-    let queryRef = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      limit(pageSize * (pageIndex + 1)),
-    )
-    const data = await getDocs(queryRef)
-    queryRef = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      startAt(data.docs[pageIndex * pageSize]),
-      limit(pageSize),
-    )
-    await fetchMovies(queryRef)
-    setActivePageIndex(pageIndex)
+    const mario = e.target.value
+    console.log(mario)
+    
+    const searchQuery = query(moviesCollection, where("title", "==", mario))
+    const querySnapshot = await getDocs(searchQuery)
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data())
+    })
+    console.log(querySnapshot)
   }
 
 
