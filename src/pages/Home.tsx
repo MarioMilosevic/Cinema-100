@@ -31,21 +31,32 @@ const Home = () => {
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
 
-  const { moviesCollection, db } = useAuth()
+  const { moviesCollection, db, trendingMoviesCollection } = useAuth()
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
-      const collectionRef = await getDocs(collection(db, 'movies'))
-      const initialQuery = query(
+      const moviesRef = await getDocs(collection(db, 'movies'))
+      const trendingMoviesRef = await getDocs(collection(db, "trending_movies"))
+      const initialQueryMovies = query(
         moviesCollection,
         orderBy(field, 'desc'),
         limit(pageSize),
       )
 
-      
-      await fetchMovies(initialQuery)
+      const trendingMoviesQuery = query(
+        trendingMoviesCollection
+      )
+      await fetchMovies(initialQueryMovies)
+
+      const trendingMoviesData = await getDocs(trendingMoviesQuery)
+       const filteredTrendingMovies = trendingMoviesData.docs.map((doc) => ({
+         ...doc.data(),
+         id: doc.id,
+       }))
+      console.log(filteredTrendingMovies)
+      setTrendingMovies(filteredTrendingMovies)
       const totalPageButtons = calculatePageButtons(
-        collectionRef.size,
+        moviesRef.size,
         pageSize,
       )
       setPagesCount(totalPageButtons)
