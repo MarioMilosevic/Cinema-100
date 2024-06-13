@@ -95,23 +95,38 @@ const Home = () => {
   }
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const mario = e.target.value
-    console.log(mario)
-    
-    const searchQuery = query(moviesCollection, where("title", "==", mario))
-    const querySnapshot = await getDocs(searchQuery)
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data())
-    })
-    console.log(querySnapshot)
+    const target = e.target.value
+    const searchQuery = query(moviesCollection, where('title', '==', target))
+    const data = await getDocs(searchQuery)
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    console.log(filteredData)
+    if (filteredData.length > 0) {
+      setMovies(filteredData)
+    }
   }
+  
+  const selectGenre = async (e) => {
+    const genreQuery = query(
+      moviesCollection,
+      where('genre', 'array-contains', e.target.value),
+    )
 
+    const querySnapshot = await getDocs(genreQuery)
+    const filteredData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    setMovies(filteredData)
+  }
 
   if (movies.length === 0) return null
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
-      <Slider movies={movies}/>
+      <Slider movies={movies} />
       <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
         <div className="relative w-[250px]">
           <input
@@ -131,8 +146,8 @@ const Home = () => {
             name="category"
             id="category"
             className="text-black rounded-full px-2"
+            onChange={selectGenre}
           >
-            <option value="All">All</option>
             {allGenres.map((genre) => (
               <option key={genre} value={genre}>
                 {genre}
