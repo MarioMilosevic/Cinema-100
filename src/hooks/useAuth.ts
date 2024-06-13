@@ -7,7 +7,8 @@ const firebaseApp = initializeApp(firebaseConfig)
 const auth = getAuth(firebaseApp)
 const db = getFirestore(firebaseApp)
 const moviesCollection = collection(db, 'movies')
+const trendingMoviesCollection = collection(db, "trending_movies")
 
 export const useAuth = () => {
-  return { firebaseApp, db, auth, moviesCollection }
+  return { firebaseApp, db, auth, moviesCollection, trendingMoviesCollection }
 }

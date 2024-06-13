@@ -7,7 +7,6 @@ import {
   endBefore,
   limit,
   limitToLast,
-  startAt,
   Query,
   DocumentData,
   where,
@@ -26,10 +25,12 @@ import Slider from '../components/Slider'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
+  const [trendingMovies, setTrendingMovies] = useState<SingleMovieType[]>([])
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
+
   const { moviesCollection, db } = useAuth()
 
   useEffect(() => {
@@ -40,6 +41,8 @@ const Home = () => {
         orderBy(field, 'desc'),
         limit(pageSize),
       )
+
+      
       await fetchMovies(initialQuery)
       const totalPageButtons = calculatePageButtons(
         collectionRef.size,
@@ -95,19 +98,63 @@ const Home = () => {
   }
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target.value
-    const searchQuery = query(moviesCollection, where('title', '==', target))
-    const data = await getDocs(searchQuery)
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }))
-    console.log(filteredData)
-    if (filteredData.length > 0) {
+    /*
+    da ubacim searchValue u stejt, na svaki taj onChange da uzmem sve iz baze, pa filterujem i renderujem
+    u next i previous da kazem if(searchValue !== "") da radi sto je radilo iz cijele baze to, 
+    else da uzme sve iz baze,
+     filteruje na osnovu slova, 
+     izracuna koliko ih ima, odredi broj stranica,
+     i nekako prikaze nzm bas kako
+    */
+    const inputValue = e.target.value.toLowerCase()
+    if (inputValue.length > 0) {
+      try {
+        const searchQuery = query(moviesCollection, orderBy('title', 'desc'))
+        await fetchMovies(searchQuery)
+        const data = await getDocs(searchQuery)
+        const filteredData = data.docs
+          .map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+          .filter((doc) => doc.title.toLowerCase().includes(inputValue))
+        const totalPages = calculatePageButtons(filteredData.length, pageSize)
+        setPagesCount(totalPages)
+        setMovies(filteredData)
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      const searchQuery = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize),
+      )
+      const data = await getDocs(searchQuery)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      console.log(filteredData)
+      const totalPages = calculatePageButtons(100, data.size)
+      setPagesCount(totalPages)
       setMovies(filteredData)
     }
   }
-  
+
+  // const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const target = e.target.value
+  //   const searchQuery = query(moviesCollection, where('title', '==', target))
+  //   const data = await getDocs(searchQuery)
+  //   const filteredData = data.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     id: doc.id,
+  //   }))
+  //   if (filteredData.length > 0) {
+  //     setMovies(filteredData)
+  //   }
+  // }
+
   const selectGenre = async (e) => {
     const genreQuery = query(
       moviesCollection,
@@ -122,11 +169,11 @@ const Home = () => {
     setMovies(filteredData)
   }
 
-  if (movies.length === 0) return null
+  if (movies.length === 0 || trendingMovies.length === 0) return null
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
-      <Slider movies={movies} />
+      <Slider trendingMovies={trendingMovies}/>
       <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
         <div className="relative w-[250px]">
           <input

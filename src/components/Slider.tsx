@@ -2,10 +2,11 @@ import MovieCard from './MovieCard'
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState } from 'react'
 
-const Slider = ({ movies }) => {
+
+const Slider = ({trendingMovies}) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
 
-  const totalSlides = Math.ceil(movies.length / 4)
+  const totalSlides = Math.ceil(trendingMovies.length / 4)
 
   const nextSlide = () => {
     if (activeSlideIndex < totalSlides - 1) {
@@ -53,7 +54,7 @@ const Slider = ({ movies }) => {
             className="relative h-full w-full flex transition-transform duration-500"
             style={{ transform: `translateX(-${activeSlideIndex * 100}%)` }}
           >
-            {movies.map((movie) => (
+            {trendingMovies.map((movie) => (
               <div key={movie.id} className="w-1/4 flex-shrink-0">
                 <MovieCard {...movie} />
               </div>

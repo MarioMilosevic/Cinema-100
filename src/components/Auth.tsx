@@ -77,6 +77,8 @@ const Auth = () => {
 
   const onSubmit = () => (hasAccount ? signInUser() : createNewUser())
 
+  
+
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
       <div className="flex items-center gap-4">
