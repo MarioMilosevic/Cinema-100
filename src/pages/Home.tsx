@@ -1,5 +1,3 @@
-
-
 // import { useState, useEffect } from 'react'
 // import {
 //   getDocs,
@@ -33,7 +31,6 @@
 //   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
 //   const [activePageIndex, setActivePageIndex] = useState<number>(0)
 //   const [pagesCount, setPagesCount] = useState<number[]>([])
-//   // const [loading, setLoading] = useState<boolean>(true)
 
 //   const { moviesCollection, db, trendingMoviesCollection } = useAuth()
 
@@ -49,7 +46,6 @@
 
 //       const totalPageButtons = calculatePageButtons(moviesRef.size, pageSize)
 //       setPagesCount(totalPageButtons)
-//       // setLoading(false)
 //     }
 //     fetchInitialMovies()
 //   }, [moviesCollection, db])
@@ -70,7 +66,6 @@
 
 //   const fetchMovies = async (queryRef: Query<DocumentData>) => {
 //     try {
-//       // setLoading(true)
 //       const data = await getDocs(queryRef)
 //       const filteredData = data.docs.map((doc) => ({
 //         ...doc.data(),
@@ -79,10 +74,8 @@
 //       setFirstVisible(data.docs[0])
 //       setLastVisible(data.docs[data.docs.length - 1])
 //       setMovies(filteredData)
-//       // setLoading(false)
 //     } catch (error) {
 //       console.error(error)
-//       // setLoading(false)
 //     }
 //   }
 
@@ -128,15 +121,14 @@
 //   }
 
 //   const fetchAndFilterMovies = async (
-//     searchValue: string,
-//     genre: string,
+//     searchValue: string | undefined,
+//     genre: string | undefined,
 //   ) => {
 //     try {
-//       // setLoading(true)
 //       let baseQuery = query(
 //         moviesCollection,
 //         orderBy('title', 'desc'),
-//         limit(pageSize),
+//         limit(100),
 //       )
 //       if (genre) {
 //         baseQuery = query(baseQuery, where('genre', 'array-contains', genre))
@@ -146,26 +138,20 @@
 //         ...doc.data(),
 //         id: doc.id,
 //       }))
-//       if (searchValue) {
+
+//       if (searchValue !== '') {
 //         filteredData = filteredData.filter((doc) =>
 //           doc.title.toLowerCase().includes(searchValue),
 //         )
 //       }
-//       if (searchValue === '') {
-//         filteredData = data.docs.map((doc) => ({
-//           ...doc.data(),
-//           id:doc.id,
-//         }))
-//       }
+
 //       const totalPages = calculatePageButtons(filteredData.length, pageSize)
 //       setFirstVisible(filteredData[0])
 //       setLastVisible(filteredData[filteredData.length - 1])
 //       setPagesCount(totalPages)
-//       setMovies(filteredData)
-//       // setLoading(false)
+//       setMovies(filteredData.slice(0, pageSize)) // Show only the first 12 movies
 //     } catch (error) {
 //       console.error(error)
-//       // setLoading(false)
 //     }
 //   }
 
@@ -174,10 +160,8 @@
 //   }
 
 //   const selectGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
-//     fetchAndFilterMovies('', e.target.value)
+//     fetchAndFilterMovies(e.target.value)
 //   }
-
-//   // if (loading) return <div>Loading...</div>
 
 //   return (
 //     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
@@ -282,7 +266,8 @@ const Home = () => {
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
-  // const [loading, setLoading] = useState<boolean>(true)
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [genre, setGenre] = useState<string>('')
 
   const { moviesCollection, db, trendingMoviesCollection } = useAuth()
 
@@ -298,7 +283,6 @@ const Home = () => {
 
       const totalPageButtons = calculatePageButtons(moviesRef.size, pageSize)
       setPagesCount(totalPageButtons)
-      // setLoading(false)
     }
     fetchInitialMovies()
   }, [moviesCollection, db])
@@ -319,7 +303,6 @@ const Home = () => {
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
-      // setLoading(true)
       const data = await getDocs(queryRef)
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
@@ -328,12 +311,11 @@ const Home = () => {
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
-      // setLoading(false)
     } catch (error) {
       console.error(error)
-      // setLoading(false)
     }
   }
+
 
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
@@ -376,27 +358,29 @@ const Home = () => {
     setActivePageIndex(pageIndex)
   }
 
-  const fetchAndFilterMovies = async (
-    searchValue: string,
-    genre: string,
-  ) => {
+
+  const fetchAndFilterMovies = async (searchValue: string, genre: string) => {
     try {
-      // setLoading(true)
       let baseQuery = query(
         moviesCollection,
         orderBy(field, 'desc'),
         limit(100),
       )
-      if (genre) {
-        baseQuery = query(baseQuery, where('genre', 'array-contains', genre))
-      }
+
       const data = await getDocs(baseQuery)
       let filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }))
 
-      if (searchValue !== '') {
+      console.log(genre)
+      console.log(searchValue)
+
+      if (genre) {
+        filteredData = filteredData.filter((doc) => doc.genre.includes(genre))
+      }
+
+      if (searchValue) {
         filteredData = filteredData.filter((doc) =>
           doc.title.toLowerCase().includes(searchValue),
         )
@@ -406,23 +390,22 @@ const Home = () => {
       setFirstVisible(filteredData[0])
       setLastVisible(filteredData[filteredData.length - 1])
       setPagesCount(totalPages)
-      setMovies(filteredData)
-      // setLoading(false)
+      setMovies(filteredData.slice(0, pageSize)) // Show only the first 12 movies
     } catch (error) {
       console.error(error)
-      // setLoading(false)
     }
   }
 
+
   const searchMovies = (e: React.ChangeEvent<HTMLInputElement>) => {
-    fetchAndFilterMovies(e.target.value.toLowerCase())
+    setSearchValue(e.target.value.toLowerCase())
+    fetchAndFilterMovies(e.target.value.toLowerCase(), genre)
   }
 
   const selectGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    fetchAndFilterMovies('', e.target.value)
+    setGenre(e.target.value)
+    fetchAndFilterMovies(searchValue, e.target.value)
   }
-
-  // if (loading) return <div>Loading...</div>
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
@@ -446,6 +429,7 @@ const Home = () => {
             name="category"
             id="category"
             className="text-black rounded-full px-2"
+            value={genre}
             onChange={selectGenre}
           >
             {allGenres.map((genre) => (
