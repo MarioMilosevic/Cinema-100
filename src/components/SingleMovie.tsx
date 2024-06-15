@@ -15,10 +15,17 @@ const SingleMovie = () => {
     const getProduct = async () => {
       if (movieId) {
         try {
-          const docRef = doc(db, 'movies', movieId)
-          const docSnap = await getDoc(docRef)
-          const filteredMovie = docSnap.data()
-          setSingleMovie(filteredMovie)
+          let docRef = doc(db, 'movies', movieId)
+          let docSnap = await getDoc(docRef)
+          if (docSnap) {
+            const filteredMovie = docSnap.data()
+            setSingleMovie(filteredMovie)
+          } else {
+            docRef = doc(db, 'trending_movies', movieId)
+            docSnap = await getDoc(docRef)
+            const filteredMovie = docSnap.data()
+            setSingleMovie(filteredMovie)
+          }
         } catch (error) {
           console.error(error)
         }
