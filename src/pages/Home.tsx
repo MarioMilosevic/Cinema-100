@@ -167,8 +167,6 @@ const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
   })
   console.log(results)
   setMovies(results)
-  // setSearchValue(e.target.value.toLowerCase())
-  // fetchAndFilterMovies(e.target.value.toLowerCase(), genre)
 }
 
 

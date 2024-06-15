@@ -12,7 +12,7 @@ export const field = 'rating'
 export const data: SingleMovieType[] = [
   {
     rank: 1,
-    title: 'The Shawshank Redemption',
+    title: 'the shawshank redemption',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '9.3',
@@ -33,7 +33,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 2,
-    title: 'The Godfather',
+    title: 'the godfather',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '9.2',
@@ -54,7 +54,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 3,
-    title: 'The Dark Knight',
+    title: 'the dark knight',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_UX67_CR0,0,67,98_AL_.jpg',
     rating: '9.0',
@@ -76,7 +76,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 4,
-    title: 'The Godfather Part II',
+    title: 'the godfather part II',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMWMwMGQzZTItY2JlNC00OWZiLWIyMDctNDk2ZDQ2YjRjMWQ0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '9.0',
@@ -97,7 +97,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 5,
-    title: '12 Angry Men',
+    title: '12 angry men',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '9.0',
@@ -115,7 +115,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 6,
-    title: "Schindler's List",
+    title: "schindler's list",
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNDE4OTMxMTctNmRhYy00NWE2LTg3YzItYTk3M2UwOTU5Njg4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.9',
@@ -133,7 +133,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 7,
-    title: 'The Lord of the Rings: The Return of the King',
+    title: 'the lord of the rings: the return of the king',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.9',
@@ -155,7 +155,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 8,
-    title: 'Pulp Fiction',
+    title: 'pulp fiction',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.8',
@@ -173,7 +173,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 9,
-    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    title: 'the lord of the rings: the fellowship of the ring',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.8',
@@ -195,7 +195,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 10,
-    title: 'The Good, the Bad and the Ugly',
+    title: 'the good, the bad and the ugly',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNjJlYmNkZGItM2NhYy00MjlmLTk5NmQtNjg1NmM2ODU4OTMwXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.8',
@@ -217,7 +217,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 11,
-    title: 'Forrest Gump',
+    title: 'forrest gump',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.8',
@@ -235,7 +235,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 12,
-    title: 'Fight Club',
+    title: 'fight club',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNDIzNDU0YzEtYzE5Ni00ZjlkLTk5ZjgtNjM3NWE4YzA3Nzk3XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -256,7 +256,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 13,
-    title: 'Inception',
+    title: 'inception',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -274,7 +274,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 14,
-    title: 'The Lord of the Rings: The Two Towers',
+    title: 'the lord of the rings: the two towers',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZGMxZTdjZmYtMmE2Ni00ZTdkLWI5NTgtNjlmMjBiNzU2MmI5XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -296,7 +296,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 15,
-    title: 'Star Wars: Episode V - The Empire Strikes Back',
+    title: 'star wars: episode v - the empire strikes back',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYmU1NDRjNDgtMzhiMi00NjZmLTg5NGItZDNiZjU5NTU4OTE0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -318,7 +318,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 16,
-    title: 'The Matrix',
+    title: 'the matrix',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -336,7 +336,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 17,
-    title: 'Goodfellas',
+    title: 'goodfellas',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BY2NkZjEzMDgtN2RjYy00YzM1LWI4ZmQtMjIwYjFjNmI3ZGEwXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.7',
@@ -357,7 +357,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 18,
-    title: "One Flew Over the Cuckoo's Nest",
+    title: "one flew over the cuckoo's nest",
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZjA0OWVhOTAtYWQxNi00YzNhLWI4ZjYtNjFjZTEyYjJlNDVlL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -379,7 +379,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 19,
-    title: 'Se7en',
+    title: 'se7en',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTUwODM5MTctZjczMi00OTk4LTg3NWUtNmVhMTAzNTNjYjcyXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -397,7 +397,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 20,
-    title: 'Seven Samurai',
+    title: 'seven samurai',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNWQ3OTM4ZGItMWEwZi00MjI5LWI3YzgtNTYwNWRkNmIzMGI5XkEyXkFqcGdeQXVyNDY2MTk1ODk@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -419,7 +419,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 21,
-    title: "It's a Wonderful Life",
+    title: "it's a wonderful life",
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZjc4NDZhZWMtNGEzYS00ZWU2LThlM2ItNTA0YzQ0OTExMTE2XkEyXkFqcGdeQXVyNjUwMzI2NzU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -441,7 +441,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 22,
-    title: 'The Silence of the Lambs',
+    title: 'the silence of the lambs',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -462,7 +462,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 23,
-    title: 'City of God',
+    title: 'city of god',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTMwYjc5ZmItYTFjZC00ZGQ3LTlkNTMtMjZiNTZlMWQzNzI5XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -480,7 +480,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 24,
-    title: 'Saving Private Ryan',
+    title: 'saving private ryan',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZjhkMDM4MWItZTVjOC00ZDRhLThmYTAtM2I5NzBmNmNlMzI1XkEyXkFqcGdeQXVyNDYyMDk5MTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -498,7 +498,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 25,
-    title: 'Life Is Beautiful',
+    title: 'life is beautiful',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYmJmM2Q4NmMtYThmNC00ZjRlLWEyZmItZTIwOTBlZDQ3NTQ1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -516,7 +516,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 26,
-    title: 'Interstellar',
+    title: 'interstellar',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -534,7 +534,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 27,
-    title: 'The Green Mile',
+    title: 'the green mile',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTUxMzQyNjA5MF5BMl5BanBnXkFtZTYwOTU2NTY3._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -552,7 +552,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 28,
-    title: 'Star Wars: Episode IV - A New Hope',
+    title: 'star wars: episode IV - a new hope',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTA5NjhiOTAtZWM0ZC00MWNhLThiMzEtZDFkOTk2OTU1ZDJkXkEyXkFqcGdeQXVyMTA4NDI1NTQx._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.6',
@@ -570,7 +570,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 29,
-    title: 'Terminator 2: Judgment Day',
+    title: 'terminator 2: judgment day',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMGU2NzRmZjUtOGUxYS00ZjdjLWEwZWItY2NlM2JhNjkxNTFmXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -588,7 +588,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 30,
-    title: 'Back to the Future',
+    title: 'back to the future',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -606,7 +606,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 31,
-    title: 'Spirited Away',
+    title: 'spirited away',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjlmZmI5MDctNDE2YS00YWE0LWE5ZWItZDBhYWQ0NTcxNWRhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -624,7 +624,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 32,
-    title: 'Psycho',
+    title: 'psycho',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNTQwNDM1YzItNDAxZC00NWY2LTk0M2UtNDIwNWI5OGUyNWUxXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -645,7 +645,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 33,
-    title: 'The Pianist',
+    title: 'the pianist',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOWRiZDIxZjktMTA1NC00MDQ2LWEzMjUtMTliZmY3NjQ3ODJiXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR2,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -666,7 +666,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 34,
-    title: 'Parasite',
+    title: 'parasite',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -684,7 +684,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 35,
-    title: 'Léon: The Professional',
+    title: 'léon: the professional',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTgyMWQ0ZWUtN2Q2MS00NmY0LWI3OWMtNjFkMzZlNDZjNTk0XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -702,7 +702,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 36,
-    title: 'The Lion King',
+    title: 'the lion king',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -724,7 +724,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 37,
-    title: 'Gladiator',
+    title: 'gladiator',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODEtN2U3NzIxMGVkZTA1L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -746,7 +746,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 38,
-    title: 'American History X',
+    title: 'american history x',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZTJhN2FkYWEtMGI0My00YWM4LWI2MjAtM2UwNjY4MTI2ZTQyXkEyXkFqcGdeQXVyNjc3MjQzNTI@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -764,7 +764,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 39,
-    title: 'The Departed',
+    title: 'the departed',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTI1MTY2OTIxNV5BMl5BanBnXkFtZTYwNjQ4NjY3._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -786,7 +786,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 40,
-    title: 'The Usual Suspects',
+    title: 'the usual suspects',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYTViNjMyNmUtNDFkNC00ZDRlLThmMDUtZDU2YWE4NGI2ZjVmXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -804,7 +804,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 41,
-    title: 'The Prestige',
+    title: 'the prestige',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -826,7 +826,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 42,
-    title: 'Whiplash',
+    title: 'whiplash',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTA5NDZlZGUtMjAxOS00YTRkLTkwYmMtYWQ0NWEwZDZiNjEzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -844,7 +844,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 43,
-    title: 'Casablanca',
+    title: 'casablanca',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BY2IzZGY2YmEtYzljNS00NTM5LTgwMzUtMzM1NjQ4NGI0OTk0XkEyXkFqcGdeQXVyNDYyMDk5MTU@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -866,7 +866,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 44,
-    title: 'The Intouchables',
+    title: 'the intouchables',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTYxNDA3MDQwNl5BMl5BanBnXkFtZTcwNTU4Mzc1Nw@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -888,7 +888,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 45,
-    title: 'Harakiri',
+    title: 'harakiri',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYjBmYTQ1NjItZWU5MS00YjI0LTg2OTYtYmFkN2JkMmNiNWVkXkEyXkFqcGdeQXVyMTMxMTY0OTQ@._V1_UY67_CR2,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -909,7 +909,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 46,
-    title: 'Grave of the Fireflies',
+    title: 'grave of the fireflies',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZmY2NjUzNDQtNTgxNC00M2Q4LTljOWQtMjNjNDBjNWUxNmJlXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.5',
@@ -927,7 +927,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 47,
-    title: 'Modern Times',
+    title: 'modern times',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYjJiZjMzYzktNjU0NS00OTkxLWEwYzItYzdhYWJjN2QzMTRlL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -945,7 +945,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 48,
-    title: 'Once Upon a Time in the West',
+    title: 'once upon a time in the west',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BODQ3NDExOGYtMzI3Mi00NWRlLTkwNjAtNjc4MDgzZGJiZTA1XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -967,7 +967,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 49,
-    title: 'Rear Window',
+    title: 'rear window',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNGUxYWM3M2MtMGM3Mi00ZmRiLWE0NGQtZjE5ODI2OTJhNTU0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -988,7 +988,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 50,
-    title: 'Alien',
+    title: 'alien',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOGQzZTBjMjQtOTVmMS00NGE5LWEyYmMtOGQ1ZGZjNmRkYjFhXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1006,7 +1006,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 51,
-    title: 'City Lights',
+    title: 'city lights',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BY2I4MmM1N2EtM2YzOS00OWUzLTkzYzctNDc5NDg2N2IyODJmXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1028,7 +1028,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 52,
-    title: 'Cinema Paradiso',
+    title: 'cinema paradiso',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BM2FhYjEyYmYtMDI1Yy00YTdlLWI2NWQtYmEzNzAxOGY1NjY2XkEyXkFqcGdeQXVyNTA3NTIyNDg@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1049,7 +1049,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 53,
-    title: 'Apocalypse Now',
+    title: 'apocalypse now',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYmQyNTA1ZGItNjZjMi00NzFlLWEzMWEtNWMwN2Q2MjJhYzEyXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1071,7 +1071,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 54,
-    title: 'Memento',
+    title: 'memento',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZTcyNjk1MjgtOWI3Mi00YzQwLWI5MTktMzY4ZmI2NDAyNzYzXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1092,7 +1092,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 55,
-    title: 'Indiana Jones and the Raiders of the Lost Ark',
+    title: 'indiana jones and the raiders of the lost ark',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNTU2ODkyY2MtMjU1NC00NjE1LWEzYjgtMWQ3MzRhMTE0NDc0XkEyXkFqcGdeQXVyMjM4MzQ4OTQ@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1114,7 +1114,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 56,
-    title: 'Django Unchained',
+    title: 'django unchained',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1154,7 +1154,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 58,
-    title: 'The Lives of Others',
+    title: 'the lives of others',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNmQyNmJjM2ItNTQzYi00ZjMxLWFjMDYtZjUyN2YwZDk5YWQ2XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1172,7 +1172,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 59,
-    title: 'Sunset Blvd.',
+    title: 'sunset blvd.',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTU0NTkyNzYwMF5BMl5BanBnXkFtZTgwMDU0NDk5MTI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1190,7 +1190,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 60,
-    title: 'Paths of Glory',
+    title: 'paths of glory',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTI5Nzc0OTMtYzBkMS00NjkxLThmM2UtNjM2ODgxN2M5NjNkXkEyXkFqcGdeQXVyNjQ2MjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1212,7 +1212,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 61,
-    title: 'The Shining',
+    title: 'the shining',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZWFlYmY2MGEtZjVkYS00YzU4LTg0YjQtYzY1ZGE3NTA5NGQxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1234,7 +1234,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 62,
-    title: 'The Great Dictator',
+    title: 'the great dictator',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMmExYWJjNTktNGUyZS00ODhmLTkxYzAtNWIzOGEyMGNiMmUwXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1252,7 +1252,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 63,
-    title: 'Avengers: Infinity War',
+    title: 'avengers: infinity war',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1274,7 +1274,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 64,
-    title: 'Witness for the Prosecution',
+    title: 'witness for the prosecution',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNDQwODU5OWYtNDcyNi00MDQ1LThiOGMtZDkwNWJiM2Y3MDg0XkEyXkFqcGdeQXVyMDI2NDg0NQ@@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.4',
@@ -1296,7 +1296,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 65,
-    title: 'Aliens',
+    title: 'aliens',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZGU2OGY5ZTYtMWNhYy00NjZiLWI0NjUtZmNhY2JhNDRmODU3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1318,7 +1318,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 66,
-    title: 'American Beauty',
+    title: 'american beauty',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNTBmZWJkNjctNDhiNC00MGE2LWEwOTctZTk5OGVhMWMyNmVhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1336,7 +1336,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 67,
-    title: 'Spider-Man: Into the Spider-Verse',
+    title: 'spider-man: into the spider-verse',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1355,7 +1355,7 @@ export const data: SingleMovieType[] = [
   {
     rank: 68,
     title:
-      'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
+      'dr. strangelove or: how i learned to stop worrying and love the bomb',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZWI3ZTMxNjctMjdlNS00NmUwLWFiM2YtZDUyY2I3N2MxYTE0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1377,7 +1377,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 69,
-    title: 'The Dark Knight Rises',
+    title: 'the dark knight rises',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1399,7 +1399,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 70,
-    title: 'Oldboy',
+    title: 'oldboy',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTI3NTQyMzU5M15BMl5BanBnXkFtZTcwMTM2MjgyMQ@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1422,7 +1422,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 71,
-    title: 'Joker',
+    title: 'joker',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1444,7 +1444,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 72,
-    title: 'Amadeus',
+    title: 'amadeus',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNWJlNzUzNGMtYTAwMS00ZjI2LWFmNWQtODcxNWUxODA5YmU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1465,7 +1465,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 73,
-    title: 'Inglourious Basterds',
+    title: 'inglourious basterds',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTJiNDEzOWYtMTVjOC00ZjlmLWE0NGMtZmE1OWVmZDQ2OWJhXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1483,7 +1483,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 74,
-    title: 'Toy Story',
+    title: 'toy story',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1505,7 +1505,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 75,
-    title: 'Coco',
+    title: 'coco',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkMDE3ZjAxXkEyXkFqcGdeQXVyODIxMzk5NjA@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1527,7 +1527,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 76,
-    title: 'Braveheart',
+    title: 'braveheart',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMzkzMmU0YTYtOWM3My00YzBmLWI0YzctOGYyNTkwMWE5MTJkXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1545,7 +1545,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 77,
-    title: 'The Boat',
+    title: 'the boat',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNDBjMWUxNTUtNjZiNi00YzJhLTgzNzUtMTRiY2FkZmMzYTNjXkEyXkFqcGdeQXVyMTUzMDUzNTI3._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1566,7 +1566,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 78,
-    title: 'Avengers: Endgame',
+    title: 'avengers: endgame',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1588,7 +1588,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 79,
-    title: 'Princess Mononoke',
+    title: 'princess mononoke',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNGIzY2IzODQtNThmMi00ZDE4LWI5YzAtNzNlZTM1ZjYyYjUyXkEyXkFqcGdeQXVyODEzNjM5OTQ@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1609,7 +1609,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 80,
-    title: 'Top Gun: Maverick',
+    title: 'top gun: maverick',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZWYzOGEwNTgtNWU3NS00ZTQ0LWJkODUtMmVhMjIwMjA1ZmQwXkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1631,7 +1631,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 81,
-    title: 'Once Upon a Time in America',
+    title: 'once upon a time in america',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMGFkNWI4MTMtNGQ0OC00MWVmLTk3MTktOGYxN2Y2YWVkZWE2XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1653,7 +1653,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 82,
-    title: 'Good Will Hunting',
+    title: 'good will hunting',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTI0MzcxMTYtZDVkMy00NjY1LTgyMTYtZmUxN2M3NmQ2NWJhXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1671,7 +1671,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 83,
-    title: 'Your Name.',
+    title: 'your name.',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BODRmZDVmNzUtZDA4ZC00NjhkLWI2M2UtN2M0ZDIzNDcxYThjL2ltYWdlXkEyXkFqcGdeQXVyNTk0MzMzODA@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1692,7 +1692,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 84,
-    title: 'Requiem for a Dream',
+    title: 'requiem for a dream',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOTdiNzJlOWUtNWMwNS00NmFlLWI0YTEtZmI3YjIzZWUyY2Y3XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1713,7 +1713,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 85,
-    title: 'Toy Story 3',
+    title: 'toy story 3',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1735,7 +1735,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 86,
-    title: "Singin' in the Rain",
+    title: "singin' in the rain",
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZDRjNGViMjQtOThlMi00MTA3LThkYzQtNzJkYjBkMGE0YzE1XkEyXkFqcGdeQXVyNDYyMDk5MTU@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1753,7 +1753,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 87,
-    title: '3 Idiots',
+    title: '3 idiots',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNTkyOGVjMGEtNmQzZi00NzFlLTlhOWQtODYyMDc2ZGJmYzFhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1775,7 +1775,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 88,
-    title: 'High and Low',
+    title: 'high and low',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZGQ1NWZlYjctNDJmOS00MmU2LTg1ODItNmZiM2ZkNzJhNDI0XkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1797,7 +1797,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 89,
-    title: 'Star Wars: Episode VI - Return of the Jedi',
+    title: 'star wars: episode VI - return of the jedi',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BOWZlMjFiYzgtMTUzNC00Y2IzLTk1NTMtZmNhMTczNTk0ODk1XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1818,7 +1818,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 90,
-    title: '2001: A Space Odyssey',
+    title: '2001: a space odyssey',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMmNlYzRiNDctZWNhMi00MzI4LThkZTctMTUzMmZkMmFmNThmXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1839,7 +1839,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 91,
-    title: 'Eternal Sunshine of the Spotless Mind',
+    title: 'eternal sunshine of the spotless mind',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTY4NzcwODg3Nl5BMl5BanBnXkFtZTcwNTEwOTMyMw@@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1861,7 +1861,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 92,
-    title: 'Capernaum',
+    title: 'capernaum',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BY2Y3OWNkMTctYzNjYS00NWVkLTg4OWEtY2YxN2I3NDhlYzE0XkEyXkFqcGdeQXVyMTI3ODAyMzE2._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1883,7 +1883,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 93,
-    title: 'Reservoir Dogs',
+    title: 'reservoir dogs',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZmExNmEwYWItYmQzOS00YjA5LTk2MjktZjEyZDE1Y2QxNjA1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1904,7 +1904,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 94,
-    title: 'The Hunt',
+    title: 'the hunt',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BMTg2NDg3ODg4NF5BMl5BanBnXkFtZTcwNzk3NTc3Nw@@._V1_UY67_CR1,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1922,7 +1922,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 95,
-    title: 'Citizen Kane',
+    title: 'citizen kane',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYjBiOTYxZWItMzdiZi00NjlkLWIzZTYtYmFhZjhiMTljOTdkXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1944,7 +1944,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 96,
-    title: 'Lawrence of Arabia',
+    title: 'lawrence of arabia',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYWY5ZjhjNGYtZmI2Ny00ODM0LWFkNzgtZmI1YzA2N2MxMzA0XkEyXkFqcGdeQXVyNjUwNzk3NDc@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1962,7 +1962,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 97,
-    title: 'M',
+    title: 'm',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BODA4ODk3OTEzMF5BMl5BanBnXkFtZTgwMTQ2ODMwMzE@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -1984,7 +1984,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 98,
-    title: 'Come and See',
+    title: 'come and see',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BNzU3OTI1MjItYTJiZC00NDI0LWFlNGYtOTQ1OTVhNDgwM2U3XkEyXkFqcGdeQXVyNTc2MDU0NDE@._V1_UY67_CR0,0,45,67_AL_.jpg',
     rating: '8.3',
@@ -2002,7 +2002,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 99,
-    title: 'North by Northwest',
+    title: 'north by northwest',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BZDA3NDExMTUtMDlhOC00MmQ5LWExZGUtYmI1NGVlZWI4OWNiXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.2',
@@ -2020,7 +2020,7 @@ export const data: SingleMovieType[] = [
   },
   {
     rank: 100,
-    title: 'Vertigo',
+    title: 'vertigo',
     thumbnail:
       'https://m.media-amazon.com/images/M/MV5BYTE4ODEwZDUtNDFjOC00NjAxLWEzYTQtYTI1NGVmZmFlNjdiL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_UX45_CR0,0,45,67_AL_.jpg',
     rating: '8.2',
