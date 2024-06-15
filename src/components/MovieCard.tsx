@@ -41,7 +41,7 @@ const MovieCard = ({
         </div>
       </div>
 
-      <h2 className="text-base font-medium">{trimmedTitle}</h2>
+      <h2 className="text-base font-medium capitalize">{trimmedTitle}</h2>
       <div className="flex text-sm gap-2 items-center">
         <span>{year}</span>
         <FaStar color="orange" />
