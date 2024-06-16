@@ -11,24 +11,25 @@ const SingleMovie = () => {
   const { db } = useAuth()
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
+
   useEffect(() => {
     const getProduct = async () => {
-      if (movieId) {
-        try {
-          let docRef = doc(db, 'movies', movieId)
-          let docSnap = await getDoc(docRef)
-          if (docSnap) {
-            const filteredMovie = docSnap.data()
-            setSingleMovie(filteredMovie)
-          } else {
-            docRef = doc(db, 'trending_movies', movieId)
-            docSnap = await getDoc(docRef)
-            const filteredMovie = docSnap.data()
-            setSingleMovie(filteredMovie)
-          }
-        } catch (error) {
-          console.error(error)
+      if (!movieId) return 
+
+      try {
+        const docRef = doc(db, 'movies', movieId)
+        let docSnap = await getDoc(docRef)
+
+        if (!docSnap.exists()) {
+          const trendingDocRef = doc(db, 'trending_movies', movieId)
+          docSnap = await getDoc(trendingDocRef)
         }
+
+        if (docSnap.exists()) {
+          setSingleMovie(docSnap.data() as SingleMovieType)
+        } 
+      } catch (error) {
+        console.error('Error fetching document:', error)
       }
     }
 
@@ -40,7 +41,9 @@ const SingleMovie = () => {
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen py-4">
       <div className="flex justify-between">
         <div className="py-4">
-          <h2 className="font-semibold">{singleMovie?.title}</h2>
+          <h2 className="font-semibold capitalize text-xl">
+            {singleMovie?.title}
+          </h2>
           <h3>{`(${singleMovie?.year})`}</h3>
         </div>
         <div className="flex items-center gap-8">

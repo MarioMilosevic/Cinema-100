@@ -38,16 +38,12 @@ const Home = () => {
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
-      const moviesRef = await getDocs(collection(db, 'movies'))
       const initialQueryMovies = query(
         moviesCollection,
         orderBy(field, 'desc'),
         limit(pageSize),
       )
       await fetchMovies(initialQueryMovies)
-
-      const totalPageButtons = calculatePageButtons(moviesRef.size, pageSize)
-      setPagesCount(totalPageButtons)
     }
     fetchInitialMovies()
   }, [moviesCollection, db])
@@ -68,11 +64,15 @@ const Home = () => {
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     try {
+      const moviesRef = await getDocs(collection(db, 'movies'))
       const data = await getDocs(queryRef)
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }))
+      console.log(filteredData)
+      const totalPages = calculatePageButtons(moviesRef.size, pageSize)
+      setPagesCount(totalPages)
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
@@ -80,30 +80,31 @@ const Home = () => {
       console.error(error)
     }
   }
+  console.log(pagesCount)
 
-  const nextPage = async () => {
-    if (activePageIndex === pagesCount.length - 1) return
-    const nextQuery = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      startAfter(lastVisible),
-      limit(pageSize),
-    )
-    await fetchMovies(nextQuery)
-    setActivePageIndex((prevIndex) => prevIndex + 1)
-  }
+  // const nextPage = async () => {
+  //   if (activePageIndex === pagesCount.length - 1) return
+  //   const nextQuery = query(
+  //     moviesCollection,
+  //     orderBy(field, 'desc'),
+  //     startAfter(lastVisible),
+  //     limit(pageSize),
+  //   )
+  //   await fetchMovies(nextQuery)
+  //   setActivePageIndex((prevIndex) => prevIndex + 1)
+  // }
 
-  const previousPage = async () => {
-    if (activePageIndex === 0) return
-    const prevQuery = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      endBefore(firstVisible),
-      limitToLast(pageSize),
-    )
-    await fetchMovies(prevQuery)
-    setActivePageIndex((prevIndex) => prevIndex - 1)
-  }
+  // const previousPage = async () => {
+  //   if (activePageIndex === 0) return
+  //   const prevQuery = query(
+  //     moviesCollection,
+  //     orderBy(field, 'desc'),
+  //     endBefore(firstVisible),
+  //     limitToLast(pageSize),
+  //   )
+  //   await fetchMovies(prevQuery)
+  //   setActivePageIndex((prevIndex) => prevIndex - 1)
+  // }
 
   const jumpToPage = async (pageIndex: number) => {
     let queryRef = query(
@@ -141,8 +142,8 @@ const Home = () => {
       }
 
       const totalPages = calculatePageButtons(filteredData.length, pageSize)
-      // setFirstVisible(filteredData[0])
-      // setLastVisible(filteredData[filteredData.length - 1])
+      setFirstVisible(filteredData[0])
+      setLastVisible(filteredData[filteredData.length - 1])
       setPagesCount(totalPages)
       setMovies(filteredData.slice(activePageIndex, pageSize))
     } catch (error) {
@@ -151,24 +152,93 @@ const Home = () => {
   }
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value.toLowerCase()
-    let baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+    const searchInput = e.target.value.toLowerCase()
+    setSearchValue(searchInput)
 
+    if (searchInput) {
+      const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+      const q = query(
+        baseQuery,
+        where('title', '>=', searchInput),
+        where('title', '<=', searchInput + '\uf8ff'),
+        // limit(pageSize),
+      )
+      const data = await getDocs(q)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      if (filteredData.length > 12) {
+        console.log('veci od 12')
+        setFirstVisible(data.docs[0])
+        setLastVisible(data.docs[11])
+        setMovies(filteredData.slice(0, 12))
+      } else {
+        setFirstVisible(data.docs[0])
+        setLastVisible(data.docs[data.docs.length - 1])
+        setMovies(filteredData)
+      }
+      // setMovies(filteredData)
+      setPagesCount(totalPages)
+      setActivePageIndex(0)
+    } else {
+      const initialQueryMovies = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize),
+      )
+      await fetchMovies(initialQueryMovies)
+      setActivePageIndex(0)
+    }
+  }
+
+  const nextPage = async (pageIndex: number) => {
+    let baseQuery = query(moviesCollection, orderBy(field, 'desc'))
     const q = query(
       baseQuery,
       where('title', '>=', searchValue),
       where('title', '<=', searchValue + '\uf8ff'),
+      startAfter(lastVisible),
+    )
+    console.log(searchValue)
+    const querySnapshot = await getDocs(q)
+    let filteredData = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    console.log(filteredData)
+    const totalPages = calculatePageButtons(filteredData.length, pageSize)
+    console.log(totalPages)
+    console.log(pageIndex)
+    if (filteredData.length > 12) {
+      filteredData = filteredData.slice(pageIndex + 1, 12)
+    }
+    setActivePageIndex((prev) => prev + 1)
+    setPagesCount(totalPages)
+    setMovies(filteredData)
+  }
+
+  const previousPage = async (pageIndex: number) => {
+    let baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+    const q = query(
+      baseQuery,
+      where('title', '>=', searchValue),
+      where('title', '<=', searchValue + '\uf8ff'),
+      endBefore(firstVisible),
+      limitToLast(pageSize),
     )
     const querySnapshot = await getDocs(q)
-    const results = []
-       let filteredData = querySnapshot.docs.map((doc) => ({
-         ...doc.data(),
-         id: doc.id,
-       }))
-    // querySnapshot.forEach((doc) => {
-    //   results.push(doc.data())
-    // })
-    // console.log(results)
+    let filteredData = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    const totalPages = calculatePageButtons(filteredData.length, pageSize)
+    if (filteredData.length > 12) {
+      filteredData = filteredData.slice(pageIndex + 1, 12)
+    }
+    setActivePageIndex((prev) => prev + 1)
+    setPagesCount(totalPages)
     setMovies(filteredData)
   }
 
@@ -222,7 +292,8 @@ const Home = () => {
       <div className="py-8 flex justify-center items-center gap-2">
         <button
           className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-          onClick={previousPage}
+          // onClick={()}
+          onClick={() => console.log('nesto')}
         >
           <FaArrowLeft />
         </button>
@@ -237,7 +308,7 @@ const Home = () => {
         ))}
         <button
           className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-          onClick={nextPage}
+          onClick={() => nextPage(activePageIndex)}
         >
           <FaArrowRight />
         </button>
