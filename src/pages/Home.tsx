@@ -82,63 +82,93 @@ const Home = () => {
     }
   }
 
-  // const nextPage = async (pageIndex: number) => {
-  //   let baseQuery = query(moviesCollection, orderBy(field, 'desc'))
-  //   const q = query(
-  //     baseQuery,
-  //     where('title', '>=', searchValue),
-  //     where('title', '<=', searchValue + '\uf8ff'),
-  //     startAfter(lastVisible),
-  //   )
-  //   const querySnapshot = await getDocs(q)
-  //   let filteredData = querySnapshot.docs.map((doc) => ({
-  //     ...doc.data(),
-  //     id: doc.id,
-  //   }))
-  //   // const totalPages = calculatePageButtons(filteredData.length, pageSize)
-  //   // console.log(totalPages)
-  //   console.log(pageIndex)
-  //   if (filteredData.length > 12) {
-  //     filteredData = filteredData.slice(pageIndex + 1, 12)
-  //   }
-  //   setActivePageIndex((prev) => prev + 1)
-  //   // setPagesCount(totalPages)
-  //   setMovies(filteredData)
-  // }
-
-  // const previousPage = async () => {
-  //   if (activePageIndex === 0) return
-  //   const prevQuery = query(
-  //     moviesCollection,
-  //     orderBy(field, 'desc'),
-  //     endBefore(firstVisible),
-  //     limitToLast(pageSize),
-  //   )
-  //   await fetchMovies(prevQuery)
-  //   setActivePageIndex((prevIndex) => prevIndex - 1)
-  // }
-
   const jumpToPage = async (pageIndex: number) => {
-    let queryRef = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      limit(pageSize * (pageIndex + 1)),
-    )
-    const data = await getDocs(queryRef)
-    queryRef = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      startAt(data.docs[pageIndex * pageSize]),
-      limit(pageSize),
-    )
-    await fetchMovies(queryRef)
-    setActivePageIndex(pageIndex)
+    let queryRef
+
+    if (searchValue) {
+      const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+      const searchQuery = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+      )
+
+      const data = await getDocs(searchQuery)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      const startIndex = pageIndex * pageSize
+      const endIndex = startIndex + pageSize
+
+      setMovies(filteredData.slice(startIndex, endIndex))
+      setPagesCount(totalPages)
+      setActivePageIndex(pageIndex)
+    } else {
+      queryRef = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize * (pageIndex + 1)),
+      )
+      const data = await getDocs(queryRef)
+      queryRef = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        startAt(data.docs[pageIndex * pageSize]),
+        limit(pageSize),
+      )
+      await fetchMovies(queryRef)
+      setActivePageIndex(pageIndex)
+    }
+  }
+
+  const previousPage = async () => {
+    if (activePageIndex === 0) return
+    if (searchValue) {
+      const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+      const q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+      )
+
+      const data = await getDocs(q)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      if (filteredData.length > pageSize) {
+        const startIndex = (activePageIndex - 1) * pageSize
+        const endIndex = activePageIndex * pageSize
+        setActivePageIndex((prev) => prev - 1)
+        setMovies(filteredData.slice(startIndex, endIndex))
+        setPagesCount(totalPages)
+      } else {
+        setFirstVisible(data.docs[0])
+        setLastVisible(data.docs[data.docs.length - 1])
+        setMovies(filteredData)
+        setActivePageIndex(0)
+        setPagesCount(1)
+      }
+    } else {
+      const prevQuery = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        endBefore(firstVisible),
+        limitToLast(pageSize),
+      )
+      await fetchMovies(prevQuery)
+      setActivePageIndex((prevIndex) => prevIndex - 1)
+    }
   }
 
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
     if (searchValue) {
-      console.log('ima searchvalue')
       {
         const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
         const q = query(
@@ -151,22 +181,13 @@ const Home = () => {
           ...doc.data(),
           id: doc.id,
         }))
-        console.log(filteredData)
         const totalPages = calculatePageButtons(filteredData.length, pageSize)
         if (filteredData.length > pageSize) {
-          console.log('duze od 12')
-          // const startIndex = activePageIndex * 12 + activePageIndex
-          console.log(activePageIndex)
-          const startIndex = activePageIndex * pageSize
-          const endIndex = (activePageIndex + 1) * pageSize
-          console.log(startIndex, endIndex)
+          const startIndex = (activePageIndex + 1) * pageSize
+          const endIndex = (activePageIndex + 2) * pageSize
           setActivePageIndex((prev) => prev + 1)
-          // setFirstVisible(data.docs[startIndex])
-          // setLastVisible(data.docs[endIndex])
-          setMovies(filteredData.slice(12, 28)) // ne hvata poslednji index
+          setMovies(filteredData.slice(startIndex, endIndex)) // ne hvata poslednji index
           setPagesCount(totalPages)
-          // setMovies(filteredData.slice())
-          // umjesto nule treba dinamicku vrijednost staviti activePageIndex * 12 + 1, (activePageIndex + 1) * 12
         } else {
           setFirstVisible(data.docs[0])
           setLastVisible(data.docs[data.docs.length - 1])
@@ -186,8 +207,6 @@ const Home = () => {
       setActivePageIndex((prevIndex) => prevIndex + 1)
     }
   }
-
-  console.log(activePageIndex)
 
   const searchMovies = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchInput = e.target.value.toLowerCase()
@@ -222,36 +241,36 @@ const Home = () => {
     }
   }
 
-  const previousPage = async (pageIndex: number) => {
-    if (activePageIndex === 0) return // If already on the first page, do nothing
+  // const previousPage = async (pageIndex: number) => {
+  //   if (activePageIndex === 0) return // If already on the first page, do nothing
 
-    try {
-      // Fetch documents starting before the first visible document of the current page
-      const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
-      const q = query(
-        baseQuery,
-        where('title', '>=', searchValue),
-        where('title', '<=', searchValue + '\uf8ff'),
-        endBefore(firstVisible),
-        limitToLast(pageSize),
-      )
+  //   try {
+  //     // Fetch documents starting before the first visible document of the current page
+  //     const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+  //     const q = query(
+  //       baseQuery,
+  //       where('title', '>=', searchValue),
+  //       where('title', '<=', searchValue + '\uf8ff'),
+  //       endBefore(firstVisible),
+  //       limitToLast(pageSize),
+  //     )
 
-      const querySnapshot = await getDocs(q)
-      const filteredData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
+  //     const querySnapshot = await getDocs(q)
+  //     const filteredData = querySnapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }))
 
-      if (filteredData.length > 0) {
-        setFirstVisible(querySnapshot.docs[0])
-        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1])
-        setMovies(filteredData)
-        setActivePageIndex((prev) => prev - 1)
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  //     if (filteredData.length > 0) {
+  //       setFirstVisible(querySnapshot.docs[0])
+  //       setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1])
+  //       setMovies(filteredData)
+  //       setActivePageIndex((prev) => prev - 1)
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   // const previousPage = async (pageIndex:number) => {
   //   if (activePageIndex === 0) return // If already on the first page, do nothing
@@ -410,4 +429,28 @@ export default Home
 //   } catch (error) {
 //     console.error(error)
 //   }
+// }
+
+// const nextPage = async (pageIndex: number) => {
+//   let baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+//   const q = query(
+//     baseQuery,
+//     where('title', '>=', searchValue),
+//     where('title', '<=', searchValue + '\uf8ff'),
+//     startAfter(lastVisible),
+//   )
+//   const querySnapshot = await getDocs(q)
+//   let filteredData = querySnapshot.docs.map((doc) => ({
+//     ...doc.data(),
+//     id: doc.id,
+//   }))
+//   // const totalPages = calculatePageButtons(filteredData.length, pageSize)
+//   // console.log(totalPages)
+//   console.log(pageIndex)
+//   if (filteredData.length > 12) {
+//     filteredData = filteredData.slice(pageIndex + 1, 12)
+//   }
+//   setActivePageIndex((prev) => prev + 1)
+//   // setPagesCount(totalPages)
+//   setMovies(filteredData)
 // }
