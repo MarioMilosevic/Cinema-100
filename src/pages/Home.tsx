@@ -125,14 +125,7 @@ const Home = () => {
       setPagesCount(totalPages)
       setActivePageIndex(pageIndex)
     } else if (!searchValue && genre !== 'All') {
-      ////////////////////////////////////////////////////////////////////////////////////////////////////
-      console.log('nemam search nemam genre')
-      console.log('testiram')
-      queryRef = query(
-        baseQuery,
-        where('genre', 'array-contains', genre),
-        // limit(pageSize * (pageIndex + 1)),
-      )
+      queryRef = query(baseQuery, where('genre', 'array-contains', genre))
       const data = await getDocs(queryRef)
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
@@ -142,7 +135,7 @@ const Home = () => {
       const startIndex = pageIndex * pageSize
       const endIndex = startIndex + pageSize
       setMovies(filteredData.slice(startIndex, endIndex))
-      setPagesCount(totalPages) // Adjust as needed for your page count calculation
+      setPagesCount(totalPages)
       setActivePageIndex(pageIndex)
     } else {
       queryRef = query(
@@ -258,12 +251,7 @@ const Home = () => {
       )
     } else if (!searchValue && genre !== 'All') {
       console.log('testiram')
-      q = query(
-        baseQuery,
-        where('genre', 'array-contains', genre),
-        endBefore(firstVisible),
-        limitToLast(pageSize),
-      )
+      q = query(baseQuery, where('genre', 'array-contains', genre))
     } else {
       q = query(baseQuery, endBefore(firstVisible), limitToLast(pageSize))
       await fetchMovies(q)
@@ -313,7 +301,6 @@ const Home = () => {
         where('title', '<=', searchValue + '\uf8ff'),
       )
     } else if (!searchValue && genre !== 'All') {
-      console.log('testiram')
       q = query(baseQuery, where('genre', 'array-contains', genre))
     } else {
       q = query(baseQuery, startAfter(lastVisible))
@@ -554,7 +541,6 @@ const Home = () => {
   }
 
   const filterMovies = async (searchInput: string, selectedGenre: string) => {
-    console.log(searchInput, selectedGenre)
     const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
     if (searchInput && selectedGenre !== 'All') {
       searchQuery = query(
