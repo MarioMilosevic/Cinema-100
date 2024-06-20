@@ -88,6 +88,7 @@ const Home = () => {
     const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
 
     if (searchValue && genre !== 'All') {
+      console.log('imam search imam genre')
       const q = query(
         baseQuery,
         where('title', '>=', searchValue),
@@ -106,6 +107,7 @@ const Home = () => {
       setPagesCount(totalPages)
       setActivePageIndex(pageIndex)
     } else if (searchValue && genre === 'All') {
+      console.log('imam search nemam genre')
       const q = query(
         baseQuery,
         where('title', '>=', searchValue),
@@ -123,20 +125,24 @@ const Home = () => {
       setPagesCount(totalPages)
       setActivePageIndex(pageIndex)
     } else if (!searchValue && genre !== 'All') {
+      ////////////////////////////////////////////////////////////////////////////////////////////////////
+      console.log('nemam search nemam genre')
+      console.log('testiram')
       queryRef = query(
         baseQuery,
         where('genre', 'array-contains', genre),
-        limit(pageSize * (pageIndex + 1)),
+        // limit(pageSize * (pageIndex + 1)),
       )
       const data = await getDocs(queryRef)
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }))
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
       const startIndex = pageIndex * pageSize
       const endIndex = startIndex + pageSize
       setMovies(filteredData.slice(startIndex, endIndex))
-      setPagesCount([0]) // Adjust as needed for your page count calculation
+      setPagesCount(totalPages) // Adjust as needed for your page count calculation
       setActivePageIndex(pageIndex)
     } else {
       queryRef = query(
@@ -308,11 +314,7 @@ const Home = () => {
       )
     } else if (!searchValue && genre !== 'All') {
       console.log('testiram')
-      q = query(
-        baseQuery,
-        where('genre', 'array-contains', genre),
-        // startAfter(lastVisible),
-      )
+      q = query(baseQuery, where('genre', 'array-contains', genre))
     } else {
       q = query(baseQuery, startAfter(lastVisible))
       await fetchMovies(q)
