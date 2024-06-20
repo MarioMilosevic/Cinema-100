@@ -85,6 +85,305 @@ const Home = () => {
 
   const jumpToPage = async (pageIndex: number) => {
     let queryRef
+    const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+
+    if (searchValue && genre !== 'All') {
+      const q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+        where('genre', 'array-contains', genre),
+      )
+      const data = await getDocs(q)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      const startIndex = pageIndex * pageSize
+      const endIndex = startIndex + pageSize
+      setMovies(filteredData.slice(startIndex, endIndex))
+      setPagesCount(totalPages)
+      setActivePageIndex(pageIndex)
+    } else if (searchValue && genre === 'All') {
+      const q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+      )
+      const data = await getDocs(q)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      const startIndex = pageIndex * pageSize
+      const endIndex = startIndex + pageSize
+      setMovies(filteredData.slice(startIndex, endIndex))
+      setPagesCount(totalPages)
+      setActivePageIndex(pageIndex)
+    } else if (!searchValue && genre !== 'All') {
+      queryRef = query(
+        baseQuery,
+        where('genre', 'array-contains', genre),
+        limit(pageSize * (pageIndex + 1)),
+      )
+      const data = await getDocs(queryRef)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      const startIndex = pageIndex * pageSize
+      const endIndex = startIndex + pageSize
+      setMovies(filteredData.slice(startIndex, endIndex))
+      setPagesCount([0]) // Adjust as needed for your page count calculation
+      setActivePageIndex(pageIndex)
+    } else {
+      queryRef = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize * (pageIndex + 1)),
+      )
+      const data = await getDocs(queryRef)
+      queryRef = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        startAt(data.docs[pageIndex * pageSize]),
+        limit(pageSize),
+      )
+      await fetchMovies(queryRef)
+      setActivePageIndex(pageIndex)
+    }
+  }
+
+  // const previousPage = async () => {
+  //   if (activePageIndex === 0) return
+  //   const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+
+  //   if (searchValue && genre !== 'All') {
+  //     const q = query(
+  //       baseQuery,
+  //       where('title', '>=', searchValue),
+  //       where('title', '<=', searchValue + '\uf8ff'),
+  //       where('genre', 'array-contains', genre),
+  //     )
+  //     const data = await getDocs(q)
+  //     const filteredData = data.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }))
+  //     const totalPages = calculatePageButtons(filteredData.length, pageSize)
+  //     if (filteredData.length > pageSize) {
+  //       const startIndex = (activePageIndex - 1) * pageSize
+  //       const endIndex = activePageIndex * pageSize
+  //       setActivePageIndex((prev) => prev - 1)
+  //       setMovies(filteredData.slice(startIndex, endIndex))
+  //       setPagesCount(totalPages)
+  //     } else {
+  //       setFirstVisible(data.docs[0])
+  //       setLastVisible(data.docs[data.docs.length - 1])
+  //       setMovies(filteredData)
+  //       setActivePageIndex(0)
+  //       setPagesCount(1)
+  //     }
+  //   } else if (searchValue && genre === 'All') {
+  //     const q = query(
+  //       baseQuery,
+  //       where('title', '>=', searchValue),
+  //       where('title', '<=', searchValue + '\uf8ff'),
+  //     )
+  //     const data = await getDocs(q)
+  //     const filteredData = data.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }))
+  //     const totalPages = calculatePageButtons(filteredData.length, pageSize)
+  //     if (filteredData.length > pageSize) {
+  //       const startIndex = (activePageIndex - 1) * pageSize
+  //       const endIndex = activePageIndex * pageSize
+  //       setActivePageIndex((prev) => prev - 1)
+  //       setMovies(filteredData.slice(startIndex, endIndex))
+  //       setPagesCount(totalPages)
+  //     } else {
+  //       setFirstVisible(data.docs[0])
+  //       setLastVisible(data.docs[data.docs.length - 1])
+  //       setMovies(filteredData)
+  //       setActivePageIndex(0)
+  //       setPagesCount([0])
+  //     }
+  //   } else if (!searchValue && genre !== 'All') {
+  //     const prevQuery = query(
+  //       baseQuery,
+  //       where('genre', 'array-contains', genre),
+  //       endBefore(firstVisible),
+  //       limitToLast(pageSize),
+  //     )
+  //     await fetchMovies(prevQuery)
+  //     setActivePageIndex((prevIndex) => prevIndex - 1)
+  //   } else {
+  //     const prevQuery = query(
+  //       moviesCollection,
+  //       orderBy(field, 'desc'),
+  //       endBefore(firstVisible),
+  //       limitToLast(pageSize),
+  //     )
+  //     await fetchMovies(prevQuery)
+  //     setActivePageIndex((prevIndex) => prevIndex - 1)
+  //   }
+  // }
+
+  const previousPage = async () => {
+    if (activePageIndex === 0) return
+    const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+    let q
+
+    if (searchValue && genre !== 'All') {
+      q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+        where('genre', 'array-contains', genre),
+      )
+    } else if (searchValue && genre === 'All') {
+      q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+      )
+    } else if (!searchValue && genre !== 'All') {
+      console.log('testiram')
+      q = query(
+        baseQuery,
+        where('genre', 'array-contains', genre),
+        endBefore(firstVisible),
+        limitToLast(pageSize),
+      )
+    } else {
+      q = query(baseQuery, endBefore(firstVisible), limitToLast(pageSize))
+      await fetchMovies(q)
+      setActivePageIndex((prevIndex) => prevIndex - 1)
+      return
+    }
+
+    const data = await getDocs(q)
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    console.log(filteredData)
+    // const totalPages = calculatePageButtons(filteredData.length, pageSize)
+
+    if (filteredData.length > pageSize) {
+      const startIndex = (activePageIndex - 1) * pageSize
+      const endIndex = activePageIndex * pageSize
+      setActivePageIndex((prev) => prev - 1)
+      setMovies(filteredData.slice(startIndex, endIndex))
+      // setPagesCount(totalPages)
+    } else {
+      setFirstVisible(data.docs[0])
+      setLastVisible(data.docs[data.docs.length - 1])
+      setMovies(filteredData)
+      setActivePageIndex(0)
+      setPagesCount([0])
+    }
+  }
+
+  const nextPage = async () => {
+    if (activePageIndex === pagesCount.length - 1) return
+    const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
+    let q
+    if (searchValue && genre !== 'All') {
+      q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+        where('genre', 'array-contains', genre),
+      )
+    } else if (searchValue && genre === 'All') {
+      console.log('imam search zanr je ALL')
+      q = query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+      )
+    } else if (!searchValue && genre !== 'All') {
+      console.log('testiram')
+      q = query(
+        baseQuery,
+        where('genre', 'array-contains', genre),
+        // startAfter(lastVisible),
+      )
+    } else {
+      q = query(baseQuery, startAfter(lastVisible))
+      await fetchMovies(q)
+      setActivePageIndex((prevIndex) => prevIndex + 1)
+      return
+    }
+
+    const data = await getDocs(q)
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    console.log(filteredData)
+    // const totalPages = calculatePageButtons(filteredData.length, pageSize)
+
+    if (filteredData.length > pageSize) {
+      const startIndex = (activePageIndex + 1) * pageSize
+      const endIndex = (activePageIndex + 2) * pageSize
+      setActivePageIndex((prev) => prev + 1)
+      setMovies(filteredData.slice(startIndex, endIndex))
+      // setPagesCount(totalPages)
+    } else {
+      setFirstVisible(data.docs[0])
+      setLastVisible(data.docs[data.docs.length - 1])
+      setMovies(filteredData)
+      setActivePageIndex(0)
+      setPagesCount([0])
+    }
+  }
+
+  // else if (searchValue && genre === 'All') {
+  //   const q = query(
+  //     baseQuery,
+  //     where('title', '>=', searchValue),
+  //     where('title', '<=', searchValue + '\uf8ff'),
+  //   )
+  //   const data = await getDocs(q)
+  //   const filteredData = data.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     id: doc.id,
+  //   }))
+  //   const totalPages = calculatePageButtons(filteredData.length, pageSize)
+  //   if (filteredData.length > pageSize) {
+  //     const startIndex = (activePageIndex + 1) * pageSize
+  //     const endIndex = (activePageIndex + 2) * pageSize
+  //     setActivePageIndex((prev) => prev + 1)
+  //     setMovies(filteredData.slice(startIndex, endIndex))
+  //     setPagesCount(totalPages)
+  //   } else {
+  //     setFirstVisible(data.docs[0])
+  //     setLastVisible(data.docs[data.docs.length - 1])
+  //     setMovies(filteredData)
+  //     setActivePageIndex(0)
+  //     setPagesCount([0])
+  //   }
+  // } else if (!searchValue && genre !== 'All') {
+  //   ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //   console.log('testiram')
+  //   const nextQuery = query(
+  //     baseQuery,
+  //     where('genre', 'array-contains', genre),
+  //     startAfter(lastVisible),
+  //     limit(pageSize),
+  //   )
+  //   await fetchMovies(nextQuery)
+  //   setActivePageIndex((prevIndex) => prevIndex + 1)
+  // }
+
+  /*
+  const jumpToPage = async (pageIndex: number) => {
+    let queryRef
     if (searchValue) {
       const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
       const q = query(
@@ -204,6 +503,7 @@ const Home = () => {
       setActivePageIndex((prevIndex) => prevIndex + 1)
     }
   }
+  */
 
   // ova ispod je dobra
 
@@ -239,13 +539,13 @@ const Home = () => {
   //     fetchInitialMovies()
   //   }
   // }
-  const searchMoviesMario = (e) => {
+  const searchMovies = (e) => {
     const searchInput = e.target.value.toLowerCase()
     setSearchValue(searchInput)
     filterMovies(searchInput, genre)
   }
 
-  const searchGenreMario = (e) => {
+  const searchGenre = (e) => {
     const selectedGenre = e.target.value
     setGenre(selectedGenre)
     filterMovies(searchValue, selectedGenre)
@@ -255,26 +555,20 @@ const Home = () => {
     console.log(searchInput, selectedGenre)
     const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
     if (searchInput && selectedGenre !== 'All') {
-      console.log('ima search ima zanr koji nije ALL')
       searchQuery = query(
         baseQuery,
         where('title', '>=', searchInput),
         where('title', '<=', searchInput + '\uf8ff'),
         where('genre', 'array-contains', selectedGenre),
       )
-    }
-    ////////////////////////////////////////////
-    else if (searchInput && selectedGenre === 'All') {
-      console.log('ima search i zanr je ALL')
+    } else if (searchInput && selectedGenre === 'All') {
       searchQuery = query(
         baseQuery,
         where('title', '>=', searchInput),
         where('title', '<=', searchInput + '\uf8ff'),
       )
-      //////////////////////////
-    } else if (searchInput === '' && selectedGenre !== 'All') {
-      console.log('testiram')
-      console.log('nema search, ima zanr i zanr nije ALL')
+    } else if (!searchInput && selectedGenre !== 'All') {
+      console.log('test')
       searchQuery = query(
         baseQuery,
         where('genre', 'array-contains', selectedGenre),
@@ -283,54 +577,29 @@ const Home = () => {
       fetchInitialMovies()
       return
     }
-
-    console.log('uslo')
     const data = await getDocs(searchQuery)
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }))
     console.log(filteredData)
-    const totalPages = calculatePageButtons(filteredData.length, pageSize)
 
     if (filteredData.length > 12) {
+      console.log('duze od 12')
+      const totalPages = calculatePageButtons(filteredData.length, pageSize)
+      console.log(filteredData.length, pageSize)
+      console.log(totalPages)
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[11])
       setMovies(filteredData.slice(0, 12))
+      setActivePageIndex(0)
+      setPagesCount(totalPages)
     } else {
       setFirstVisible(data.docs[0])
       setLastVisible(data.docs[data.docs.length - 1])
       setMovies(filteredData)
-      setPagesCount(totalPages)
       setActivePageIndex(0)
-    }
-  }
-
-  const searchByGenre = async (e) => {
-    const selectedGenre = e.target.value
-    setGenre(selectedGenre)
-    if (selectedGenre === 'All') {
-      fetchInitialMovies()
-    } else {
-      const q = query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        where('genre', 'array-contains', selectedGenre),
-      )
-      const data = await getDocs(q)
-      const filteredData = data.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      if (filteredData.length > 12) {
-        setFirstVisible(data.docs[0])
-        setLastVisible(data.docs[11])
-        setMovies(filteredData.slice(0, 12))
-      } else {
-        setFirstVisible(data.docs[0])
-        setLastVisible(data.docs[data.docs.length - 1])
-        setMovies(filteredData)
-      }
+      setPagesCount([0])
     }
   }
 
@@ -343,8 +612,7 @@ const Home = () => {
             type="text"
             placeholder="Search"
             className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
-            onChange={searchMoviesMario}
-            // onChange={searchMovies}
+            onChange={searchMovies}
           />
           <SlMagnifier
             className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
@@ -358,8 +626,7 @@ const Home = () => {
             id="category"
             className="text-black rounded-full px-2"
             value={genre}
-            onChange={searchGenreMario}
-            // onChange={searchByGenre}
+            onChange={searchGenre}
           >
             {allGenres.map((genre) => (
               <option key={genre} value={genre}>
