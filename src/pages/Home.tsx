@@ -24,6 +24,7 @@ import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
 import { useDebounce } from '../hooks/useDebounce'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -43,10 +44,9 @@ const Home = () => {
     fetchTrendingMovies()
   }, [])
 
-   useEffect(() => {
-     filterMovies(debouncedSearch, genre)
-   }, [debouncedSearch, genre])
-
+  useEffect(() => {
+    filterMovies(debouncedSearch, genre)
+  }, [debouncedSearch, genre])
 
   const fetchTrendingMovies = async () => {
     const trendingMoviesQuery = query(trendingMoviesCollection)
@@ -89,7 +89,7 @@ const Home = () => {
 
   const goToPage = async (pageIndex: number) => {
     let queryRef: Query<DocumentData>
-    
+
     if (searchValue) {
       queryRef =
         genre !== 'All'
@@ -265,6 +265,8 @@ const Home = () => {
     setPagesCount(calculatePageButtons(filteredData.length, pageSize))
     setActivePageIndex(0)
   }
+
+  if (movies.length === 0) return <LoadingSpinner />
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
