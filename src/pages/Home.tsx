@@ -12,6 +12,8 @@ import {
   startAt,
   collection,
   where,
+  DocumentSnapshot,
+  CollectionReference,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
@@ -24,7 +26,6 @@ import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
 import { useDebounce } from '../hooks/useDebounce'
-import LoadingSpinner from '../components/LoadingSpinner'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -87,43 +88,68 @@ const Home = () => {
     setLastVisible(data.docs[data.docs.length - 1])
   }
 
-  const goToPage = async (pageIndex: number) => {
-    let queryRef: Query<DocumentData>
 
-    if (searchValue) {
-      queryRef =
-        genre !== 'All'
-          ? query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-              where('genre', 'array-contains', genre),
-            )
-          : query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-            )
-    } else if (genre !== 'All') {
-      queryRef = query(baseQuery, where('genre', 'array-contains', genre))
-    } else {
-      const data = await getDocs(
-        query(
-          moviesCollection,
-          orderBy(field, 'desc'),
-          limit(pageSize * (pageIndex + 1)),
-        ),
+  const buildSearchQuery = (
+    searchValue: string,
+    genre: string,
+    baseQuery: Query<DocumentData>,
+  ) => {
+    if (genre !== 'All') {
+      return query(
+        baseQuery,
+        where('title', '>=', searchValue),
+        where('title', '<=', searchValue + '\uf8ff'),
+        where('genre', 'array-contains', genre),
       )
-      queryRef = query(
+    }
+    return query(
+      baseQuery,
+      where('title', '>=', searchValue),
+      where('title', '<=', searchValue + '\uf8ff'),
+    )
+  }
+
+  const buildGenreQuery = (genre: string, baseQuery: Query<DocumentData>) => {
+    return query(baseQuery, where('genre', 'array-contains', genre))
+  }
+
+  const buildPaginationQuery = async (
+    pageIndex: number,
+    field: string,
+    pageSize: number,
+    moviesCollection: CollectionReference<DocumentData>,
+    lastVisible?: DocumentSnapshot<DocumentData>,
+  ) => {
+    if (lastVisible) {
+      return query(
         moviesCollection,
         orderBy(field, 'desc'),
-        startAt(data.docs[pageIndex * pageSize]),
+        startAfter(lastVisible),
         limit(pageSize),
       )
-      await fetchMovies(queryRef)
-      setActivePageIndex(pageIndex)
-      return
     }
+    const data = await getDocs(
+      query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize * (pageIndex + 1)),
+      ),
+    )
+    return query(
+      moviesCollection,
+      orderBy(field, 'desc'),
+      startAt(data.docs[pageIndex * pageSize]),
+      limit(pageSize),
+    )
+  }
+
+
+
+  const fetchAndSetMovies = async (
+    queryRef: Query<DocumentData>,
+    pageIndex: number,
+    pageSize: number,
+  ) => {
     const data = await getDocs(queryRef)
     setMovies(
       data.docs
@@ -134,76 +160,71 @@ const Home = () => {
     setActivePageIndex(pageIndex)
   }
 
+
+  const goToPage = async (pageIndex: number) => {
+    let queryRef: Query<DocumentData>
+
+    if (searchValue) {
+      queryRef = buildSearchQuery(searchValue, genre, baseQuery)
+    } else if (genre !== 'All') {
+      queryRef = buildGenreQuery(genre, baseQuery)
+    } else {
+      queryRef = await buildPaginationQuery(
+        pageIndex,
+        field,
+        pageSize,
+        moviesCollection,
+      )
+      await fetchMovies(queryRef)
+      setActivePageIndex(pageIndex)
+      return
+    }
+
+    await fetchAndSetMovies(queryRef, pageIndex, pageSize)
+  }
+
   const previousPage = async () => {
     if (activePageIndex === 0) return
     let queryRef: Query<DocumentData>
+    // queryRef = buildSearchQuery(searchValue, genre, baseQuery)
     if (searchValue) {
-      queryRef =
-        genre !== 'All'
-          ? query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-              where('genre', 'array-contains', genre),
-              endBefore(firstVisible),
-              limitToLast(pageSize),
-            )
-          : query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-              endBefore(firstVisible),
-              limitToLast(pageSize),
-            )
+      queryRef = buildSearchQuery(searchValue, genre, baseQuery)
+        .endBefore(firstVisible)
+        .limitToLast(pageSize)
     } else if (genre !== 'All') {
-      queryRef = query(
-        baseQuery,
-        where('genre', 'array-contains', genre),
-        endBefore(firstVisible),
-        limitToLast(pageSize),
-      )
-    } else {
-      queryRef = query(
-        baseQuery,
-        endBefore(firstVisible),
-        limitToLast(pageSize),
-      )
+      queryRef = buildGenreQuery(genre, baseQuery)
+        .endBefore(firstVisible)
+        .limitToLast(pageSize)
     }
-    await fetchMovies(queryRef)
-    setActivePageIndex((prev) => prev - 1)
   }
+
+ 
 
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
     let queryRef: Query<DocumentData>
     if (searchValue) {
-      queryRef =
-        genre !== 'All'
-          ? query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-              where('genre', 'array-contains', genre),
-              startAfter(lastVisible),
-              limit(pageSize),
-            )
-          : query(
-              baseQuery,
-              where('title', '>=', searchValue),
-              where('title', '<=', searchValue + '\uf8ff'),
-              startAfter(lastVisible),
-              limit(pageSize),
-            )
+      queryRef = query(
+        buildSearchQuery(searchValue, genre, baseQuery),
+        startAfter(lastVisible),
+        limit(pageSize),
+      )
     } else if (genre !== 'All') {
       queryRef = query(
-        baseQuery,
-        where('genre', 'array-contains', genre),
+        buildGenreQuery(genre, baseQuery),
         startAfter(lastVisible),
         limit(pageSize),
       )
     } else {
-      queryRef = query(baseQuery, startAfter(lastVisible), limit(pageSize))
+      queryRef = await buildPaginationQuery(
+        activePageIndex + 1,
+        field,
+        pageSize,
+        moviesCollection,
+        lastVisible,
+      )
     }
+
     await fetchMovies(queryRef)
     setActivePageIndex((prev) => prev + 1)
   }
@@ -265,8 +286,6 @@ const Home = () => {
     setPagesCount(calculatePageButtons(filteredData.length, pageSize))
     setActivePageIndex(0)
   }
-
-  if (movies.length === 0) return <LoadingSpinner />
 
   return (
     <div className="max-w-[1300px] mx-auto pt-20 pb-4">
