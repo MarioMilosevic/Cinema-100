@@ -15,13 +15,12 @@ import InputField from './InputField'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
-import { useAuth } from '../hooks/useAuth'
+import { auth } from '../config/firebase'
 import { useNavigate } from 'react-router'
 
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
   const { hasAccount } = useAppSlice()
-  const { auth } = useAuth()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 

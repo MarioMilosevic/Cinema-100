@@ -3,10 +3,10 @@ import movieLogo from '../assets/movie-icon-vector.jpg'
 import { RiShutDownLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
-import { useAuth } from '../hooks/useAuth'
+// import { auth } from '../hooks/useAuth'
+import { auth } from '../config/firebase'
 
 const SharedLayout = () => {
-  const { auth } = useAuth()
   const signOutUser = async () => {
     try {
       await signOut(auth)

@@ -89,3 +89,24 @@ export const buildGenreQuery = (
 ) => {
   return query(baseQuery, where('genre', 'array-contains', genre))
 }
+
+// export const fetchInitialMovies = async () => {
+//         const initialQuery = query(
+//           moviesCollection,
+//           orderBy(field, 'desc'),
+//           limit(pageSize),
+//         )
+//         // const moviesRef = await getDocs(collection(db, 'movies'))
+//     const data = await getDocs(initialQuery)
+//     return data
+//         // setMovies(
+//         //     data.docs.map((doc) => ({
+//         //         ...(doc.data() as SingleMovieType),
+//         //         id: doc.id,
+//         //     })),
+//         // )
+//         // setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
+//         // setActivePageIndex(0)
+//         // setFirstVisible(data.docs[0])
+//         // setLastVisible(data.docs[data.docs.length - 1])
+//       }

@@ -2,13 +2,13 @@ import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import { FaStar } from 'react-icons/fa'
-import { useAuth } from '../hooks/useAuth'
+// import { db } from '../hooks/useAuth'
+import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
 import { FaBookmark } from 'react-icons/fa'
 import ReactPlayer from 'react-player'
 const SingleMovie = () => {
   const { movieId } = useParams()
-  const { db } = useAuth()
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
@@ -34,7 +34,7 @@ const SingleMovie = () => {
     }
 
     getProduct()
-  }, [db, movieId])
+  }, [movieId])
 
   if (!singleMovie) return
   return (

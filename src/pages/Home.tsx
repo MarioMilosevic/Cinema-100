@@ -12,7 +12,12 @@ import {
   collection,
   where,
 } from 'firebase/firestore'
-import { useAuth } from '../hooks/useAuth'
+import {
+  moviesCollection,
+  trendingMoviesCollection,
+  db,
+  baseQuery,
+} from '../config/firebase'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
 import { SingleMovieType } from '../utils/types'
@@ -38,8 +43,6 @@ const Home = () => {
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
-  const { moviesCollection, trendingMoviesCollection, db, baseQuery } =
-    useAuth()
   const debouncedSearch = useDebounce(searchValue)
 
   useEffect(() => {
@@ -48,6 +51,50 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
+    const filterMovies = async (searchInput: string, selectedGenre: string) => {
+      let searchQuery: Query<DocumentData> = baseQuery
+
+      if (searchInput && selectedGenre !== 'All') {
+        searchQuery = query(
+          baseQuery,
+          where('title', '>=', searchInput),
+          where('title', '<=', searchInput + '\uf8ff'),
+          where('genre', 'array-contains', selectedGenre),
+        )
+      } else if (searchInput && selectedGenre === 'All') {
+        searchQuery = query(
+          baseQuery,
+          where('title', '>=', searchInput),
+          where('title', '<=', searchInput + '\uf8ff'),
+        )
+      } else if (!searchInput && selectedGenre !== 'All') {
+        searchQuery = query(
+          baseQuery,
+          where('genre', 'array-contains', selectedGenre),
+        )
+      } else {
+        fetchInitialMovies()
+        return
+      }
+
+      const data = await getDocs(searchQuery)
+      const filteredData = data.docs.map((doc) => ({
+        ...(doc.data() as SingleMovieType),
+        id: doc.id,
+      }))
+
+      setMovies(filteredData.slice(0, pageSize))
+      setFirstVisible(data.docs[0])
+
+      if (data.docs.length < pageSize) {
+        setLastVisible(data.docs[data.docs.length - 1])
+      } else {
+        setLastVisible(data.docs[pageSize - 1])
+      }
+      setPagesCount(calculatePageButtons(filteredData.length, pageSize))
+      setActivePageIndex(0)
+    }
+
     filterMovies(debouncedSearch, genre)
   }, [debouncedSearch, genre])
 
@@ -68,15 +115,18 @@ const Home = () => {
       orderBy(field, 'desc'),
       limit(pageSize),
     )
-    // napravim funkciju koja se zove fetchIniitalMovies
-    // drugu funkciju koja pinga firebase
-    // tu drugu funkciju pozovem unutar ove prve gore funckije
-    // druga funkcija returna sta treba iz firebasa
-    // u fetchInitial setujem stejt sa datom sto je returnana
     const moviesRef = await getDocs(collection(db, 'movies'))
     setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
     setActivePageIndex(0)
-    await fetchMovies(initialQuery)
+    const data = await getDocs(initialQuery)
+    setMovies(
+      data.docs.map((doc) => ({
+        ...(doc.data() as SingleMovieType),
+        id: doc.id,
+      })),
+    )
+    setFirstVisible(data.docs[0])
+    setLastVisible(data.docs[data.docs.length - 1])
   }
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {

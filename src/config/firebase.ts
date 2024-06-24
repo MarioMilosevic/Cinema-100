@@ -7,3 +7,15 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
+
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
+import { getFirestore, collection, orderBy, query } from 'firebase/firestore'
+import { field } from '../utils/constants'
+
+export const firebaseApp = initializeApp(firebaseConfig)
+export const auth = getAuth(firebaseApp)
+export const db = getFirestore(firebaseApp)
+export const moviesCollection = collection(db, 'movies')
+export const trendingMoviesCollection = collection(db, 'trending_movies')
+export const baseQuery = query(moviesCollection, orderBy(field, 'desc'))
