@@ -12,7 +12,6 @@ import {
   startAt,
   collection,
   where,
-  DocumentSnapshot,
   CollectionReference,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
@@ -73,6 +72,7 @@ const Home = () => {
     // u fetchInitial setujem stejt sa datom sto je returnana
     const moviesRef = await getDocs(collection(db, 'movies'))
     setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
+    setActivePageIndex(0)
     await fetchMovies(initialQuery)
   }
 
@@ -87,7 +87,6 @@ const Home = () => {
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
-
 
   const buildSearchQuery = (
     searchValue: string,
@@ -118,16 +117,27 @@ const Home = () => {
     field: string,
     pageSize: number,
     moviesCollection: CollectionReference<DocumentData>,
-    lastVisible?: DocumentSnapshot<DocumentData>,
+    visibleDoc?: DocumentData | null,
+    direction: 'next' | 'previous' = 'next',
   ) => {
-    if (lastVisible) {
-      return query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        startAfter(lastVisible),
-        limit(pageSize),
-      )
+    if (visibleDoc) {
+      if (direction === 'next') {
+        return query(
+          moviesCollection,
+          orderBy(field, 'desc'),
+          startAfter(visibleDoc),
+          limit(pageSize),
+        )
+      } else {
+        return query(
+          moviesCollection,
+          orderBy(field, 'desc'),
+          endBefore(visibleDoc),
+          limitToLast(pageSize),
+        )
+      }
     }
+
     const data = await getDocs(
       query(
         moviesCollection,
@@ -135,15 +145,22 @@ const Home = () => {
         limit(pageSize * (pageIndex + 1)),
       ),
     )
-    return query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      startAt(data.docs[pageIndex * pageSize]),
-      limit(pageSize),
-    )
+
+    if (direction === 'next') {
+      return query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        startAt(data.docs[pageIndex * pageSize]),
+        limit(pageSize),
+      )
+    } else {
+      return query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limitToLast(pageSize),
+      )
+    }
   }
-
-
 
   const fetchAndSetMovies = async (
     queryRef: Query<DocumentData>,
@@ -159,7 +176,6 @@ const Home = () => {
     setPagesCount(calculatePageButtons(data.size, pageSize))
     setActivePageIndex(pageIndex)
   }
-
 
   const goToPage = async (pageIndex: number) => {
     let queryRef: Query<DocumentData>
@@ -185,24 +201,41 @@ const Home = () => {
 
   const previousPage = async () => {
     if (activePageIndex === 0) return
-    let queryRef: Query<DocumentData>
-    // queryRef = buildSearchQuery(searchValue, genre, baseQuery)
-    if (searchValue) {
-      queryRef = buildSearchQuery(searchValue, genre, baseQuery)
-        .endBefore(firstVisible)
-        .limitToLast(pageSize)
-    } else if (genre !== 'All') {
-      queryRef = buildGenreQuery(genre, baseQuery)
-        .endBefore(firstVisible)
-        .limitToLast(pageSize)
-    }
-  }
 
- 
+    let queryRef: Query<DocumentData>
+
+    if (searchValue) {
+      queryRef = query(
+        buildSearchQuery(searchValue, genre, baseQuery),
+        endBefore(firstVisible),
+        limitToLast(pageSize),
+      )
+    } else if (genre !== 'All') {
+      queryRef = query(
+        buildGenreQuery(genre, baseQuery),
+        endBefore(firstVisible),
+        limitToLast(pageSize),
+      )
+    } else {
+      queryRef = await buildPaginationQuery(
+        activePageIndex - 1,
+        field,
+        pageSize,
+        moviesCollection,
+        firstVisible,
+        'previous',
+      )
+    }
+
+    await fetchMovies(queryRef)
+    setActivePageIndex((prev) => prev - 1)
+  }
 
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
+
     let queryRef: Query<DocumentData>
+
     if (searchValue) {
       queryRef = query(
         buildSearchQuery(searchValue, genre, baseQuery),
@@ -222,6 +255,7 @@ const Home = () => {
         pageSize,
         moviesCollection,
         lastVisible,
+        'next',
       )
     }
 
@@ -282,7 +316,6 @@ const Home = () => {
     } else {
       setLastVisible(data.docs[pageSize - 1])
     }
-
     setPagesCount(calculatePageButtons(filteredData.length, pageSize))
     setActivePageIndex(0)
   }
