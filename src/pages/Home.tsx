@@ -9,10 +9,8 @@ import {
   limitToLast,
   Query,
   DocumentData,
-  startAt,
   collection,
   where,
-  CollectionReference,
 } from 'firebase/firestore'
 import { useAuth } from '../hooks/useAuth'
 import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
@@ -24,6 +22,11 @@ import { allGenres, pageSize, field } from '../utils/constants'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
+import {
+  buildPaginationQuery,
+  buildGenreQuery,
+  buildSearchQuery,
+} from '../utils/api'
 import { useDebounce } from '../hooks/useDebounce'
 
 const Home = () => {
@@ -86,80 +89,6 @@ const Home = () => {
     )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
-  }
-
-  const buildSearchQuery = (
-    searchValue: string,
-    genre: string,
-    baseQuery: Query<DocumentData>,
-  ) => {
-    if (genre !== 'All') {
-      return query(
-        baseQuery,
-        where('title', '>=', searchValue),
-        where('title', '<=', searchValue + '\uf8ff'),
-        where('genre', 'array-contains', genre),
-      )
-    }
-    return query(
-      baseQuery,
-      where('title', '>=', searchValue),
-      where('title', '<=', searchValue + '\uf8ff'),
-    )
-  }
-
-  const buildGenreQuery = (genre: string, baseQuery: Query<DocumentData>) => {
-    return query(baseQuery, where('genre', 'array-contains', genre))
-  }
-
-  const buildPaginationQuery = async (
-    pageIndex: number,
-    field: string,
-    pageSize: number,
-    moviesCollection: CollectionReference<DocumentData>,
-    visibleDoc?: DocumentData | null,
-    direction: 'next' | 'previous' = 'next',
-  ) => {
-    if (visibleDoc) {
-      if (direction === 'next') {
-        return query(
-          moviesCollection,
-          orderBy(field, 'desc'),
-          startAfter(visibleDoc),
-          limit(pageSize),
-        )
-      } else {
-        return query(
-          moviesCollection,
-          orderBy(field, 'desc'),
-          endBefore(visibleDoc),
-          limitToLast(pageSize),
-        )
-      }
-    }
-
-    const data = await getDocs(
-      query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        limit(pageSize * (pageIndex + 1)),
-      ),
-    )
-
-    if (direction === 'next') {
-      return query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        startAt(data.docs[pageIndex * pageSize]),
-        limit(pageSize),
-      )
-    } else {
-      return query(
-        moviesCollection,
-        orderBy(field, 'desc'),
-        limitToLast(pageSize),
-      )
-    }
   }
 
   const fetchAndSetMovies = async (
@@ -264,7 +193,6 @@ const Home = () => {
   }
 
   const searchMovies = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // include debounce
     const searchInput = e.target.value.toLowerCase()
     setSearchValue(searchInput)
     filterMovies(debouncedSearch, genre)
