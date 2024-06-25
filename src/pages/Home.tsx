@@ -24,15 +24,16 @@ import { SingleMovieType } from '../utils/types'
 import { calculatePageButtons } from '../utils/helperFunctions'
 import { SlMagnifier } from 'react-icons/sl'
 import { allGenres, pageSize, field } from '../utils/constants'
-import MovieCard from '../components/MovieCard'
-import PageButton from '../components/PageButton'
-import Slider from '../components/Slider'
 import {
   buildPaginationQuery,
   buildGenreQuery,
   buildSearchQuery,
 } from '../utils/api'
 import { useDebounce } from '../hooks/useDebounce'
+import MovieCard from '../components/MovieCard'
+import PageButton from '../components/PageButton'
+import Slider from '../components/Slider'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -46,7 +47,6 @@ const Home = () => {
   const debouncedSearch = useDebounce(searchValue)
 
   useEffect(() => {
-    fetchInitialMovies()
     fetchTrendingMovies()
   }, [])
 
@@ -299,67 +299,73 @@ const Home = () => {
   }
 
   return (
-    <div className="max-w-[1300px] mx-auto pt-20 pb-4">
-      <Slider trendingMovies={trendingMovies} />
-      <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
-        <div className="relative w-[250px]">
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
-            onChange={searchMovies}
-          />
-          <SlMagnifier
-            className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
-            color="black"
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <select
-            name="category"
-            id="category"
-            className="text-black rounded-full px-2"
-            value={genre}
-            onChange={searchGenre}
-          >
-            {allGenres.map((genre) => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
+    <div className="max-w-[1300px] mx-auto pt-20 pb-4 min-h-screen">
+      {movies.length === 0 ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <Slider trendingMovies={trendingMovies} />
+          <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
+            <div className="relative w-[250px]">
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
+                onChange={searchMovies}
+              />
+              <SlMagnifier
+                className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
+                color="black"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <select
+                name="category"
+                id="category"
+                className="text-black rounded-full px-2"
+                value={genre}
+                onChange={searchGenre}
+              >
+                {allGenres.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+              <FaBookmark size={25} className="cursor-pointer" />
+              <FaHouse size={25} className="cursor-pointer" />
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-8 py-4">
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} {...movie} />
             ))}
-          </select>
-          <FaBookmark size={25} className="cursor-pointer" />
-          <FaHouse size={25} className="cursor-pointer" />
-        </div>
-      </div>
-      <div className="grid grid-cols-4 gap-8 py-4">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} {...movie} />
-        ))}
-      </div>
-      <div className="py-8 flex justify-center items-center gap-2">
-        <button
-          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-          onClick={previousPage}
-        >
-          <FaArrowLeft />
-        </button>
-        {pagesCount.map((el, index) => (
-          <PageButton
-            key={index}
-            clickHandler={() => goToPage(index)}
-            isActive={activePageIndex === index ? 'true' : 'false'}
-          >
-            {el + 1}
-          </PageButton>
-        ))}
-        <button
-          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-          onClick={nextPage}
-        >
-          <FaArrowRight />
-        </button>
-      </div>
+          </div>
+          <div className="py-8 flex justify-center items-center gap-2">
+            <button
+              className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+              onClick={previousPage}
+            >
+              <FaArrowLeft />
+            </button>
+            {pagesCount.map((el, index) => (
+              <PageButton
+                key={index}
+                clickHandler={() => goToPage(index)}
+                isActive={activePageIndex === index ? 'true' : 'false'}
+              >
+                {el + 1}
+              </PageButton>
+            ))}
+            <button
+              className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+              onClick={nextPage}
+            >
+              <FaArrowRight />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
