@@ -1,7 +1,6 @@
 import MovieCard from './MovieCard'
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState } from 'react'
-// import { SingleMovieType } from '../utils/types'
 
 
 const Slider = ({trendingMovies}) => {
@@ -28,7 +27,7 @@ const Slider = ({trendingMovies}) => {
   const dots = [...Array(totalSlides).keys()]
 
   return (
-    <div className="w-full pt-12 pb-20 flex flex-col gap-4 relative">
+    <div className="w-full py-16 flex flex-col gap-4 relative">
       <div className="w-[90%] mx-auto flex items-center justify-between">
         <h2 className='text-xl font-semibold'>Currently Trending</h2>
         <div className="flex gap-1 items-center">

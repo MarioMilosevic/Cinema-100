@@ -5,6 +5,13 @@ export const initialUserState = {
   password: '',
 }
 
+export const initialNewUserState = {
+  email: '',
+  password: '',
+    name: '',
+  lastName: '',
+}
+
 export const pageSize = 12
 export const field = 'rating'
 

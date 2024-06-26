@@ -299,7 +299,7 @@ const Home = () => {
   }
 
   return (
-    <div className="max-w-[1300px] mx-auto pt-20 pb-4 min-h-screen">
+    <div className="max-w-[1300px] mx-auto  min-h-screen">
       {movies.length === 0 ? (
         <LoadingSpinner />
       ) : (

@@ -4,8 +4,13 @@ import { UseFormRegisterReturn } from 'react-hook-form'
 export type UserType = {
   email: string
   password: string
-  name?: string
-  lastName?: string
+}
+
+export type NewUserType = {
+  email: string
+  password: string
+  name: string
+  lastName: string
 }
 
 export type InputFieldProps = {

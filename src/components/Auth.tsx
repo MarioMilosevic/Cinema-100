@@ -1,16 +1,18 @@
-import { useState } from 'react'
 import movieLogo from '../assets/movie-icon-vector.jpg'
-import { UserType } from '../utils/types'
-import { initialUserState } from '../utils/constants'
+import { useState } from 'react'
+import { UserType, NewUserType } from '../utils/types'
+import { initialUserState, initialNewUserState } from '../utils/constants'
 import { authenticationSchema, UserFormFormValues } from '../utils/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-
+import { collection, addDoc } from 'firebase/firestore'
+import { db } from '../config/firebase'
 import {
   createUserWithEmailAndPassword,
   signInAnonymously,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
+import { where, query, getDocs } from 'firebase/firestore'
 import InputField from './InputField'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { toggleHasAccount } from '../redux/features/appSlice'
@@ -20,14 +22,13 @@ import { useNavigate } from 'react-router'
 
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
+  const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState)
   const { hasAccount } = useAppSlice()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const form = useForm<UserFormFormValues>({
     defaultValues: {
-      name: user.name,
-      lastName: user.lastName,
       email: user.email,
       password: user.password,
     },
@@ -40,24 +41,46 @@ const Auth = () => {
     formState: { errors },
   } = form
 
-  const createNewUser = async () => {
-    if (user.email && user.password) {
-      try {
-        await createUserWithEmailAndPassword(auth, user.email, user.password)
-        navigate('/home')
-      } catch (error) {
-        console.error('Error', error)
+  const createNewUser = async (data: UserFormFormValues) => {
+    try {
+      const newUser = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password,
+      )
+      console.log(newUser)
+
+      // Check if user already exists in Firestore
+      const userQuery = query(
+        collection(db, 'users'),
+        where('email', '==', newUser.user.email),
+      )
+      const querySnapshot = await getDocs(userQuery)
+
+      if (querySnapshot.empty) {
+        // Add user document to Firestore
+        await addDoc(collection(db, 'users'), {
+          name: data.name,
+          lastName: data.lastName,
+          email: data.email,
+          bookmarkedMovies: [],
+          likedMovies: [],
+        })
       }
-      setUser(initialUserState)
+
+      navigate('/home')
+    } catch (error) {
+      console.error('Error', error)
     }
+    setUser(initialUserState)
   }
 
-  const signInUser = async () => {
+  const signInUser = async (data: UserFormFormValues) => {
     try {
       const existingUser = await signInWithEmailAndPassword(
         auth,
-        user.email,
-        user.password,
+        data.email,
+        data.password,
       )
       if (existingUser) navigate('/home')
     } catch (error) {
@@ -74,9 +97,13 @@ const Auth = () => {
     }
   }
 
-  const onSubmit = () => (hasAccount ? signInUser() : createNewUser())
-
-  
+  const onSubmit = (data: UserFormFormValues) => {
+    if (hasAccount) {
+      signInUser(data)
+    } else {
+      createNewUser(data)
+    }
+  }
 
   return (
     <div className="mt-16 w-[400px] flex flex-col mx-auto items-center gap-8">
@@ -126,7 +153,7 @@ const Auth = () => {
           <InputField
             type="text"
             placeholder="Email"
-            value={hasAccount ? user.email : user.email}
+            value={user.email}
             changeHandler={(e) =>
               setUser((prev) => ({
                 ...prev,
@@ -145,7 +172,7 @@ const Auth = () => {
           <InputField
             type="password"
             placeholder="Password"
-            value={hasAccount ? user.password : user.password}
+            value={user.password}
             changeHandler={(e) =>
               setUser((prev) => ({
                 ...prev,
@@ -161,10 +188,7 @@ const Auth = () => {
               }),
             }}
           />
-          <button
-            className="bg-red-500 rounded-lg p-2"
-            onClick={hasAccount ? signInUser : createNewUser}
-          >
+          <button className="bg-red-500 rounded-lg p-2" type="submit">
             {hasAccount ? 'Log In' : 'Sign Up'}
           </button>
         </form>
@@ -200,8 +224,87 @@ const Auth = () => {
           ))}
         </div>
       )}
+      <button className="bg-red-500 rounded-full p-6">
+        Add users collection to firebase
+      </button>
     </div>
   )
 }
 
 export default Auth
+
+// {!hasAccount && (
+//   <>
+//     <InputField
+//       type="text"
+//       placeholder="Name"
+//       value={user.name}
+//       changeHandler={(e) =>
+//         setUser((prev) => ({ ...prev, name: e.target.value }))
+//       }
+//       zod={{
+//         ...register('name', {
+//           required: {
+//             value: true,
+//             message: 'Name is required',
+//           },
+//         }),
+//       }}
+//     />
+//     <InputField
+//       type="text"
+//       placeholder="Last Name"
+//       value={user.lastName}
+//       changeHandler={(e) =>
+//         setUser((prev) => ({ ...prev, lastName: e.target.value }))
+//       }
+//       zod={{
+//         ...register('lastName', {
+//           required: {
+//             value: true,
+//             message: 'Last Name is required',
+//           },
+//         }),
+//       }}
+//     />
+//   </>
+// )}
+// {/*  */}
+// <InputField
+//   type="text"
+//   placeholder="Email"
+//   value={user.email}
+//   changeHandler={(e) =>
+//     setUser((prev) => ({
+//       ...prev,
+//       email: e.target.value,
+//     }))
+//   }
+//   zod={{
+//     ...register('email', {
+//       required: {
+//         value: true,
+//         message: 'Email is required',
+//       },
+//     }),
+//   }}
+// />
+// <InputField
+//   type="password"
+//   placeholder="Password"
+//   value={user.password}
+//   changeHandler={(e) =>
+//     setUser((prev) => ({
+//       ...prev,
+//       password: e.target.value,
+//     }))
+//   }
+//   zod={{
+//     ...register('password', {
+//       required: {
+//         value: true,
+//         message: 'Password is required',
+//       },
+//     }),
+//   }}
+// />
