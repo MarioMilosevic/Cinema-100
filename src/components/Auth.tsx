@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { UserType, NewUserType } from '../utils/types'
 import { initialUserState, initialNewUserState } from '../utils/constants'
 import { authenticationSchema, UserFormFormValues } from '../utils/zod'
-// import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
@@ -13,7 +13,6 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { where, query, getDocs } from 'firebase/firestore'
-import InputField from './InputField'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
@@ -34,7 +33,7 @@ const Auth = () => {
       email: user.email,
       password: user.password,
     },
-    // resolver: zodResolver(authenticationSchema),
+    resolver: zodResolver(authenticationSchema),
   })
 
   const {
@@ -61,19 +60,22 @@ const Auth = () => {
 
       if (querySnapshot.empty) {
         // Add user document to Firestore
+        console.log('ne postoji')
         await addDoc(collection(db, 'users'), {
           name: data.name,
           lastName: data.lastName,
           email: data.email,
+          password: data.password,
           bookmarkedMovies: [],
         })
+      } else {
+        console.log('vec postoji')
       }
 
-      navigate('/home')
+      // navigate('/home')
     } catch (error) {
       console.error('Error', error)
     }
-    setUser(initialUserState)
   }
 
   const signInUser = async (data: UserFormFormValues) => {
@@ -116,7 +118,15 @@ const Auth = () => {
       <div className="bg-gray-800 w-[400px] mx-auto p-10 flex flex-col text-sm gap-8 rounded-lg">
         <h2 className="text-2xl">{hasAccount ? 'Log In' : 'Sign Up'}</h2>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          {hasAccount ? <LogIn /> : <SignUp />}
+          {hasAccount ? (
+            <LogIn user={user} setUser={setUser} register={register} />
+          ) : (
+            <SignUp
+              newUser={newUser}
+              setNewUser={setNewUser}
+              register={register}
+            />
+          )}
           <button className="bg-red-500 rounded-lg p-2" type="submit">
             {hasAccount ? 'Log In' : 'Sign Up'}
           </button>

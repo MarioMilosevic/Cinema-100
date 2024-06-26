@@ -1,9 +1,5 @@
-import { initialUserState } from '../utils/constants'
-import { UserType } from '../utils/types'
 import InputField from './InputField'
-import { useState } from 'react'
-const LogIn = () => {
-  const [user, setUser] = useState<UserType>(initialUserState)
+const LogIn = ({ user, setUser, register }) => {
   return (
     <>
       <InputField
@@ -16,14 +12,14 @@ const LogIn = () => {
             email: e.target.value,
           }))
         }
-        // zod={{
-        //     ...register('email', {
-        //         required: {
-        //             value: true,
-        //             message: 'Email is required',
-        //         },
-        //     }),
-        // }}
+        zod={{
+          ...register('email', {
+            required: {
+              value: true,
+              message: 'Email is required',
+            },
+          }),
+        }}
       />
       <InputField
         type="password"
@@ -35,14 +31,14 @@ const LogIn = () => {
             password: e.target.value,
           }))
         }
-        // zod={{
-        //     ...register('password', {
-        //         required: {
-        //             value: true,
-        //             message: 'Password is required',
-        //         },
-        //     }),
-        // }}
+        zod={{
+          ...register('password', {
+            required: {
+              value: true,
+              message: 'Password is required',
+            },
+          }),
+        }}
       />
     </>
   )

@@ -4,16 +4,16 @@ const InputField = ({
   placeholder,
   changeHandler,
   value,
-  // zod,
+  zod,
 }: InputFieldProps) => {
-  // const { onChange: zodOnChange, ...restZodProps } = zod
+  const { onChange: zodOnChange, ...restZodProps } = zod
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   changeHandler(e)
-  //   if (zodOnChange) {
-  //     zodOnChange(e)
-  //   }
-  // }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeHandler(e)
+    if (zodOnChange) {
+      zodOnChange(e)
+    }
+  }
 
   return (
     <input
@@ -21,8 +21,8 @@ const InputField = ({
       placeholder={placeholder}
       value={value}
       className="p-2 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
-      onChange={changeHandler}
-      // {...restZodProps}
+      onChange={handleChange}
+      {...restZodProps}
     />
   )
 }
