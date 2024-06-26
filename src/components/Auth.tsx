@@ -19,6 +19,8 @@ import { toggleHasAccount } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { auth } from '../config/firebase'
 import { useNavigate } from 'react-router'
+import LogIn from './LogIn'
+import SignUp from './SignUp'
 
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
@@ -114,83 +116,7 @@ const Auth = () => {
       <div className="bg-gray-800 w-[400px] mx-auto p-10 flex flex-col text-sm gap-8 rounded-lg">
         <h2 className="text-2xl">{hasAccount ? 'Log In' : 'Sign Up'}</h2>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          {/*  */}
-          {!hasAccount && (
-            <>
-              <InputField
-                type="text"
-                placeholder="Name"
-                value={user.name}
-                changeHandler={(e) =>
-                  setUser((prev) => ({ ...prev, name: e.target.value }))
-                }
-                // zod={{
-                //   ...register('name', {
-                //     required: {
-                //       value: true,
-                //       message: 'Name is required',
-                //     },
-                //   }),
-                // }}
-              />
-              <InputField
-                type="text"
-                placeholder="Last Name"
-                value={user.lastName}
-                changeHandler={(e) =>
-                  setUser((prev) => ({ ...prev, lastName: e.target.value }))
-                }
-                // zod={{
-                //   ...register('lastName', {
-                //     required: {
-                //       value: true,
-                //       message: 'Last Name is required',
-                //     },
-                //   }),
-                // }}
-              />
-            </>
-          )}
-          {/*  */}
-          <InputField
-            type="text"
-            placeholder="Email"
-            value={user.email}
-            changeHandler={(e) =>
-              setUser((prev) => ({
-                ...prev,
-                email: e.target.value,
-              }))
-            }
-            // zod={{
-            //   ...register('email', {
-            //     required: {
-            //       value: true,
-            //       message: 'Email is required',
-            //     },
-            //   }),
-            // }}
-          />
-          <InputField
-            type="password"
-            placeholder="Password"
-            value={user.password}
-            changeHandler={(e) =>
-              setUser((prev) => ({
-                ...prev,
-                password: e.target.value,
-              }))
-            }
-            // zod={{
-            //   ...register('password', {
-            //     required: {
-            //       value: true,
-            //       message: 'Password is required',
-            //     },
-            //   }),
-            // }}
-          />
-          {/*  */}
+          {hasAccount ? <LogIn /> : <SignUp />}
           <button className="bg-red-500 rounded-lg p-2" type="submit">
             {hasAccount ? 'Log In' : 'Sign Up'}
           </button>
