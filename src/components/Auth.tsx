@@ -14,7 +14,7 @@ import {
 } from 'firebase/auth'
 import { where, query, getDocs } from 'firebase/firestore'
 import { useAppSlice } from '../hooks/useAppSlice'
-import { toggleHasAccount } from '../redux/features/appSlice'
+import { toggleHasAccount, setGlobalUser } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { auth } from '../config/firebase'
 import { useNavigate } from 'react-router'
@@ -24,7 +24,7 @@ import SignUp from './SignUp'
 const Auth = () => {
   const [user, setUser] = useState<UserType>(initialUserState)
   const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState)
-  const { hasAccount } = useAppSlice()
+  const { hasAccount, globalUser } = useAppSlice()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -57,18 +57,22 @@ const Auth = () => {
         where('email', '==', newUser.user.email),
       )
       const querySnapshot = await getDocs(userQuery)
-
+      console.log(querySnapshot)
       if (querySnapshot.empty) {
-        // Add user document to Firestore
         console.log('ne postoji')
-        await addDoc(collection(db, 'users'), {
+        const newUser = {
           name: data.name,
           lastName: data.lastName,
           email: data.email,
           password: data.password,
           bookmarkedMovies: [],
-        })
+        }
+        await addDoc(collection(db, 'users'), newUser)
+        dispatch(setGlobalUser(newUser))
+        navigate('/home')
       } else {
+        setNewUser(initialNewUserState)
+        alert('User already exists')
         console.log('vec postoji')
       }
 
@@ -85,7 +89,11 @@ const Auth = () => {
         data.email,
         data.password,
       )
-      if (existingUser) navigate('/home')
+      console.log(existingUser)
+      if (existingUser) {
+        navigate('/home')
+        dispatch(setGlobalUser(existingUser))
+      }
     } catch (error) {
       console.error(error)
     }
@@ -168,3 +176,13 @@ const Auth = () => {
 }
 
 export default Auth
+
+/*
+na sign Up napravim usera i ubacim ga u firebase
+AKO TO MOZE DA RADI potrazim ga u firebase dispatchujem da je on global user
+u shared layout stavim welcome back "user.name"
+na movieCard na klik bookmark ikone nadjem id filma, nadjem film, pusham ga u user.bookmarkedMovies,
+na klik bukmarked pored ALL renderujem movies iz user.bookmarkedMovies
+na klik kucice renderujem ove filmove pozovem neku od onih funkcija iz HOME
+
+*/

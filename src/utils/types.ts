@@ -11,6 +11,7 @@ export type NewUserType = {
   password: string
   name: string
   lastName: string
+  bookmarkedMovies: string[]
 }
 
 export type InputFieldProps = {
@@ -39,6 +40,7 @@ export type SingleMovieType = {
 
 export type AppState = {
   hasAccount: boolean
+  globalUser: NewUserType
 }
 
 export type PageButtonProps = {

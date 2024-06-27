@@ -30,6 +30,7 @@ import {
   buildSearchQuery,
 } from '../utils/api'
 import { useDebounce } from '../hooks/useDebounce'
+import { useAppSlice } from '../hooks/useAppSlice'
 import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
@@ -45,9 +46,10 @@ const Home = () => {
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
   const debouncedSearch = useDebounce(searchValue)
-
+  const { globalUser } = useAppSlice()
   useEffect(() => {
     fetchTrendingMovies()
+    console.log(globalUser)
   }, [])
 
   useEffect(() => {
