@@ -11,7 +11,7 @@ export type NewUserType = {
   password: string
   name: string
   lastName: string
-  bookmarkedMovies: string[]
+  bookmarkedMovies: SingleMovieType[]
 }
 
 export type InputFieldProps = {

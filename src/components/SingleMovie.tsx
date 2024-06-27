@@ -1,6 +1,5 @@
 import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
-import { doc, getDoc } from 'firebase/firestore'
 import { FaStar } from 'react-icons/fa'
 import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
@@ -13,23 +12,6 @@ const SingleMovie = () => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
-    // const getProduct = async (idMovie: string | undefined) => {
-    //   if (!idMovie) return
-    //   try {
-    //     const docRef = doc(db, 'movies', idMovie)
-    //     let docSnap = await getDoc(docRef)
-    //     if (!docSnap.exists()) {
-    //       const trendingDocRef = doc(db, 'trending_movies', idMovie)
-    //       docSnap = await getDoc(trendingDocRef)
-    //     }
-    //     if (docSnap.exists()) {
-    //       setSingleMovie(docSnap.data() as SingleMovieType)
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching document:', error)
-    //   }
-    // }
-    // getProduct(movieId)
     const fetchMovie = async () => {
       if (!movieId) return
       const movie = await getProduct(movieId, db)

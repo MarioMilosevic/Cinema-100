@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppState, NewUserType } from '../../utils/types'
+import { AppState, NewUserType, SingleMovieType } from '../../utils/types'
 import { initialNewUserState } from '../../utils/constants'
 
 const initialState: AppState = {
@@ -20,12 +20,23 @@ export const appSlice = createSlice({
     logOutUser: (state) => {
       state.globalUser = initialNewUserState
     },
-    addMovies: (state, action: PayloadAction<string>) => {
+    addMovie: (state, action: PayloadAction<SingleMovieType>) => {
       state.globalUser.bookmarkedMovies.push(action.payload)
+    },
+    removeMovie: (state, action: PayloadAction<string>) => {
+      state.globalUser.bookmarkedMovies =
+        state.globalUser.bookmarkedMovies.filter(
+          (movie) => movie.id !== action.payload,
+        )
     },
   },
 })
 
-export const { toggleHasAccount, setGlobalUser, logOutUser, addMovies } =
-  appSlice.actions
+export const {
+  toggleHasAccount,
+  setGlobalUser,
+  logOutUser,
+  addMovie,
+  removeMovie,
+} = appSlice.actions
 export default appSlice.reducer

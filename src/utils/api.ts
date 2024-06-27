@@ -13,6 +13,7 @@ import {
   where,
   doc,
   getDoc,
+  Firestore,
 } from 'firebase/firestore'
 
 export const buildPaginationQuery = async (
@@ -92,7 +93,7 @@ export const buildGenreQuery = (
   return query(baseQuery, where('genre', 'array-contains', genre))
 }
 
-export const getProduct = async (idMovie: string | undefined, db) => {
+export const getProduct = async (idMovie: string | undefined, db:Firestore) => {
   if (!idMovie) return null
   try {
     const docRef = doc(db, 'movies', idMovie)
