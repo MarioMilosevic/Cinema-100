@@ -4,9 +4,10 @@ import { RiShutDownLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase'
-
+import { useAppSlice } from '../hooks/useAppSlice'
 
 const SharedLayout = () => {
+  const { globalUser } = useAppSlice()
   const signOutUser = async () => {
     try {
       await signOut(auth)
@@ -29,7 +30,12 @@ const SharedLayout = () => {
             </div>
           </Link>
           <div className="flex gap-12">
-            <span>Welcome back, Guest</span>
+            <p className="flex gap-1">
+              Welcome back,
+              <span className="capitalize">
+                {globalUser.name ? globalUser.name : 'Guest'}
+              </span>
+            </p>
             <div className="flex items-center gap-4">
               <span>Log Out</span>
               <Link to={'/'}>

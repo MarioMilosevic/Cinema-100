@@ -5,7 +5,7 @@ import { initialUserState, initialNewUserState } from '../utils/constants'
 import { authenticationSchema, UserFormFormValues } from '../utils/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import {
   createUserWithEmailAndPassword,
@@ -75,8 +75,6 @@ const Auth = () => {
         alert('User already exists')
         console.log('vec postoji')
       }
-
-      // navigate('/home')
     } catch (error) {
       console.error('Error', error)
     }
@@ -90,9 +88,19 @@ const Auth = () => {
         data.password,
       )
       console.log(existingUser)
+      const userQuery = query(
+        collection(db, 'users'),
+        where('email', '==', data.email),
+      )
+      const querySnapshot = await getDocs(userQuery)
+      const [user] = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      console.log(user)
       if (existingUser) {
         navigate('/home')
-        dispatch(setGlobalUser(existingUser))
+        dispatch(setGlobalUser(user))
       }
     } catch (error) {
       console.error(error)
