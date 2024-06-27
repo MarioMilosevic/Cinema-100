@@ -44,6 +44,7 @@ const Home = () => {
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
+  // const [bookmarkedMovies, setBookmarkedMovies] = useState<boolean>(false)
   const debouncedSearch = useDebounce(searchValue)
   useEffect(() => {
     fetchTrendingMovies()
@@ -298,7 +299,7 @@ const Home = () => {
   }
 
   return (
-    <div className="max-w-[1300px] mx-auto  min-h-screen">
+    <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">
       {movies.length === 0 ? (
         <LoadingSpinner />
       ) : (
@@ -332,7 +333,7 @@ const Home = () => {
                 ))}
               </select>
               <FaBookmark size={25} className="cursor-pointer" />
-              <FaHouse size={25} className="cursor-pointer" />
+              <FaHouse size={25} className="cursor-pointer" color="red" />
             </div>
           </div>
           <div className="grid grid-cols-4 gap-8 py-4">

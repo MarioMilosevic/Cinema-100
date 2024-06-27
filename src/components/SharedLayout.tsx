@@ -5,12 +5,16 @@ import { Link } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase'
 import { useAppSlice } from '../hooks/useAppSlice'
+import { useDispatch } from 'react-redux'
+import { logOutUser } from '../redux/features/appSlice'
 
 const SharedLayout = () => {
   const { globalUser } = useAppSlice()
+  const dispatch = useDispatch()
   const signOutUser = async () => {
     try {
       await signOut(auth)
+      dispatch(logOutUser())
     } catch (error) {
       console.error('Error signing out ', error)
     }

@@ -2,7 +2,7 @@ import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import { FaStar } from 'react-icons/fa'
-// import { db } from '../hooks/useAuth'
+import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
 import { FaBookmark } from 'react-icons/fa'
@@ -13,27 +13,29 @@ const SingleMovie = () => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
-    const getProduct = async () => {
-      if (!movieId) return 
-
-      try {
-        const docRef = doc(db, 'movies', movieId)
-        let docSnap = await getDoc(docRef)
-
-        if (!docSnap.exists()) {
-          const trendingDocRef = doc(db, 'trending_movies', movieId)
-          docSnap = await getDoc(trendingDocRef)
-        }
-
-        if (docSnap.exists()) {
-          setSingleMovie(docSnap.data() as SingleMovieType)
-        } 
-      } catch (error) {
-        console.error('Error fetching document:', error)
-      }
+    // const getProduct = async (idMovie: string | undefined) => {
+    //   if (!idMovie) return
+    //   try {
+    //     const docRef = doc(db, 'movies', idMovie)
+    //     let docSnap = await getDoc(docRef)
+    //     if (!docSnap.exists()) {
+    //       const trendingDocRef = doc(db, 'trending_movies', idMovie)
+    //       docSnap = await getDoc(trendingDocRef)
+    //     }
+    //     if (docSnap.exists()) {
+    //       setSingleMovie(docSnap.data() as SingleMovieType)
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching document:', error)
+    //   }
+    // }
+    // getProduct(movieId)
+    const fetchMovie = async () => {
+      if (!movieId) return
+      const movie = await getProduct(movieId, db)
+      setSingleMovie(movie)
     }
-
-    getProduct()
+    fetchMovie()
   }, [movieId])
 
   if (!singleMovie) return
@@ -102,8 +104,8 @@ const SingleMovie = () => {
         <div className="border-b border-b-gray-100 pb-4">
           <h3>Writers</h3>
           <div className="flex gap-4">
-            {singleMovie.writers.map((writer) => {
-              return <span className="">{writer}</span>
+            {singleMovie.writers.map((writer, index) => {
+              return <span key={index}>{writer}</span>
             })}
           </div>
         </div>

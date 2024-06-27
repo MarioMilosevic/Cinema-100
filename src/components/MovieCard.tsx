@@ -2,6 +2,11 @@ import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { getProduct } from '../utils/api'
+import { db } from '../config/firebase'
+import { addMovies } from '../redux/features/appSlice'
+import { useDispatch } from 'react-redux'
+import { useAppSlice } from '../hooks/useAppSlice'
 const MovieCard = ({
   image,
   title,
@@ -12,11 +17,21 @@ const MovieCard = ({
 }: SingleMovieType) => {
   const navigate = useNavigate()
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
+  const dispatch = useDispatch()
+  const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
   const findMovie = async (id: string) => {
     navigate(`/home/${id}`)
   }
+
+  const addMovie = async (id: string, database) => {
+    const movie = await getProduct(id, database)
+    console.log(movie)
+    setIsBookmarked((prev) => !prev)
+    dispatch(addMovies(movie))
+  }
+  console.log(globalUser)
 
   return (
     <div className="max-w-[300px] flex flex-col">
@@ -29,7 +44,7 @@ const MovieCard = ({
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark
             className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
-            onClick={() => setIsBookmarked((prev) => !prev)}
+            onClick={() => addMovie(id, db)}
           />
           <div
             className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100"

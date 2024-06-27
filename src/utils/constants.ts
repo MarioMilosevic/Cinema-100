@@ -8,14 +8,13 @@ export const initialUserState = {
 export const initialNewUserState = {
   email: '',
   password: '',
-    name: '',
+  name: '',
   lastName: '',
+  bookmarkedMovies: [],
 }
 
 export const pageSize = 12
 export const field = 'rating'
-
-
 
 export const data: SingleMovieType[] = [
   {
@@ -2050,4 +2049,7 @@ export const data: SingleMovieType[] = [
   },
 ]
 
-export const allGenres = ["All", ...new Set(data.flatMap((movie) => movie.genre))]
+export const allGenres = [
+  'All',
+  ...new Set(data.flatMap((movie) => movie.genre)),
+]
