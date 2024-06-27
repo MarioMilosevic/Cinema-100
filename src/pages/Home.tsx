@@ -18,7 +18,7 @@ import {
   db,
   baseQuery,
 } from '../config/firebase'
-import { FaArrowLeft, FaArrowRight, FaBookmark } from 'react-icons/fa'
+import { FaBookmark } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
 import { SingleMovieType } from '../utils/types'
 import { calculatePageButtons } from '../utils/helperFunctions'
@@ -30,11 +30,11 @@ import {
   buildSearchQuery,
 } from '../utils/api'
 import { useDebounce } from '../hooks/useDebounce'
-import MovieCard from '../components/MovieCard'
-import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
 import LoadingSpinner from '../components/LoadingSpinner'
 import AllMovies from '../components/AllMovies'
+import BookmarkedMovies from '../components/BookmarkedMovies'
+import { useAppSlice } from '../hooks/useAppSlice'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -47,6 +47,7 @@ const Home = () => {
   const [genre, setGenre] = useState<string>('All')
   const [bookmarkedMovies, setBookmarkedMovies] = useState<boolean>(false)
   const debouncedSearch = useDebounce(searchValue)
+  const {globalUser} = useAppSlice()
 
   useEffect(() => {
     fetchTrendingMovies()
@@ -348,15 +349,21 @@ const Home = () => {
               />
             </div>
           </div>
-          <p className="border py-4 text-lg font-medium">Top 100</p>
-          <AllMovies
-            nextPage={nextPage}
-            previousPage={previousPage}
-            goToPage={goToPage}
-            activePageIndex={activePageIndex}
-            movies={movies}
-            pagesCount={pagesCount}
-          />
+          <p className="py-4 text-lg font-medium">
+            {bookmarkedMovies ? 'Your bookmarked movies' : 'Top 100'}
+          </p>
+          {bookmarkedMovies ? (
+            <BookmarkedMovies bookmarkedMovies={globalUser.bookmarkedMovies} />
+          ) : (
+            <AllMovies
+              nextPage={nextPage}
+              previousPage={previousPage}
+              goToPage={goToPage}
+              activePageIndex={activePageIndex}
+              movies={movies}
+              pagesCount={pagesCount}
+            />
+          )}
         </>
       )}
     </div>
