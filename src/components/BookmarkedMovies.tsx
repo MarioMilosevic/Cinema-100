@@ -1,17 +1,19 @@
-import { SingleMovieType } from '../utils/types'
 import MovieCard from './MovieCard'
+import { SingleMovieType } from '../utils/types'
 
-const BookmarkedMovies = ({ bookmarkedMovies }: SingleMovieType[]) => {
-  console.log(bookmarkedMovies)
+const BookmarkedMovies = ({
+  bookmarkedMovies,
+  updateMovie,
+}: SingleMovieType[]) => {
   return bookmarkedMovies.length > 0 ? (
     <div className="grid grid-cols-4 gap-8 py-4 ">
       {bookmarkedMovies.map((movie) => (
-        <MovieCard key={movie.id} {...movie} />
+        <MovieCard key={movie.id} {...movie} updateMovie={updateMovie} />
       ))}
     </div>
   ) : (
-    <div className="flex items-center justify-center">
-      <p>No bookmarked movies</p>
+    <div className="flex items-center justify-center min-h-[200px]">
+      <p className="text-lg font-medium">No bookmarked movies</p>
     </div>
   )
 }

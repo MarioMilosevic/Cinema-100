@@ -7,6 +7,7 @@ import { db } from '../config/firebase'
 import { addMovie, removeMovie } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { useAppSlice } from '../hooks/useAppSlice'
+import { arrayUnion, doc, updateDoc } from 'firebase/firestore'
 const MovieCard = ({
   image,
   title,
@@ -14,9 +15,12 @@ const MovieCard = ({
   rating,
   genre,
   id,
+  isBookmarked,
+  updateMovie,
 }: SingleMovieType) => {
+  console.log(id)
   const navigate = useNavigate()
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
+  const [bookmarked, setBookmarked] = useState<boolean>(isBookmarked)
   const dispatch = useDispatch()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
@@ -27,18 +31,27 @@ const MovieCard = ({
 
   const bookmarkHandler = async (id: string) => {
     const movie = await getProduct(id, db)
-    if (isBookmarked) {
-      console.log('jeste')
+    if (bookmarked) {
+      updateMovie(id, 'isBookmarked', false)
       dispatch(removeMovie(movie?.id))
     } else {
-      console.log('nije')
-      if (movie) {
-        dispatch(addMovie(movie as SingleMovieType))
-      }
+      updateMovie(id, 'isBookmarked', true)
+      dispatch(addMovie(movie as SingleMovieType))
     }
-    setIsBookmarked((prev) => !prev)
+    setBookmarked((prev) => !prev)
   }
-  console.log(globalUser)
+
+  const addBookmarkedMovie = async () => {
+    const userRef = doc(db, 'users', globalUser.id)
+    console.log(userRef)
+    try {
+      await updateDoc(userRef, {
+        bookmarkedMovies: arrayUnion(id),
+      })
+    } catch (error) {
+      console.error('Error updatin document: ', error)
+    }
+  }
 
   return (
     <div className="max-w-[300px] flex flex-col">
@@ -50,8 +63,9 @@ const MovieCard = ({
         />
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark
-            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
-            onClick={() => bookmarkHandler(id)}
+            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${bookmarked ? 'text-orange-500' : 'text-gray-700'}`}
+            onClick={addBookmarkedMovie}
+            // onClick={() => bookmarkHandler(id)}
           />
           <div
             className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100"

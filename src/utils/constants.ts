@@ -12,6 +12,14 @@ export const initialNewUserState = {
   lastName: '',
   bookmarkedMovies: [],
 }
+export const initialGlobalUserState = {
+  email: '',
+  password: '',
+  name: '',
+  lastName: '',
+  bookmarkedMovies: [],
+  id: '',
+}
 
 export const pageSize = 12
 export const field = 'rating'

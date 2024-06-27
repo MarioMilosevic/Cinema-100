@@ -8,13 +8,14 @@ const AllMovies = ({
   previousPage,
   goToPage,
   pagesCount,
-  activePageIndex,
+    activePageIndex,
+  updateMovie
 }: AllMoviesProps) => {
   return (
     <>
       <div className="grid grid-cols-4 gap-8 py-4">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} {...movie} />
+            <MovieCard key={movie.id} {...movie} updateMovie={updateMovie} />
         ))}
       </div>
       <div className="py-8 flex justify-center items-center gap-2">

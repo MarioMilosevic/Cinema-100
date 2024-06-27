@@ -14,6 +14,16 @@ export type NewUserType = {
   bookmarkedMovies: SingleMovieType[]
 }
 
+export type GlobalUserType = {
+  email: string
+  password: string
+  name: string
+  lastName: string
+  bookmarkedMovies: SingleMovieType[]
+  id:string
+}
+
+
 export type InputFieldProps = {
   type: string
   placeholder: string
@@ -36,11 +46,12 @@ export type SingleMovieType = {
   director: string[]
   writers: string[]
   imdbid: string
+  isBookmarked?: boolean;
 }
 
 export type AppState = {
   hasAccount: boolean
-  globalUser: NewUserType
+  globalUser: GlobalUserType
 }
 
 export type PageButtonProps = {
