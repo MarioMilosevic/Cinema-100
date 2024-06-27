@@ -15,7 +15,7 @@ const SingleMovie = () => {
     const fetchMovie = async () => {
       if (!movieId) return
       const movie = await getProduct(movieId, db)
-      setSingleMovie(movie)
+      setSingleMovie(movie as SingleMovieType)
     }
     fetchMovie()
   }, [movieId])

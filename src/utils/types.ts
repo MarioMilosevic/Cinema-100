@@ -53,3 +53,12 @@ export type PageButtonOptions = {
   true: string
   false: string
 }
+
+export type AllMoviesProps = {
+  movies: SingleMovieType[]
+  nextPage: () => Promise<void>
+  previousPage: () => Promise<void>
+  goToPage: (pageIndex: number) => Promise<void>
+  pagesCount: number[]
+  activePageIndex: number
+}

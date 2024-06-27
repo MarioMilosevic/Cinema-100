@@ -190,6 +190,7 @@ na sign Up napravim usera i ubacim ga u firebase
 AKO TO MOZE DA RADI potrazim ga u firebase dispatchujem da je on global user
 u shared layout stavim welcome back "user.name"
 na movieCard na klik bookmark ikone nadjem id filma, nadjem film, pusham ga u user.bookmarkedMovies,
+
 na klik bukmarked pored ALL renderujem movies iz user.bookmarkedMovies
 na klik kucice renderujem ove filmove pozovem neku od onih funkcija iz HOME
 

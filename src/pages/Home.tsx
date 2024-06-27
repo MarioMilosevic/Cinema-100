@@ -34,6 +34,7 @@ import MovieCard from '../components/MovieCard'
 import PageButton from '../components/PageButton'
 import Slider from '../components/Slider'
 import LoadingSpinner from '../components/LoadingSpinner'
+import AllMovies from '../components/AllMovies'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -44,8 +45,9 @@ const Home = () => {
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
-  // const [bookmarkedMovies, setBookmarkedMovies] = useState<boolean>(false)
+  const [bookmarkedMovies, setBookmarkedMovies] = useState<boolean>(false)
   const debouncedSearch = useDebounce(searchValue)
+
   useEffect(() => {
     fetchTrendingMovies()
   }, [])
@@ -332,38 +334,29 @@ const Home = () => {
                   </option>
                 ))}
               </select>
-              <FaBookmark size={25} className="cursor-pointer" />
-              <FaHouse size={25} className="cursor-pointer" color="red" />
+              <FaBookmark
+                size={25}
+                className="cursor-pointer transition-all duration-200"
+                color={bookmarkedMovies ? 'red' : 'white'}
+                onClick={() => setBookmarkedMovies(true)}
+              />
+              <FaHouse
+                size={25}
+                className="cursor-pointer transition-all duration-200"
+                color={bookmarkedMovies ? 'white' : 'red'}
+                onClick={() => setBookmarkedMovies(false)}
+              />
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-8 py-4">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} {...movie} />
-            ))}
-          </div>
-          <div className="py-8 flex justify-center items-center gap-2">
-            <button
-              className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-              onClick={previousPage}
-            >
-              <FaArrowLeft />
-            </button>
-            {pagesCount.map((el, index) => (
-              <PageButton
-                key={index}
-                clickHandler={() => goToPage(index)}
-                isActive={activePageIndex === index ? 'true' : 'false'}
-              >
-                {el + 1}
-              </PageButton>
-            ))}
-            <button
-              className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
-              onClick={nextPage}
-            >
-              <FaArrowRight />
-            </button>
-          </div>
+          <p className="border py-4 text-lg font-medium">Top 100</p>
+          <AllMovies
+            nextPage={nextPage}
+            previousPage={previousPage}
+            goToPage={goToPage}
+            activePageIndex={activePageIndex}
+            movies={movies}
+            pagesCount={pagesCount}
+          />
         </>
       )}
     </div>

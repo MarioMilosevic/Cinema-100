@@ -29,10 +29,12 @@ const MovieCard = ({
     const movie = await getProduct(id, db)
     if (isBookmarked) {
       console.log('jeste')
-      dispatch(removeMovie(movie.id))
+      dispatch(removeMovie(movie?.id))
     } else {
       console.log('nije')
-      dispatch(addMovie(movie))
+      if (movie) {
+        dispatch(addMovie(movie as SingleMovieType))
+      }
     }
     setIsBookmarked((prev) => !prev)
   }
