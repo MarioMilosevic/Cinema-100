@@ -26,7 +26,7 @@ export const appSlice = createSlice({
     removeMovie: (state, action: PayloadAction<string>) => {
       state.globalUser.bookmarkedMovies =
         state.globalUser.bookmarkedMovies.filter(
-          (movie) => movie.id !== action.payload,
+          (movie) => movie !== action.payload,
         )
     },
   },

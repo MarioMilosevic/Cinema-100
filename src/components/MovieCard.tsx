@@ -26,8 +26,6 @@ const MovieCard = ({
 
   useEffect(() => {
     try {
-      console.log('filmovi usera useeffect', globalUser.bookmarkedMovies)
-      // u redu ovo ispod
       const isBookmarked = globalUser.bookmarkedMovies.some(
         (movie) => movie === id,
       )
@@ -37,17 +35,11 @@ const MovieCard = ({
     }
   }, [globalUser.bookmarkedMovies, id])
 
-
   const findMovie = async (id: string) => {
     navigate(`/home/${id}`)
   }
 
   const bookmarkHandler = async (id: string) => {
-    console.log(
-      'filmovi usera kada se pozove funckija',
-      globalUser.bookmarkedMovies,
-    )
-
     try {
       if (!globalUser?.id || !db) {
         console.error('globalUser.id or db is not defined')
@@ -55,26 +47,21 @@ const MovieCard = ({
       }
 
       const userRef = doc(db, 'users', globalUser.id)
-      const movie = await getProduct(id, db)
-      console.log("pronadjeni film",movie, "id proslijedjen", id)
+      // const movie = await getProduct(id, db)
 
       if (bookmarked) {
-        console.log('ukloni')
         await updateDoc(userRef, {
           bookmarkedMovies: arrayRemove(id),
         })
-        dispatch(removeMovie(movie?.id))
+        dispatch(removeMovie(id))
         setBookmarked(false)
       } else {
-        console.log('dodaj')
         await updateDoc(userRef, {
           bookmarkedMovies: arrayUnion(id),
         })
         dispatch(addMovie(id))
         setBookmarked(true)
       }
-
-      // setBookmarked((prev) => !prev)
     } catch (error) {
       console.error('Error updating document: ', error)
     }
