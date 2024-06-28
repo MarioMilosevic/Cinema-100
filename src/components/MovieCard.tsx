@@ -8,6 +8,8 @@ import { addMovie, removeMovie } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { arrayUnion, doc, updateDoc, arrayRemove } from 'firebase/firestore'
+import { useEffect } from 'react'
+
 const MovieCard = ({
   image,
   title,
@@ -15,21 +17,37 @@ const MovieCard = ({
   rating,
   genre,
   id,
-  isBookmarked,
-  updateMovie,
 }: SingleMovieType) => {
   const navigate = useNavigate()
-  const [bookmarked, setBookmarked] = useState<boolean>(isBookmarked)
+  const [bookmarked, setBookmarked] = useState<boolean>(false)
   const dispatch = useDispatch()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
+  useEffect(() => {
+    try {
+      console.log('filmovi usera useeffect', globalUser.bookmarkedMovies)
+      // u redu ovo ispod
+      const isBookmarked = globalUser.bookmarkedMovies.some(
+        (movie) => movie === id,
+      )
+      setBookmarked(isBookmarked)
+    } catch (error) {
+      console.error('Error with checking', error)
+    }
+  }, [globalUser.bookmarkedMovies, id])
+
+
   const findMovie = async (id: string) => {
     navigate(`/home/${id}`)
   }
-  console.log(globalUser.id)
 
-  const addBookmarkedMovie = async (id: string) => {
+  const bookmarkHandler = async (id: string) => {
+    console.log(
+      'filmovi usera kada se pozove funckija',
+      globalUser.bookmarkedMovies,
+    )
+
     try {
       if (!globalUser?.id || !db) {
         console.error('globalUser.id or db is not defined')
@@ -38,22 +56,25 @@ const MovieCard = ({
 
       const userRef = doc(db, 'users', globalUser.id)
       const movie = await getProduct(id, db)
+      console.log("pronadjeni film",movie, "id proslijedjen", id)
 
       if (bookmarked) {
+        console.log('ukloni')
         await updateDoc(userRef, {
           bookmarkedMovies: arrayRemove(id),
         })
-        updateMovie(id, 'isBookmarked', false)
         dispatch(removeMovie(movie?.id))
+        setBookmarked(false)
       } else {
+        console.log('dodaj')
         await updateDoc(userRef, {
           bookmarkedMovies: arrayUnion(id),
         })
-        updateMovie(id, 'isBookmarked', true)
-        dispatch(addMovie(movie as SingleMovieType))
+        dispatch(addMovie(id))
+        setBookmarked(true)
       }
 
-      setBookmarked((prev) => !prev)
+      // setBookmarked((prev) => !prev)
     } catch (error) {
       console.error('Error updating document: ', error)
     }
@@ -70,8 +91,7 @@ const MovieCard = ({
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark
             className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${bookmarked ? 'text-orange-500' : 'text-gray-700'}`}
-            onClick={() => addBookmarkedMovie(id)}
-            // onClick={() => bookmarkHandler(id)}
+            onClick={() => bookmarkHandler(id)}
           />
           <div
             className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100"

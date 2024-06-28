@@ -85,7 +85,6 @@ const Home = () => {
       const filteredData = data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
         id: doc.id,
-        isBookmarked: false,
       }))
 
       setMovies(filteredData.slice(0, pageSize))
@@ -128,7 +127,6 @@ const Home = () => {
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
         id: doc.id,
-        isBookmarked: false,
       })),
     )
     setFirstVisible(data.docs[0])
@@ -141,7 +139,6 @@ const Home = () => {
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
         id: doc.id,
-        isBookmarked: false,
       })),
     )
     setFirstVisible(data.docs[0])
@@ -159,7 +156,6 @@ const Home = () => {
         .map((doc) => ({
           ...(doc.data() as SingleMovieType),
           id: doc.id,
-          isBookmarked: false,
         }))
         .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
     )
@@ -295,7 +291,6 @@ const Home = () => {
     const filteredData = data.docs.map((doc) => ({
       ...(doc.data() as SingleMovieType),
       id: doc.id,
-      isBookmarked: false,
     }))
 
     setMovies(filteredData.slice(0, pageSize))
@@ -308,18 +303,6 @@ const Home = () => {
     }
     setPagesCount(calculatePageButtons(filteredData.length, pageSize))
     setActivePageIndex(0)
-  }
-
-  const updateMovie = (
-    id: string,
-    key: keyof SingleMovieType,
-    value: string,
-  ) => {
-    setMovies((prev) =>
-      prev.map((movie) =>
-        movie.id === id ? { ...movie, [key]: value } : movie,
-      ),
-    )
   }
 
   return (
@@ -376,7 +359,6 @@ const Home = () => {
           {bookmarkedMovies ? (
             <BookmarkedMovies
               bookmarkedMovies={globalUser.bookmarkedMovies}
-              updateMovie={updateMovie}
             />
           ) : (
             <AllMovies
@@ -386,7 +368,6 @@ const Home = () => {
               activePageIndex={activePageIndex}
               movies={movies}
               pagesCount={pagesCount}
-              updateMovie={updateMovie}
             />
           )}
         </>

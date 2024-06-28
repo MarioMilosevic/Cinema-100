@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppState, GlobalUserType, SingleMovieType } from '../../utils/types'
-import {  initialGlobalUserState } from '../../utils/constants'
+import { initialGlobalUserState } from '../../utils/constants'
 
 const initialState: AppState = {
   hasAccount: true,
