@@ -1,13 +1,12 @@
 import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { db } from '../config/firebase'
-import { addMovie, removeMovie } from '../redux/features/appSlice'
-import { useDispatch } from 'react-redux'
+// import { addMovie, removeMovie } from '../redux/features/appSlice'
+// import { useDispatch } from 'react-redux'
 import { useAppSlice } from '../hooks/useAppSlice'
-import { arrayUnion, doc, updateDoc, arrayRemove } from 'firebase/firestore'
-import { useEffect } from 'react'
+import { arrayUnion, doc, updateDoc, arrayRemove, getDoc } from 'firebase/firestore'
 import { getProduct } from '../utils/api'
 
 const MovieCard = ({
@@ -19,21 +18,9 @@ const MovieCard = ({
   id,
 }: SingleMovieType) => {
   const navigate = useNavigate()
-  // const [bookmarked, setBookmarked] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
-
-  // useEffect(() => {
-  //   try {
-  //     // const isBookmarked = globalUser.bookmarkedMovies.some(
-  //     //   (movie) => movie === id,
-  //     // )
-  //     // setBookmarked(isBookmarked)
-  //   } catch (error) {
-  //     console.error('Error with checking', error)
-  //   }
-  // }, [globalUser.bookmarkedMovies, id])
 
   const findMovie = async (id: string) => {
     navigate(`/home/${id}`)
@@ -45,32 +32,46 @@ const MovieCard = ({
         console.error('globalUser.id or db is not defined')
         return
       }
-      /*
-       
-       */
-             const userRef = doc(db, 'users', globalUser.id)
+
+      const userRef = doc(db, 'users', globalUser.id)
+      console.log(userRef)
+
       const movie = await getProduct(id, db)
       console.log(movie)
       console.log(movie?.id)
-      if (bookmarked) {
-        await updateDoc(userRef, {
-          bookmarkedMovies: arrayRemove(movie?.id),
-          // bookmarkedMovies: arrayRemove(id),
-        })
-        dispatch(removeMovie(movie?.id))
-        // dispatch(removeMovie(id))
-        setBookmarked(false)
+
+      // Fetch the user's data from Firestore
+      const userDoc = await getDoc(userRef)
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const bookmarkedMovies = userData.bookmarkedMovies
+
+        // Check if the movie is already in the user's bookmarks
+        const isBookmarked = bookmarkedMovies.some(
+          (bookmarkedMovie) => bookmarkedMovie.id === movie.id,
+        )
+
+        if (isBookmarked) {
+          console.log('Movie is already bookmarked')
+          // Optionally, remove the movie from bookmarks
+          await updateDoc(userRef, {
+            bookmarkedMovies: arrayRemove(movie),
+          })
+          console.log('Movie removed from bookmarks')
+        } else {
+          console.log('Movie is not bookmarked yet')
+          // Add the movie to bookmarks
+          await updateDoc(userRef, {
+            bookmarkedMovies: arrayUnion(movie),
+          })
+          console.log('Movie added to bookmarks')
+        }
       } else {
-        await updateDoc(userRef, {
-          bookmarkedMovies: arrayUnion(movie),
-          // bookmarkedMovies: arrayUnion(id),
-        })
-        dispatch(addMovie(movie?.id))
-        // dispatch(addMovie(id))
-        setBookmarked(true)
+        console.error('User document does not exist')
       }
     } catch (error) {
-      console.error('Error updating document: ', error)
+      console.error('Error:', error)
     }
   }
 
@@ -84,7 +85,8 @@ const MovieCard = ({
         />
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark
-            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${bookmarked ? 'text-orange-500' : 'text-gray-700'}`}
+            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500`}
+            // className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${bookmarked ? 'text-orange-500' : 'text-gray-700'}`}
             onClick={() => bookmarkHandler(id)}
           />
           <div
