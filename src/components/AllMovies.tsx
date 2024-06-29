@@ -1,22 +1,28 @@
 import { AllMoviesProps } from '../utils/types'
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import MovieCard from './MovieCard'
 import PageButton from './PageButton'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 const AllMovies = ({
   movies,
   nextPage,
   previousPage,
   goToPage,
   pagesCount,
-    activePageIndex,
-  updateMovie
+  activePageIndex,
+  // bookmarkedMoviesIds,
 }: AllMoviesProps) => {
   return (
     <>
       <div className="grid grid-cols-4 gap-8 py-4">
-        {movies.map((movie) => (
-            <MovieCard key={movie.id} {...movie} updateMovie={updateMovie} />
-        ))}
+        {movies.map((movie) => {
+          // console.log(bookmarkedMoviesIds)
+          console.log(movie.id)
+          // const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
+          return (
+            <MovieCard key={movie.id} {...movie} />
+            // <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
+          )
+        })}
       </div>
       <div className="py-8 flex justify-center items-center gap-2">
         <button

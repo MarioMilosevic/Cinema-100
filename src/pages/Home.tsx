@@ -12,7 +12,7 @@ import {
   collection,
   where,
   doc,
-  getDoc
+  getDoc,
 } from 'firebase/firestore'
 import {
   moviesCollection,
@@ -41,16 +41,16 @@ import { useAppSlice } from '../hooks/useAppSlice'
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
   const [trendingMovies, setTrendingMovies] = useState<SingleMovieType[]>([])
+  const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>([])
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
-  const [bookmarkedMovies, setBookmarkedMovies] = useState<boolean>(false)
+  const [bookmarkedPage, setBookmarkedPage] = useState<boolean>(false)
   const debouncedSearch = useDebounce(searchValue)
   const { globalUser } = useAppSlice()
-
 
   useEffect(() => {
     fetchTrendingMovies()
@@ -118,25 +118,6 @@ const Home = () => {
     )
   }
 
-// const fetchBookmarkedMovies = async () => {
-//   try {
-//     const userRef = doc(db, 'users', globalUser.id)
-//     const userDoc = await getDoc(userRef)
-
-//     if (userDoc.exists()) {
-//       const userData = userDoc.data()
-//       const bookmarkedMoviesRefs = userData.bookmarkedMovies
-//       console.log('Bookmarked Movies: ', bookmarkedMoviesRefs)
-//     const bookmarkedMovies = query(moviesCollection)
-
-//     } else {
-//       console.log('No such document!')
-//     }
-//   } catch (error) {
-//     console.error('Error fetching bookmarked movies: ', error)
-//   }
-// }
-
   const fetchBookmarkedMovies = async () => {
     try {
       const userRef = doc(db, 'users', globalUser.id)
@@ -147,24 +128,7 @@ const Home = () => {
         const userData = userDoc.data()
         const bookmarkedMoviesRefs = userData.bookmarkedMovies
         console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
-
-        // Initialize an array to hold the movie data
-        const bookmarkedMovies = []
-
-        // Fetch each movie document
-        for (const movieId of bookmarkedMoviesRefs) {
-          const movieRef = doc(db, 'moviesCollection', movieId)
-          const movieDoc = await getDoc(movieRef)
-
-          if (movieDoc.exists()) {
-            bookmarkedMovies.push(movieDoc.data())
-          } else {
-            console.log(`No such movie with ID: ${movieId}`)
-          }
-        }
-
-        console.log('Bookmarked Movies Data: ', bookmarkedMovies)
-        // Do something with the bookmarkedMovies array
+        setBookmarkedMovies(bookmarkedMoviesRefs)
       } else {
         console.log('No such document!')
       }
@@ -172,7 +136,6 @@ const Home = () => {
       console.error('Error fetching bookmarked movies: ', error)
     }
   }
-
 
   const fetchInitialMovies = async () => {
     const initialQuery = query(
@@ -187,7 +150,7 @@ const Home = () => {
     setMovies(
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        id: doc.id,
+        firebaseId: doc.id,
       })),
     )
     setFirstVisible(data.docs[0])
@@ -199,7 +162,7 @@ const Home = () => {
     setMovies(
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        id: doc.id,
+        firebaseId: doc.id,
       })),
     )
     setFirstVisible(data.docs[0])
@@ -216,7 +179,7 @@ const Home = () => {
       data.docs
         .map((doc) => ({
           ...(doc.data() as SingleMovieType),
-          id: doc.id,
+          firebaseId: doc.id,
         }))
         .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
     )
@@ -351,7 +314,7 @@ const Home = () => {
     const data = await getDocs(searchQuery)
     const filteredData = data.docs.map((doc) => ({
       ...(doc.data() as SingleMovieType),
-      id: doc.id,
+      firebaseId: doc.id,
     }))
 
     setMovies(filteredData.slice(0, pageSize))
@@ -365,6 +328,16 @@ const Home = () => {
     setPagesCount(calculatePageButtons(filteredData.length, pageSize))
     setActivePageIndex(0)
   }
+
+  const allMovies = [...movies, ...trendingMovies]
+  // console.log(allMovies)
+
+  // const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.firebaseId)
+  // console.log(bookmarkedMoviesIds)
+
+  // console.log(movies)
+  // console.log(trendingMovies)
+  console.log(bookmarkedMovies)
 
   return (
     <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">
@@ -403,24 +376,22 @@ const Home = () => {
               <FaBookmark
                 size={25}
                 className="cursor-pointer transition-all duration-200"
-                color={bookmarkedMovies ? 'red' : 'white'}
-                onClick={() => setBookmarkedMovies(true)}
+                color={bookmarkedPage ? 'red' : 'white'}
+                onClick={() => setBookmarkedPage(true)}
               />
               <FaHouse
                 size={25}
                 className="cursor-pointer transition-all duration-200"
-                color={bookmarkedMovies ? 'white' : 'red'}
-                onClick={() => setBookmarkedMovies(false)}
+                color={bookmarkedPage ? 'white' : 'red'}
+                onClick={() => setBookmarkedPage(false)}
               />
             </div>
           </div>
           <p className="py-4 text-lg font-medium">
-            {bookmarkedMovies ? 'Your bookmarked movies' : 'Top 100'}
+            {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100'}
           </p>
-          {bookmarkedMovies ? (
-            <BookmarkedMovies
-              bookmarkedMovies={globalUser.bookmarkedMovies}
-            />
+          {bookmarkedPage ? (
+            <BookmarkedMovies />
           ) : (
             <AllMovies
               nextPage={nextPage}
@@ -428,6 +399,7 @@ const Home = () => {
               goToPage={goToPage}
               activePageIndex={activePageIndex}
               movies={movies}
+              // bookmarkedMoviesIds={bookmarkedMoviesIds}
               pagesCount={pagesCount}
             />
           )}
@@ -438,3 +410,10 @@ const Home = () => {
 }
 
 export default Home
+
+//     /*
+//      moracu da uporedim all movies i bookmarkedMovies, sto znaci da oboje trebaju da budu cijeli movie sa movie.id
+
+//      kada dodajem film, dodajem cijeli movie, kada ga micem, moram da ga nadjem u userov bookmarkedMovies [], i da vratim array bez tog filma
+//      na homePageu odmah fecujem all, trending i bookmarkedMovies pa uporedim movie.id ukoliko je isti proslijedim prop true ako nije proslijedim false, ili tako nesto
+//      */
