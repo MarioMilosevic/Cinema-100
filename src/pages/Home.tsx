@@ -11,6 +11,8 @@ import {
   DocumentData,
   collection,
   where,
+  doc,
+  getDoc
 } from 'firebase/firestore'
 import {
   moviesCollection,
@@ -52,6 +54,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchTrendingMovies()
+    fetchBookmarkedMovies()
   }, [])
 
   useEffect(() => {
@@ -103,8 +106,10 @@ const Home = () => {
   }, [debouncedSearch, genre])
 
   const fetchTrendingMovies = async () => {
+    console.log(trendingMoviesCollection)
     const trendingMoviesQuery = query(trendingMoviesCollection)
     const trendingMoviesData = await getDocs(trendingMoviesQuery)
+    console.log(trendingMoviesData)
     setTrendingMovies(
       trendingMoviesData.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
@@ -112,6 +117,62 @@ const Home = () => {
       })),
     )
   }
+
+// const fetchBookmarkedMovies = async () => {
+//   try {
+//     const userRef = doc(db, 'users', globalUser.id)
+//     const userDoc = await getDoc(userRef)
+
+//     if (userDoc.exists()) {
+//       const userData = userDoc.data()
+//       const bookmarkedMoviesRefs = userData.bookmarkedMovies
+//       console.log('Bookmarked Movies: ', bookmarkedMoviesRefs)
+//     const bookmarkedMovies = query(moviesCollection)
+
+//     } else {
+//       console.log('No such document!')
+//     }
+//   } catch (error) {
+//     console.error('Error fetching bookmarked movies: ', error)
+//   }
+// }
+
+  const fetchBookmarkedMovies = async () => {
+    try {
+      const userRef = doc(db, 'users', globalUser.id)
+      const userDoc = await getDoc(userRef)
+      console.log(userDoc)
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const bookmarkedMoviesRefs = userData.bookmarkedMovies
+        console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
+
+        // Initialize an array to hold the movie data
+        const bookmarkedMovies = []
+
+        // Fetch each movie document
+        for (const movieId of bookmarkedMoviesRefs) {
+          const movieRef = doc(db, 'moviesCollection', movieId)
+          const movieDoc = await getDoc(movieRef)
+
+          if (movieDoc.exists()) {
+            bookmarkedMovies.push(movieDoc.data())
+          } else {
+            console.log(`No such movie with ID: ${movieId}`)
+          }
+        }
+
+        console.log('Bookmarked Movies Data: ', bookmarkedMovies)
+        // Do something with the bookmarkedMovies array
+      } else {
+        console.log('No such document!')
+      }
+    } catch (error) {
+      console.error('Error fetching bookmarked movies: ', error)
+    }
+  }
+
 
   const fetchInitialMovies = async () => {
     const initialQuery = query(

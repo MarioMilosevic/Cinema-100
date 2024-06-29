@@ -2,13 +2,13 @@ import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { addMovie, removeMovie } from '../redux/features/appSlice'
 import { useDispatch } from 'react-redux'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { arrayUnion, doc, updateDoc, arrayRemove } from 'firebase/firestore'
 import { useEffect } from 'react'
+import { getProduct } from '../utils/api'
 
 const MovieCard = ({
   image,
@@ -19,21 +19,21 @@ const MovieCard = ({
   id,
 }: SingleMovieType) => {
   const navigate = useNavigate()
-  const [bookmarked, setBookmarked] = useState<boolean>(false)
+  // const [bookmarked, setBookmarked] = useState<boolean>(false)
   const dispatch = useDispatch()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
-  useEffect(() => {
-    try {
-      const isBookmarked = globalUser.bookmarkedMovies.some(
-        (movie) => movie === id,
-      )
-      setBookmarked(isBookmarked)
-    } catch (error) {
-      console.error('Error with checking', error)
-    }
-  }, [globalUser.bookmarkedMovies, id])
+  // useEffect(() => {
+  //   try {
+  //     // const isBookmarked = globalUser.bookmarkedMovies.some(
+  //     //   (movie) => movie === id,
+  //     // )
+  //     // setBookmarked(isBookmarked)
+  //   } catch (error) {
+  //     console.error('Error with checking', error)
+  //   }
+  // }, [globalUser.bookmarkedMovies, id])
 
   const findMovie = async (id: string) => {
     navigate(`/home/${id}`)
@@ -45,21 +45,28 @@ const MovieCard = ({
         console.error('globalUser.id or db is not defined')
         return
       }
-
-      const userRef = doc(db, 'users', globalUser.id)
-      // const movie = await getProduct(id, db)
-
+      /*
+       
+       */
+             const userRef = doc(db, 'users', globalUser.id)
+      const movie = await getProduct(id, db)
+      console.log(movie)
+      console.log(movie?.id)
       if (bookmarked) {
         await updateDoc(userRef, {
-          bookmarkedMovies: arrayRemove(id),
+          bookmarkedMovies: arrayRemove(movie?.id),
+          // bookmarkedMovies: arrayRemove(id),
         })
-        dispatch(removeMovie(id))
+        dispatch(removeMovie(movie?.id))
+        // dispatch(removeMovie(id))
         setBookmarked(false)
       } else {
         await updateDoc(userRef, {
-          bookmarkedMovies: arrayUnion(id),
+          bookmarkedMovies: arrayUnion(movie),
+          // bookmarkedMovies: arrayUnion(id),
         })
-        dispatch(addMovie(id))
+        dispatch(addMovie(movie?.id))
+        // dispatch(addMovie(id))
         setBookmarked(true)
       }
     } catch (error) {
