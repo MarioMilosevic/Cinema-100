@@ -9,18 +9,18 @@ const AllMovies = ({
   goToPage,
   pagesCount,
   activePageIndex,
-  // bookmarkedMoviesIds,
+  bookmarkedMovies,
 }: AllMoviesProps) => {
+  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
   return (
     <>
       <div className="grid grid-cols-4 gap-8 py-4">
         {movies.map((movie) => {
-          // console.log(bookmarkedMoviesIds)
-          console.log(movie.id)
-          // const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
+          console.log("u renderu",bookmarkedMoviesIds)
+          console.log("u renderu movie id",movie.id)
+          const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (
-            <MovieCard key={movie.id} {...movie} />
-            // <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
+            <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
           )
         })}
       </div>

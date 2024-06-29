@@ -21,23 +21,18 @@ const MovieCard = ({
   year,
   rating,
   genre,
-  id,
   firebaseId,
   isBookmarked,
 }: SingleMovieType) => {
-  // console.log(isBookmarked)
-  console.log(firebaseId)
   const navigate = useNavigate()
-  // const dispatch = useDispatch()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
-  const findMovie = async (id: string) => {
-    navigate(`/home/${id}`)
+  const findMovie = async (firebaseId: string) => {
+    navigate(`/home/${firebaseId}`)
   }
 
   const bookmarkHandler = async (firebaseId: string) => {
-    // console.log(id)
     try {
       if (!globalUser?.id || !db) {
         console.error('globalUser.id or db is not defined')

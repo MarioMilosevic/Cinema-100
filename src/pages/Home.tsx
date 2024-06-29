@@ -106,10 +106,8 @@ const Home = () => {
   }, [debouncedSearch, genre])
 
   const fetchTrendingMovies = async () => {
-    console.log(trendingMoviesCollection)
     const trendingMoviesQuery = query(trendingMoviesCollection)
     const trendingMoviesData = await getDocs(trendingMoviesQuery)
-    console.log(trendingMoviesData)
     setTrendingMovies(
       trendingMoviesData.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
@@ -329,15 +327,6 @@ const Home = () => {
     setActivePageIndex(0)
   }
 
-  const allMovies = [...movies, ...trendingMovies]
-  // console.log(allMovies)
-
-  // const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.firebaseId)
-  // console.log(bookmarkedMoviesIds)
-
-  // console.log(movies)
-  // console.log(trendingMovies)
-  console.log(bookmarkedMovies)
 
   return (
     <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">
@@ -391,7 +380,7 @@ const Home = () => {
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100'}
           </p>
           {bookmarkedPage ? (
-            <BookmarkedMovies />
+              <BookmarkedMovies bookmarkedMovies={bookmarkedMovies } />
           ) : (
             <AllMovies
               nextPage={nextPage}
@@ -399,7 +388,7 @@ const Home = () => {
               goToPage={goToPage}
               activePageIndex={activePageIndex}
               movies={movies}
-              // bookmarkedMoviesIds={bookmarkedMoviesIds}
+              bookmarkedMovies={bookmarkedMovies}
               pagesCount={pagesCount}
             />
           )}
@@ -411,9 +400,3 @@ const Home = () => {
 
 export default Home
 
-//     /*
-//      moracu da uporedim all movies i bookmarkedMovies, sto znaci da oboje trebaju da budu cijeli movie sa movie.id
-
-//      kada dodajem film, dodajem cijeli movie, kada ga micem, moram da ga nadjem u userov bookmarkedMovies [], i da vratim array bez tog filma
-//      na homePageu odmah fecujem all, trending i bookmarkedMovies pa uporedim movie.id ukoliko je isti proslijedim prop true ako nije proslijedim false, ili tako nesto
-//      */

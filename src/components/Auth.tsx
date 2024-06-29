@@ -87,7 +87,6 @@ const Auth = () => {
         data.email,
         data.password,
       )
-      console.log(existingUser)
       const userQuery = query(
         collection(db, 'users'),
         where('email', '==', data.email),
@@ -97,7 +96,6 @@ const Auth = () => {
         id: doc.id,
         ...doc.data(),
       }))
-      console.log(user)
       if (existingUser) {
         navigate('/home')
         dispatch(setGlobalUser(user))

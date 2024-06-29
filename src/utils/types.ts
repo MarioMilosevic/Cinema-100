@@ -46,7 +46,8 @@ export type SingleMovieType = {
   director: string[]
   writers: string[]
   imdbid: string
-  isBookmarked?: boolean;
+  isBookmarked: boolean;
+  firebaseId:string
 }
 
 export type AppState = {
