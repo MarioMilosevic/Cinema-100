@@ -16,8 +16,6 @@ const AllMovies = ({
     <>
       <div className="grid grid-cols-4 gap-8 py-4">
         {movies.map((movie) => {
-          console.log("u renderu",bookmarkedMoviesIds)
-          console.log("u renderu movie id",movie.id)
           const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (
             <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />

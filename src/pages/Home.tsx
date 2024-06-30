@@ -13,6 +13,7 @@ import {
   where,
   doc,
   getDoc,
+  onSnapshot
 } from 'firebase/firestore'
 import {
   moviesCollection,
@@ -54,8 +55,52 @@ const Home = () => {
 
   useEffect(() => {
     fetchTrendingMovies()
-    fetchBookmarkedMovies()
   }, [])
+  
+   useEffect(() => {
+     const userRef = doc(db, 'users', globalUser.id)
+
+     const unsubscribe = onSnapshot(
+       userRef,
+       (userDoc) => {
+         if (userDoc.exists()) {
+           const userData = userDoc.data()
+           const bookmarkedMoviesRefs = userData.bookmarkedMovies
+           console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
+           setBookmarkedMovies(bookmarkedMoviesRefs)
+         } else {
+           console.log('No such document!')
+         }
+       },
+       (error) => {
+         console.error('Error fetching bookmarked movies: ', error)
+       },
+     )
+
+     // Cleanup subscription on unmount
+     return () => unsubscribe()
+   }, [globalUser.id])
+//   useEffect(() => {
+//       const fetchBookmarkedMovies = async () => {
+//         try {
+//           const userRef = doc(db, 'users', globalUser.id)
+//           const userDoc = await getDoc(userRef)
+
+//           if (userDoc.exists()) {
+//             const userData = userDoc.data()
+//             const bookmarkedMoviesRefs = userData.bookmarkedMovies
+//             console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
+//             setBookmarkedMovies(bookmarkedMoviesRefs)
+//           } else {
+//             console.log('No such document!')
+//           }
+//         } catch (error) {
+//           console.error('Error fetching bookmarked movies: ', error)
+//         }
+//       }
+//     fetchBookmarkedMovies()
+// }, [])
+
 
   useEffect(() => {
     const filterMovies = async (searchInput: string, selectedGenre: string) => {
@@ -116,24 +161,7 @@ const Home = () => {
     )
   }
 
-  const fetchBookmarkedMovies = async () => {
-    try {
-      const userRef = doc(db, 'users', globalUser.id)
-      const userDoc = await getDoc(userRef)
-      console.log(userDoc)
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data()
-        const bookmarkedMoviesRefs = userData.bookmarkedMovies
-        console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
-        setBookmarkedMovies(bookmarkedMoviesRefs)
-      } else {
-        console.log('No such document!')
-      }
-    } catch (error) {
-      console.error('Error fetching bookmarked movies: ', error)
-    }
-  }
 
   const fetchInitialMovies = async () => {
     const initialQuery = query(
