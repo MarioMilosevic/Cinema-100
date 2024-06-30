@@ -12,8 +12,7 @@ import {
   collection,
   where,
   doc,
-  getDoc,
-  onSnapshot
+  onSnapshot,
 } from 'firebase/firestore'
 import {
   moviesCollection,
@@ -42,7 +41,9 @@ import { useAppSlice } from '../hooks/useAppSlice'
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
   const [trendingMovies, setTrendingMovies] = useState<SingleMovieType[]>([])
-  const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>([])
+  const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>(
+    [],
+  )
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
@@ -56,51 +57,31 @@ const Home = () => {
   useEffect(() => {
     fetchTrendingMovies()
   }, [])
-  
-   useEffect(() => {
-     const userRef = doc(db, 'users', globalUser.id)
 
-     const unsubscribe = onSnapshot(
-       userRef,
-       (userDoc) => {
-         if (userDoc.exists()) {
-           const userData = userDoc.data()
-           const bookmarkedMoviesRefs = userData.bookmarkedMovies
-           console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
-           setBookmarkedMovies(bookmarkedMoviesRefs)
-         } else {
-           console.log('No such document!')
-         }
-       },
-       (error) => {
-         console.error('Error fetching bookmarked movies: ', error)
-       },
-     )
+  useEffect(() => {
+    const userRef = doc(db, 'users', globalUser.id)
 
-     // Cleanup subscription on unmount
-     return () => unsubscribe()
-   }, [globalUser.id])
-//   useEffect(() => {
-//       const fetchBookmarkedMovies = async () => {
-//         try {
-//           const userRef = doc(db, 'users', globalUser.id)
-//           const userDoc = await getDoc(userRef)
+    const unsubscribe = onSnapshot(
+      userRef,
+      (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data()
+          console.log(userData)
+          const bookmarkedMoviesRefs = userData.bookmarkedMovies
+          console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
+          setBookmarkedMovies(bookmarkedMoviesRefs)
+        } else {
+          console.log('No such document!')
+        }
+      },
+      (error) => {
+        console.error('Error fetching bookmarked movies: ', error)
+      },
+    )
 
-//           if (userDoc.exists()) {
-//             const userData = userDoc.data()
-//             const bookmarkedMoviesRefs = userData.bookmarkedMovies
-//             console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
-//             setBookmarkedMovies(bookmarkedMoviesRefs)
-//           } else {
-//             console.log('No such document!')
-//           }
-//         } catch (error) {
-//           console.error('Error fetching bookmarked movies: ', error)
-//         }
-//       }
-//     fetchBookmarkedMovies()
-// }, [])
-
+    // Cleanup subscription on unmount
+    return () => unsubscribe()
+  }, [globalUser.id])
 
   useEffect(() => {
     const filterMovies = async (searchInput: string, selectedGenre: string) => {
@@ -156,12 +137,10 @@ const Home = () => {
     setTrendingMovies(
       trendingMoviesData.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        id: doc.id,
+        firebaseId: doc.id,
       })),
     )
   }
-
-
 
   const fetchInitialMovies = async () => {
     const initialQuery = query(
@@ -355,7 +334,6 @@ const Home = () => {
     setActivePageIndex(0)
   }
 
-
   return (
     <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">
       {movies.length === 0 ? (
@@ -408,7 +386,7 @@ const Home = () => {
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100'}
           </p>
           {bookmarkedPage ? (
-              <BookmarkedMovies bookmarkedMovies={bookmarkedMovies } />
+            <BookmarkedMovies bookmarkedMovies={bookmarkedMovies} />
           ) : (
             <AllMovies
               nextPage={nextPage}
@@ -427,4 +405,3 @@ const Home = () => {
 }
 
 export default Home
-

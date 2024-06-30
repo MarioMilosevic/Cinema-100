@@ -24,6 +24,7 @@ const MovieCard = ({
   firebaseId,
   isBookmarked,
 }: SingleMovieType) => {
+  console.log(firebaseId)
   const navigate = useNavigate()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
