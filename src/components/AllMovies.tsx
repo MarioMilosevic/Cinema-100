@@ -12,6 +12,8 @@ const AllMovies = ({
   bookmarkedMovies,
 }: AllMoviesProps) => {
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
+  
+
   return (
     <>
       <div className="grid grid-cols-4 gap-8 py-4">

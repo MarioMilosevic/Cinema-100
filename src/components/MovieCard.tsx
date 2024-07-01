@@ -1,10 +1,8 @@
 import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
-// import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { db } from '../config/firebase'
-// import { addMovie, removeMovie } from '../redux/features/appSlice'
-// import { useDispatch } from 'react-redux'
+import { db, moviesCollection } from '../config/firebase'
+
 import { useAppSlice } from '../hooks/useAppSlice'
 import {
   arrayUnion,
@@ -12,8 +10,10 @@ import {
   updateDoc,
   arrayRemove,
   getDoc,
+  where,
+  query,
+  getDocs,
 } from 'firebase/firestore'
-import { getProduct } from '../utils/api'
 
 const MovieCard = ({
   image,
@@ -21,38 +21,44 @@ const MovieCard = ({
   year,
   rating,
   genre,
-  firebaseId,
   isBookmarked,
+  id,
 }: SingleMovieType) => {
-  console.log(firebaseId)
   const navigate = useNavigate()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
-  const findMovie = async (firebaseId: string) => {
-    navigate(`/home/${firebaseId}`)
+  const findMovie = async (id: string) => {
+    navigate(`/home/${id}`)
   }
 
-  const bookmarkHandler = async (firebaseId: string) => {
+  const bookmarkHandler = async (id: string) => {
+    console.log(id)
     try {
       if (!globalUser?.id || !db) {
         console.error('globalUser.id or db is not defined')
         return
       }
+      console.log(moviesCollection)
+      const q = query(moviesCollection, where('id', '==', id))
+      console.log(q)
+      const querySnapshot = await getDocs(q)
+      const [movie] = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }))
+      console.log(movie)
 
       const userRef = doc(db, 'users', globalUser.id)
-      const movie = await getProduct(firebaseId, db)
-      // Fetch the user's data from Firestore
       const userDoc = await getDoc(userRef)
+      console.log(userDoc)
+
       if (userDoc.exists()) {
         const userData = userDoc.data()
         const bookmarkedMovies = userData.bookmarkedMovies
 
-        // Check if the movie is already in the user's bookmarks
         const isBookmarked = bookmarkedMovies.some(
           (bookmarkedMovie) => bookmarkedMovie.id === movie.id,
         )
-
         if (isBookmarked) {
           console.log('Izbrisi film')
           await updateDoc(userRef, {
@@ -82,12 +88,12 @@ const MovieCard = ({
         />
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark
-            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
-            onClick={() => bookmarkHandler(firebaseId)}
+            className={`absolute top-2 right-2 cursor-pointer w-5 h-5 hover:text-orange-500 active:text-red-700 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
+            onClick={() => bookmarkHandler(id)}
           />
           <div
             className="flex items-center gap-2 z-10 absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-full bg-gray-700 text-gray-100 px-4 py-2 cursor-pointer hover:text-gray-900 hover:bg-gray-300 active:bg-orange-700 active:text-gray-100"
-            onClick={() => findMovie(firebaseId)}
+            onClick={() => findMovie(id)}
           >
             <span>See more</span>
             <FaSearch />

@@ -137,7 +137,6 @@ const Home = () => {
     setTrendingMovies(
       trendingMoviesData.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        firebaseId: doc.id,
       })),
     )
   }
@@ -155,7 +154,6 @@ const Home = () => {
     setMovies(
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        firebaseId: doc.id,
       })),
     )
     setFirstVisible(data.docs[0])
@@ -167,12 +165,12 @@ const Home = () => {
     setMovies(
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        firebaseId: doc.id,
       })),
     )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
+
 
   const fetchAndSetMovies = async (
     queryRef: Query<DocumentData>,
@@ -184,7 +182,6 @@ const Home = () => {
       data.docs
         .map((doc) => ({
           ...(doc.data() as SingleMovieType),
-          firebaseId: doc.id,
         }))
         .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
     )
@@ -245,6 +242,7 @@ const Home = () => {
     await fetchMovies(queryRef)
     setActivePageIndex((prev) => prev - 1)
   }
+
 
   const nextPage = async () => {
     if (activePageIndex === pagesCount.length - 1) return
@@ -319,7 +317,6 @@ const Home = () => {
     const data = await getDocs(searchQuery)
     const filteredData = data.docs.map((doc) => ({
       ...(doc.data() as SingleMovieType),
-      firebaseId: doc.id,
     }))
 
     setMovies(filteredData.slice(0, pageSize))
@@ -383,7 +380,7 @@ const Home = () => {
             </div>
           </div>
           <p className="py-4 text-lg font-medium">
-            {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100'}
+            {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100 movies'}
           </p>
           {bookmarkedPage ? (
             <BookmarkedMovies bookmarkedMovies={bookmarkedMovies} />

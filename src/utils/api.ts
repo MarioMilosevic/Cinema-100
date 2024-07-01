@@ -94,7 +94,7 @@ export const buildGenreQuery = (
 }
 
 export const getProduct = async (idMovie: string | undefined, db:Firestore) => {
-  if (!idMovie) return null
+  if (!idMovie) return 
   try {
     const docRef = doc(db, 'movies', idMovie)
     let docSnap = await getDoc(docRef)
@@ -105,30 +105,9 @@ export const getProduct = async (idMovie: string | undefined, db:Firestore) => {
     if (docSnap.exists()) {
       return docSnap.data()
     }
-    return null
   } catch (error) {
     console.error('Error fetching document:', error)
-    return null
   }
 }
 
-// export const fetchInitialMovies = async () => {
-//         const initialQuery = query(
-//           moviesCollection,
-//           orderBy(field, 'desc'),
-//           limit(pageSize),
-//         )
-//         // const moviesRef = await getDocs(collection(db, 'movies'))
-//     const data = await getDocs(initialQuery)
-//     return data
-//         // setMovies(
-//         //     data.docs.map((doc) => ({
-//         //         ...(doc.data() as SingleMovieType),
-//         //         id: doc.id,
-//         //     })),
-//         // )
-//         // setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
-//         // setActivePageIndex(0)
-//         // setFirstVisible(data.docs[0])
-//         // setLastVisible(data.docs[data.docs.length - 1])
-//       }
+
