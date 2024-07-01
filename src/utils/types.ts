@@ -73,4 +73,5 @@ export type AllMoviesProps = {
   goToPage: (pageIndex: number) => Promise<void>
   pagesCount: number[]
   activePageIndex: number
+  bookmarkedMovies:SingleMovieType[]
 }

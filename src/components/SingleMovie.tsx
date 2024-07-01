@@ -11,10 +11,6 @@ const SingleMovie = () => {
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
-
-  console.log(movieId)
-
-
   useEffect(() => {
     const fetchMovie = async () => {
       if (!movieId) return
