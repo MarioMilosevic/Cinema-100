@@ -33,39 +33,32 @@ const MovieCard = ({
   }
 
   const bookmarkHandler = async (id: string) => {
-    console.log(id)
     try {
       if (!globalUser?.id || !db) {
         console.error('globalUser.id or db is not defined')
         return
       }
-      console.log(moviesCollection)
       const q = query(moviesCollection, where('id', '==', id))
-      console.log(q)
       const querySnapshot = await getDocs(q)
       const [movie] = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
       }))
-      console.log(movie)
 
       const userRef = doc(db, 'users', globalUser.id)
       const userDoc = await getDoc(userRef)
-      console.log(userDoc)
 
       if (userDoc.exists()) {
         const userData = userDoc.data()
         const bookmarkedMovies = userData.bookmarkedMovies
 
         const isBookmarked = bookmarkedMovies.some(
-          (bookmarkedMovie) => bookmarkedMovie.id === movie.id,
+          (bookmarkedMovie: SingleMovieType) => bookmarkedMovie.id === movie.id,
         )
         if (isBookmarked) {
-          console.log('Izbrisi film')
           await updateDoc(userRef, {
             bookmarkedMovies: arrayRemove(movie),
           })
         } else {
-          console.log('Dodaj film')
           await updateDoc(userRef, {
             bookmarkedMovies: arrayUnion(movie),
           })

@@ -3,13 +3,19 @@ import { SingleMovieType } from '../utils/types'
 
 const BookmarkedMovies = ({
   bookmarkedMovies,
-}: SingleMovieType[]) => {
-  console.log(bookmarkedMovies)
+}: {
+  bookmarkedMovies: SingleMovieType[]
+}) => {
+  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
+
   return bookmarkedMovies.length > 0 ? (
-    <div className="grid grid-cols-4 gap-8 py-4 ">
-      {bookmarkedMovies.map((movie) => (
-        <MovieCard key={movie.id} {...movie} isBookmarked={true} />
-      ))}
+    <div className='grid grid-cols-4 gap-8 py-4'>
+      {bookmarkedMovies.map((movie) => {
+        const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
+        return (
+          <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
+        )
+      })}
     </div>
   ) : (
     <div className="flex items-center justify-center min-h-[200px]">
