@@ -2,7 +2,7 @@ import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
 import { SingleMovieType } from '../utils/types'
 import { useNavigate } from 'react-router'
 import { db, moviesCollection } from '../config/firebase'
-
+import { fetchMovieDoc } from '../utils/api'
 import { useAppSlice } from '../hooks/useAppSlice'
 import {
   arrayUnion,
@@ -10,9 +10,6 @@ import {
   updateDoc,
   arrayRemove,
   getDoc,
-  where,
-  query,
-  getDocs,
 } from 'firebase/firestore'
 
 const MovieCard = ({
@@ -29,7 +26,8 @@ const MovieCard = ({
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
   const findMovie = async (id: string) => {
-    navigate(`/home/${id}`)
+    const doc = await fetchMovieDoc(id, moviesCollection)
+    navigate(`/home/${doc.id}`)
   }
 
   const bookmarkHandler = async (id: string) => {
@@ -38,31 +36,32 @@ const MovieCard = ({
         console.error('globalUser.id or db is not defined')
         return
       }
-      const q = query(moviesCollection, where('id', '==', id))
-      const querySnapshot = await getDocs(q)
-      const [movie] = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-      }))
 
+      const movieDoc = await fetchMovieDoc(id, moviesCollection)
+      if (!movieDoc) {
+        console.error('Movie document does not exist')
+        return
+      }
+
+      const movieData = movieDoc.data()
       const userRef = doc(db, 'users', globalUser.id)
       const userDoc = await getDoc(userRef)
 
       if (userDoc.exists()) {
         const userData = userDoc.data()
-        const bookmarkedMovies = userData.bookmarkedMovies
+        const bookmarkedMovies: SingleMovieType[] = userData.bookmarkedMovies
 
-        const isBookmarked = bookmarkedMovies.some(
-          (bookmarkedMovie: SingleMovieType) => bookmarkedMovie.id === movie.id,
+        const isAlreadyBookmarked = bookmarkedMovies.some(
+          (bookmarkedMovie) => bookmarkedMovie.id === movieData.id,
         )
-        if (isBookmarked) {
-          await updateDoc(userRef, {
-            bookmarkedMovies: arrayRemove(movie),
-          })
-        } else {
-          await updateDoc(userRef, {
-            bookmarkedMovies: arrayUnion(movie),
-          })
-        }
+
+        const updatedBookmarkedMovies = isAlreadyBookmarked
+          ? arrayRemove(movieData)
+          : arrayUnion(movieData)
+
+        await updateDoc(userRef, {
+          bookmarkedMovies: updatedBookmarkedMovies,
+        })
       } else {
         console.error('User document does not exist')
       }

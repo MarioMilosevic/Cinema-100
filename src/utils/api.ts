@@ -93,8 +93,11 @@ export const buildGenreQuery = (
   return query(baseQuery, where('genre', 'array-contains', genre))
 }
 
-export const getProduct = async (idMovie: string | undefined, db:Firestore) => {
-  if (!idMovie) return 
+export const getProduct = async (
+  idMovie: string | undefined,
+  db: Firestore,
+) => {
+  if (!idMovie) return
   try {
     const docRef = doc(db, 'movies', idMovie)
     let docSnap = await getDoc(docRef)
@@ -110,4 +113,11 @@ export const getProduct = async (idMovie: string | undefined, db:Firestore) => {
   }
 }
 
-
+export const fetchMovieDoc = async (
+  movieId: string,
+  moviesCollection: CollectionReference<DocumentData>,
+) => {
+  const q = query(moviesCollection, where('id', '==', movieId))
+  const querySnapshot = await getDocs(q)
+  return querySnapshot.docs[0]
+}
