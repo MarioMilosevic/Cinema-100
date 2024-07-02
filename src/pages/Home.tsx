@@ -380,7 +380,15 @@ const Home = () => {
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100 movies'}
           </p>
           {bookmarkedPage ? (
-            <BookmarkedMovies bookmarkedMovies={bookmarkedMovies} />
+              <BookmarkedMovies
+                nextPage={nextPage}
+                previousPage={previousPage}
+                goToPage={goToPage}
+                activePageIndex={activePageIndex}
+                movies={movies}
+                bookmarkedMovies={bookmarkedMovies}
+                pagesCount={ pagesCount}
+                />
           ) : (
             <AllMovies
               nextPage={nextPage}

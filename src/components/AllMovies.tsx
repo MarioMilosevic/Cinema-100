@@ -12,7 +12,6 @@ const AllMovies = ({
   bookmarkedMovies,
 }: AllMoviesProps) => {
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
-  
 
   return (
     <>
