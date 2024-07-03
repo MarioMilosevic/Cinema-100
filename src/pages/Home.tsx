@@ -66,7 +66,7 @@ const Home = () => {
       (userDoc) => {
         if (userDoc.exists()) {
           const userData = userDoc.data()
-          const bookmarkedMoviesRefs = userData.bookmarkedMovies.slice(0, pageSize)
+          const bookmarkedMoviesRefs = userData.bookmarkedMovies
           setBookmarkedMovies(bookmarkedMoviesRefs)
         } else {
           console.log('No such document!')
@@ -110,7 +110,6 @@ const Home = () => {
       const data = await getDocs(searchQuery)
       const filteredData = data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
-        id: doc.id,
       }))
 
       setMovies(filteredData.slice(0, pageSize))
@@ -381,13 +380,11 @@ const Home = () => {
           </p>
           {bookmarkedPage ? (
               <BookmarkedMovies
-                nextPage={nextPage}
-                previousPage={previousPage}
-                goToPage={goToPage}
                 activePageIndex={activePageIndex}
-                movies={movies}
+                setActivePageIndex={setActivePageIndex}
                 bookmarkedMovies={bookmarkedMovies}
-                pagesCount={ pagesCount}
+                pagesCount={pagesCount}
+                setPagesCount={setPagesCount }
                 />
           ) : (
             <AllMovies
