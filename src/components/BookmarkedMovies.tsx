@@ -8,10 +8,10 @@ import { calculatePageButtons } from '../utils/helperFunctions'
 
 const BookmarkedMovies = ({
   bookmarkedMovies,
-  activePageIndex,
-  setActivePageIndex,
-  pagesCount,
-  setPagesCount,
+  searchValue,
+  setSearchValue,
+  genre,
+  setGenre,
 }: {
   bookmarkedMovies: SingleMovieType[]
 }) => {
@@ -20,9 +20,11 @@ const BookmarkedMovies = ({
     setPagesCount(totalPages)
     setActivePageIndex(0)
     setMovies(bookmarkedMovies.slice(0, pageSize))
-  }, [bookmarkedMovies, setActivePageIndex, setPagesCount])
+  }, [bookmarkedMovies])
 
   const [movies, setMovies] = useState<SingleMovieType[]>([])
+  const [activePageIndex, setActivePageIndex] = useState<number>(0)
+  const [pagesCount, setPagesCount] = useState<number[]>([])
 
   const nextPage = () => {
     if (activePageIndex === pagesCount.length - 1) return

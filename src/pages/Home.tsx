@@ -380,11 +380,11 @@ const Home = () => {
           </p>
           {bookmarkedPage ? (
               <BookmarkedMovies
-                activePageIndex={activePageIndex}
-                setActivePageIndex={setActivePageIndex}
                 bookmarkedMovies={bookmarkedMovies}
-                pagesCount={pagesCount}
-                setPagesCount={setPagesCount }
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                genre={genre}
+                setGenre={setGenre}
                 />
           ) : (
             <AllMovies
