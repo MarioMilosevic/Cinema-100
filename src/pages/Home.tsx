@@ -59,7 +59,12 @@ const Home = () => {
   useEffect(() => {
     fetchTrendingMovies()
     fetchInitialMovies()
-  }, [])
+    const getBookmarkedMovies = async () => {
+      const movies = await fetchBookmarkedMovies(globalUser.id, db)
+      setBookmarkedMovies(movies)
+    }
+    getBookmarkedMovies()
+  }, [globalUser.id])
 
   // useEffect(() => {
   //   const getbookmarkedMovies = async () => {
@@ -373,8 +378,8 @@ const Home = () => {
             <BookmarkedMovies
               bookmarkedPage={bookmarkedPage}
               setBookmarkedPage={setBookmarkedPage}
-                bookmarkedMovies={bookmarkedMovies}
-                setBookmarkedMovies={setBookmarkedMovies}
+              bookmarkedMovies={bookmarkedMovies}
+              setBookmarkedMovies={setBookmarkedMovies}
             />
           ) : (
             <AllMovies

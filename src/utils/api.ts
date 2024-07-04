@@ -124,27 +124,16 @@ export const fetchMovieDoc = async (
 
 export const fetchBookmarkedMovies = async (userId: string, db: Firestore) => {
   try {
-    // Get a reference to the user document
     const userRef = doc(db, 'users', userId)
-
-    // Fetch the user document
     const userDoc = await getDoc(userRef)
-
-    // Check if the document exists
     if (userDoc.exists()) {
-      // Extract the bookmarkedMovies array
       const userData = userDoc.data()
       const bookmarkedMovies = userData.bookmarkedMovies
-
-      // Handle the bookmarked movies (e.g., set state or return them)
-      console.log('Bookmarked Movies:', bookmarkedMovies)
       return bookmarkedMovies
     } else {
       console.log('No such document!')
-      return []
     }
   } catch (error) {
     console.error('Error fetching bookmarked movies:', error)
-    return []
   }
 }

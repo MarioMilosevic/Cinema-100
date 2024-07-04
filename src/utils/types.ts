@@ -20,9 +20,8 @@ export type GlobalUserType = {
   name: string
   lastName: string
   bookmarkedMovies: SingleMovieType[]
-  id:string
+  id: string
 }
-
 
 export type InputFieldProps = {
   type: string
@@ -46,8 +45,8 @@ export type SingleMovieType = {
   director: string[]
   writers: string[]
   imdbid: string
-  isBookmarked: boolean;
-  firebaseId:string
+  isBookmarked: boolean
+  firebaseId: string
 }
 
 export type AppState = {
@@ -73,5 +72,12 @@ export type AllMoviesProps = {
   goToPage: (pageIndex: number) => Promise<void>
   pagesCount: number[]
   activePageIndex: number
-  bookmarkedMovies:SingleMovieType[]
+  bookmarkedMovies: SingleMovieType[]
+}
+
+export type BookmarkedMoviesProps = {
+  bookmarkedPage: boolean
+  setBookmarkedPage: (page: boolean) => void
+  bookmarkedMovies: SingleMovieType[]
+  setBookmarkedMovies: (movies: SingleMovieType[]) => void
 }

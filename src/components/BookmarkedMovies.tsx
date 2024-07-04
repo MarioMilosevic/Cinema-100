@@ -1,7 +1,7 @@
 import MovieCard from './MovieCard'
 import PageButton from './PageButton'
 import Menu from './Menu'
-import { SingleMovieType } from '../utils/types'
+import { BookmarkedMoviesProps, SingleMovieType } from '../utils/types'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { pageSize } from '../utils/constants'
 import { useState, useEffect } from 'react'
@@ -15,41 +15,80 @@ const BookmarkedMovies = ({
   setBookmarkedPage,
   bookmarkedMovies,
   setBookmarkedMovies,
-}: {
-  bookmarkedPage: boolean
-  setBookmarkedPage: (page: boolean) => void
-  bookmarkedMovies: SingleMovieType[]
-  setBookmarkedMovies: (movies: SingleMovieType[]) => void
-}) => {
+}: BookmarkedMoviesProps) => {
   const { globalUser } = useAppSlice()
 
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [genre, setGenre] = useState<string>('All')
+  const [currentMovies, setCurrentMovies] =
+    useState<SingleMovieType[]>(bookmarkedMovies)
 
-  useEffect(() => {
-    const getBookmarkedMovies = async () => {
-      const movies = await fetchBookmarkedMovies(globalUser.id, db)
-      const totalPages = calculatePageButtons(movies.length, pageSize)
+  // useEffect(() => {
+  //   const getBookmarkedMovies = async () => {
+  //     const movies = await fetchBookmarkedMovies(globalUser.id, db)
+  //     const totalPages = calculatePageButtons(movies.length, pageSize)
+  //     setPagesCount(totalPages)
+  //     setBookmarkedMovies(movies)
+  //   }
+  //   getBookmarkedMovies()
+  // }, [globalUser.id, setBookmarkedMovies])
+
+  const searchGenre = (e) => {
+    const searchInput = e.target.value
+    setGenre(searchInput)
+    filterMoviesByGenre(searchInput)
+  }
+
+  const searchMovies = () => {
+    console.log('nesto')
+  }
+
+  const filterMoviesByGenre = (genre: string) => {
+    // let mario = [...bookmarkedMovies]
+    if (genre === 'All') {
+      console.log('uslo')
+      console.log(bookmarkedMovies)
+      setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
+    } else {
+      const filteredMovies = bookmarkedMovies.filter((movie) =>
+        movie.genre.includes(genre),
+      )
+      console.log(filteredMovies)
+      setCurrentMovies(filteredMovies.slice(0, pageSize))
+      const totalPages = calculatePageButtons(filteredMovies.length, pageSize)
       setPagesCount(totalPages)
-      setBookmarkedMovies(movies)
     }
-    getBookmarkedMovies()
-  }, [globalUser.id, setBookmarkedMovies])
+    setActivePageIndex(0)
+  }
 
-  const currentMovies = bookmarkedMovies.slice(
-    activePageIndex * pageSize,
-    (activePageIndex + 1) * pageSize,
-  )
+  // const currentMovies = bookmarkedMovies.slice(
+  //   activePageIndex * pageSize,
+  //   (activePageIndex + 1) * pageSize,
+  // )
 
   const nextPage = () => {
     if (activePageIndex < pagesCount.length - 1) {
       setActivePageIndex((prev) => prev + 1)
+      setCurrentMovies(
+        bookmarkedMovies.slice(
+          activePageIndex * pageSize,
+          (activePageIndex + 1) * pageSize,
+        ),
+      )
     }
   }
 
   const previousPage = () => {
     if (activePageIndex > 0) {
       setActivePageIndex((prev) => prev - 1)
+      setCurrentMovies(
+        bookmarkedMovies.slice(
+          activePageIndex * pageSize,
+          (activePageIndex - 1) * pageSize,
+        ),
+      )
     }
   }
 
@@ -57,23 +96,15 @@ const BookmarkedMovies = ({
     setActivePageIndex(pageIndex)
   }
 
-  const searchGenre = () => {
-    console.log('Search by genre')
-  }
-
-  const searchMovies = () => {
-    console.log('Search by movies')
-  }
-
   return (
     <div>
       <Menu
-        searchValue=""
+        searchValue={searchValue}
         searchGenre={searchGenre}
         searchMovies={searchMovies}
         bookmarkedPage={bookmarkedPage}
         setBookmarkedPage={setBookmarkedPage}
-        genre="All"
+        genre={genre}
       />
       {currentMovies.length > 0 ? (
         <>
