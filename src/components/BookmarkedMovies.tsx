@@ -17,7 +17,7 @@ const BookmarkedMovies = ({
   bookmarkedMovies: SingleMovieType[]
 }) => {
   const { globalUser } = useAppSlice()
-
+  console.log(setBookmarkedPage)
   useEffect(() => {
     const userRef = doc(db, 'users', globalUser.id)
 

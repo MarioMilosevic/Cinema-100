@@ -40,24 +40,47 @@ import BookmarkedMovies from '../components/BookmarkedMovies'
 import { useAppSlice } from '../hooks/useAppSlice'
 
 const Home = () => {
-  // const [movies, setMovies] = useState<SingleMovieType[]>([])
+  const [movies, setMovies] = useState<SingleMovieType[]>([])
   const [trendingMovies, setTrendingMovies] = useState<SingleMovieType[]>([])
   const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>(
     [],
   )
-  // const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
-  // const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
+  const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
+  const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   // const [activePageIndex, setActivePageIndex] = useState<number>(0)
   // const [pagesCount, setPagesCount] = useState<number[]>([])
-  const [searchValue, setSearchValue] = useState<string>('')
-  const [genre, setGenre] = useState<string>('All')
+  // const [searchValue, setSearchValue] = useState<string>('')
+  // const [genre, setGenre] = useState<string>('All')
   const [bookmarkedPage, setBookmarkedPage] = useState<boolean>(false)
   // const debouncedSearch = useDebounce(searchValue)
   const { globalUser } = useAppSlice()
 
   useEffect(() => {
     fetchTrendingMovies()
+    fetchInitialMovies()
   }, [])
+
+  useEffect(() => {
+    const userRef = doc(db, 'users', globalUser.id)
+
+    const unsubscribe = onSnapshot(
+      userRef,
+      (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data()
+          const bookmarkedMoviesRefs = userData.bookmarkedMovies
+          setBookmarkedMovies(bookmarkedMoviesRefs)
+        } else {
+          console.log('No such document!')
+        }
+      },
+      (error) => {
+        console.error('Error fetching bookmarked movies: ', error)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [globalUser.id])
 
   // useEffect(() => {
   //   const userRef = doc(db, 'users', globalUser.id)
@@ -138,24 +161,24 @@ const Home = () => {
     )
   }
 
-  // const fetchInitialMovies = async () => {
-  //   const initialQuery = query(
-  //     moviesCollection,
-  //     orderBy(field, 'desc'),
-  //     limit(pageSize),
-  //   )
-  //   const moviesRef = await getDocs(collection(db, 'movies'))
-  //   setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
-  //   setActivePageIndex(0)
-  //   const data = await getDocs(initialQuery)
-  //   setMovies(
-  //     data.docs.map((doc) => ({
-  //       ...(doc.data() as SingleMovieType),
-  //     })),
-  //   )
-  //   setFirstVisible(data.docs[0])
-  //   setLastVisible(data.docs[data.docs.length - 1])
-  // }
+  const fetchInitialMovies = async () => {
+    const initialQuery = query(
+      moviesCollection,
+      orderBy(field, 'desc'),
+      limit(pageSize),
+    )
+    // const moviesRef = await getDocs(collection(db, 'movies'))
+    // setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
+    // setActivePageIndex(0)
+    const data = await getDocs(initialQuery)
+    setMovies(
+      data.docs.map((doc) => ({
+        ...(doc.data() as SingleMovieType),
+      })),
+    )
+    setFirstVisible(data.docs[0])
+    setLastVisible(data.docs[data.docs.length - 1])
+  }
 
   // const fetchMovies = async (queryRef: Query<DocumentData>) => {
   //   const data = await getDocs(queryRef)
@@ -338,17 +361,22 @@ const Home = () => {
           </p>
           {bookmarkedPage ? (
             <BookmarkedMovies
+              bookmarkedPage={bookmarkedPage}
+              setBookmarkedPage={setBookmarkedPage}
               bookmarkedMovies={bookmarkedMovies}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              genre={genre}
-              setGenre={setGenre}
             />
           ) : (
             <AllMovies
               bookmarkedMovies={bookmarkedMovies}
+              movies={movies}
+              setMovies={setMovies}
               bookmarkedPage={bookmarkedPage}
               setBookmarkedPage={setBookmarkedPage}
+              firstVisible={firstVisible}
+              setFirstVisible={setFirstVisible}
+              lastVisible={lastVisible}
+              setLastVisible={setLastVisible}
+              fetchInitialMovies={fetchInitialMovies}
             />
           )}
         </>
