@@ -38,6 +38,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import AllMovies from '../components/AllMovies'
 import BookmarkedMovies from '../components/BookmarkedMovies'
 import { useAppSlice } from '../hooks/useAppSlice'
+import { fetchBookmarkedMovies } from '../utils/api'
 
 const Home = () => {
   const [movies, setMovies] = useState<SingleMovieType[]>([])
@@ -60,27 +61,36 @@ const Home = () => {
     fetchInitialMovies()
   }, [])
 
-  useEffect(() => {
-    const userRef = doc(db, 'users', globalUser.id)
+  // useEffect(() => {
+  //   const getbookmarkedMovies = async () => {
+  //     const movies = await fetchBookmarkedMovies(globalUser.id, db)
+  //     setBookmarkedMovies(movies)
+  //     console.log('fecovani movies', movies)
+  //   }
+  //   getbookmarkedMovies()
+  // }, [globalUser.id])
 
-    const unsubscribe = onSnapshot(
-      userRef,
-      (userDoc) => {
-        if (userDoc.exists()) {
-          const userData = userDoc.data()
-          const bookmarkedMoviesRefs = userData.bookmarkedMovies
-          setBookmarkedMovies(bookmarkedMoviesRefs)
-        } else {
-          console.log('No such document!')
-        }
-      },
-      (error) => {
-        console.error('Error fetching bookmarked movies: ', error)
-      },
-    )
+  // useEffect(() => {
+  //   const userRef = doc(db, 'users', globalUser.id)
 
-    return () => unsubscribe()
-  }, [globalUser.id])
+  //   const unsubscribe = onSnapshot(
+  //     userRef,
+  //     (userDoc) => {
+  //       if (userDoc.exists()) {
+  //         const userData = userDoc.data()
+  //         const bookmarkedMoviesRefs = userData.bookmarkedMovies
+  //         setBookmarkedMovies(bookmarkedMoviesRefs)
+  //       } else {
+  //         console.log('No such document!')
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching bookmarked movies: ', error)
+  //     },
+  //   )
+
+  //   return () => unsubscribe()
+  // }, [globalUser.id])
 
   // useEffect(() => {
   //   const userRef = doc(db, 'users', globalUser.id)
@@ -363,7 +373,8 @@ const Home = () => {
             <BookmarkedMovies
               bookmarkedPage={bookmarkedPage}
               setBookmarkedPage={setBookmarkedPage}
-              bookmarkedMovies={bookmarkedMovies}
+                bookmarkedMovies={bookmarkedMovies}
+                setBookmarkedMovies={setBookmarkedMovies}
             />
           ) : (
             <AllMovies
