@@ -1,35 +1,64 @@
 import MovieCard from './MovieCard'
 import PageButton from './PageButton'
+import Menu from './Menu'
 import { SingleMovieType } from '../utils/types'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { pageSize } from '../utils/constants'
 import { useState, useEffect } from 'react'
 import { calculatePageButtons } from '../utils/helperFunctions'
+import { db } from '../config/firebase'
+import { onSnapshot, doc } from 'firebase/firestore'
+import { useAppSlice } from '../hooks/useAppSlice'
 
 const BookmarkedMovies = ({
-  bookmarkedMovies,
-  searchValue,
-  setSearchValue,
-  genre,
-  setGenre,
+  bookmarkedPage,
+  setBookmarkedPage,
 }: {
   bookmarkedMovies: SingleMovieType[]
 }) => {
-  useEffect(() => {
-    const totalPages = calculatePageButtons(bookmarkedMovies.length, pageSize)
-    setPagesCount(totalPages)
-    setActivePageIndex(0)
-    setMovies(bookmarkedMovies.slice(0, pageSize))
-  }, [bookmarkedMovies])
+  const { globalUser } = useAppSlice()
 
-  const [movies, setMovies] = useState<SingleMovieType[]>([])
+  useEffect(() => {
+    const userRef = doc(db, 'users', globalUser.id)
+
+    const unsubscribe = onSnapshot(
+      userRef,
+      (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data()
+          const bookmarkedMoviesRefs = userData.bookmarkedMovies
+          const totalPages = calculatePageButtons(
+            bookmarkedMoviesRefs.length,
+            pageSize,
+          )
+          setPagesCount(totalPages)
+          setActivePageIndex(0)
+          setBookmarkedMovies(bookmarkedMoviesRefs)
+          //   setMovies(bookmarkedMovies.slice(0, pageSize))
+        } else {
+          console.log('No such document!')
+        }
+      },
+      (error) => {
+        console.error('Error fetching bookmarked movies: ', error)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [globalUser.id])
+
+  const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>(
+    [],
+  )
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [genre, setGenre] = useState<string>('All')
 
   const nextPage = () => {
     if (activePageIndex === pagesCount.length - 1) return
     const nextPageIndex = activePageIndex + 1
-    setMovies(
+    setBookmarkedMovies(
       bookmarkedMovies.slice(
         nextPageIndex * pageSize,
         (nextPageIndex + 1) * pageSize,
@@ -41,7 +70,7 @@ const BookmarkedMovies = ({
   const previousPage = () => {
     if (activePageIndex === 0) return
     const prevPageIndex = activePageIndex - 1
-    setMovies(
+    setBookmarkedMovies(
       bookmarkedMovies.slice(
         prevPageIndex * pageSize,
         (prevPageIndex + 1) * pageSize,
@@ -51,16 +80,32 @@ const BookmarkedMovies = ({
   }
 
   const goToPage = (pageIndex: number) => {
-    setMovies(
+    setBookmarkedMovies(
       bookmarkedMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
     )
     setActivePageIndex(pageIndex)
   }
 
-  return movies.length > 0 ? (
+  const searchGenre = () => {
+    console.log('da trazi zanr')
+  }
+
+  const searchMovies = () => {
+    console.log('da trazi filmove')
+  }
+
+  return bookmarkedMovies.length > 0 ? (
     <>
+      <Menu
+        searchValue={searchValue}
+        searchGenre={searchGenre}
+        searchMovies={searchMovies}
+        bookmarkedPage={bookmarkedPage}
+        setBookmarkedPage={setBookmarkedPage}
+        genre={genre}
+      />
       <div className="grid grid-cols-4 gap-8 py-4">
-        {movies.map((movie) => {
+        {bookmarkedMovies.map((movie) => {
           return <MovieCard key={movie.id} {...movie} isBookmarked={true} />
         })}
       </div>
