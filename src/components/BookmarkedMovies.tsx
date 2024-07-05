@@ -6,9 +6,6 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { pageSize } from '../utils/constants'
 import { useState, useEffect } from 'react'
 import { calculatePageButtons } from '../utils/helperFunctions'
-import { db } from '../config/firebase'
-import { useAppSlice } from '../hooks/useAppSlice'
-import { fetchBookmarkedMovies } from '../utils/api'
 
 const BookmarkedMovies = ({
   bookmarkedPage,
@@ -16,18 +13,14 @@ const BookmarkedMovies = ({
   bookmarkedMovies,
   setBookmarkedMovies,
 }: BookmarkedMoviesProps) => {
-  const { globalUser } = useAppSlice()
-
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
-  const [currentMovies, setCurrentMovies] = useState<SingleMovieType[]>([])
+  const [currentMovies, setCurrentMovies] =
+    useState<SingleMovieType[]>(bookmarkedMovies)
+  const [filteredMovies, setFilteredMovies] = useState<SingleMovieType[]>([])
 
-  // useEffect(() => {
-  //   setCurrentMovies(bookmarkedMovies.slice(activePageIndex, pageSize))
-  //   setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
-  // }, [activePageIndex, bookmarkedMovies])
   useEffect(() => {
     setCurrentMovies(
       bookmarkedMovies.slice(
@@ -35,12 +28,11 @@ const BookmarkedMovies = ({
         (activePageIndex + 1) * pageSize,
       ),
     )
-    setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+    // setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
   }, [activePageIndex, bookmarkedMovies])
 
-  console.log('render')
-
   const searchGenre = (e) => {
+    // ova se pozove na promjenu zanra
     const searchInput = e.target.value
     setGenre(searchInput)
     filterMoviesByGenre(searchInput)
@@ -60,6 +52,7 @@ const BookmarkedMovies = ({
       const filteredMovies = bookmarkedMovies.filter((movie) =>
         movie.genre.includes(genre),
       )
+      setFilteredMovies(filteredMovies)
       setCurrentMovies(filteredMovies.slice(0, pageSize))
       setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
     }
@@ -93,21 +86,36 @@ const BookmarkedMovies = ({
   }
 
   const goToPage = (pageIndex: number) => {
-    setActivePageIndex(pageIndex)
-    setCurrentMovies(
-      bookmarkedMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
-    )
+    if (searchValue === '' && genre === 'All') {
+      console.log('ako je sve kako treba')
+      setActivePageIndex(pageIndex)
+      setCurrentMovies(
+        bookmarkedMovies.slice(
+          pageIndex * pageSize,
+          (pageIndex + 1) * pageSize,
+        ),
+      )
+    }
+    if (searchValue === '' && genre !== 'All') {
+      console.log('ukoliko je zanr mjenjan')
+
+      setActivePageIndex(pageIndex)
+      setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
+      setCurrentMovies((previousMovies) =>
+        previousMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+      )
+    }
   }
 
   return (
     <div>
       <Menu
         searchValue={searchValue}
-        searchGenre={searchGenre}
         searchMovies={searchMovies}
         bookmarkedPage={bookmarkedPage}
         setBookmarkedPage={setBookmarkedPage}
         genre={genre}
+        searchGenre={searchGenre}
       />
       {currentMovies.length > 0 ? (
         <>
