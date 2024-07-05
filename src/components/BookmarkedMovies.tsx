@@ -22,18 +22,23 @@ const BookmarkedMovies = ({
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
-  const [currentMovies, setCurrentMovies] =
-    useState<SingleMovieType[]>(bookmarkedMovies)
+  const [currentMovies, setCurrentMovies] = useState<SingleMovieType[]>([])
 
   // useEffect(() => {
-  //   const getBookmarkedMovies = async () => {
-  //     const movies = await fetchBookmarkedMovies(globalUser.id, db)
-  //     const totalPages = calculatePageButtons(movies.length, pageSize)
-  //     setPagesCount(totalPages)
-  //     setBookmarkedMovies(movies)
-  //   }
-  //   getBookmarkedMovies()
-  // }, [globalUser.id, setBookmarkedMovies])
+  //   setCurrentMovies(bookmarkedMovies.slice(activePageIndex, pageSize))
+  //   setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+  // }, [activePageIndex, bookmarkedMovies])
+  useEffect(() => {
+    setCurrentMovies(
+      bookmarkedMovies.slice(
+        activePageIndex * pageSize,
+        (activePageIndex + 1) * pageSize,
+      ),
+    )
+    setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+  }, [activePageIndex, bookmarkedMovies])
+
+  console.log('render')
 
   const searchGenre = (e) => {
     const searchInput = e.target.value
@@ -46,35 +51,29 @@ const BookmarkedMovies = ({
   }
 
   const filterMoviesByGenre = (genre: string) => {
-    // let mario = [...bookmarkedMovies]
     if (genre === 'All') {
       console.log('uslo')
       console.log(bookmarkedMovies)
       setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
+      setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
     } else {
       const filteredMovies = bookmarkedMovies.filter((movie) =>
         movie.genre.includes(genre),
       )
-      console.log(filteredMovies)
       setCurrentMovies(filteredMovies.slice(0, pageSize))
-      const totalPages = calculatePageButtons(filteredMovies.length, pageSize)
-      setPagesCount(totalPages)
+      setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
     }
     setActivePageIndex(0)
   }
 
-  // const currentMovies = bookmarkedMovies.slice(
-  //   activePageIndex * pageSize,
-  //   (activePageIndex + 1) * pageSize,
-  // )
-
   const nextPage = () => {
     if (activePageIndex < pagesCount.length - 1) {
-      setActivePageIndex((prev) => prev + 1)
+      const nextPageIndex = activePageIndex + 1
+      setActivePageIndex(nextPageIndex)
       setCurrentMovies(
         bookmarkedMovies.slice(
-          activePageIndex * pageSize,
-          (activePageIndex + 1) * pageSize,
+          nextPageIndex * pageSize,
+          (nextPageIndex + 1) * pageSize,
         ),
       )
     }
@@ -82,11 +81,12 @@ const BookmarkedMovies = ({
 
   const previousPage = () => {
     if (activePageIndex > 0) {
-      setActivePageIndex((prev) => prev - 1)
+      const prevPageIndex = activePageIndex - 1
+      setActivePageIndex(prevPageIndex)
       setCurrentMovies(
         bookmarkedMovies.slice(
-          activePageIndex * pageSize,
-          (activePageIndex - 1) * pageSize,
+          prevPageIndex * pageSize,
+          (prevPageIndex + 1) * pageSize,
         ),
       )
     }
@@ -94,6 +94,9 @@ const BookmarkedMovies = ({
 
   const goToPage = (pageIndex: number) => {
     setActivePageIndex(pageIndex)
+    setCurrentMovies(
+      bookmarkedMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    )
   }
 
   return (
