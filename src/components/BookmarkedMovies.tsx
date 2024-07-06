@@ -29,8 +29,11 @@ const BookmarkedMovies = ({
         (activePageIndex + 1) * pageSize,
       ),
     )
-    // setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
   }, [activePageIndex, bookmarkedMovies])
+
+  useEffect(() => {
+    setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+  }, [bookmarkedMovies.length])
 
   const searchGenre = (e) => {
     // ova se pozove na promjenu zanra
@@ -63,14 +66,15 @@ const BookmarkedMovies = ({
   const filterMoviesByGenre = (genre: string) => {
     let genreFilteredMovies
     if (genre === 'All' && !searchValue) {
-      console.log('zanr ALL nema seachvalue')
+      console.log('NEMA genre NEMA seachvalue')
       setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
       setFilteredMovies(bookmarkedMovies)
       setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
     }
     if (genre !== 'All' && !searchValue) {
-      console.log('zanr NIJE ALL NEMA SEARCHVALUE')
-      genreFilteredMovies = filteredMovies.filter((movie) =>
+      console.log('IMA genre NEMA SearchValue')
+      // problem nedje
+      genreFilteredMovies = bookmarkedMovies.filter((movie) =>
         movie.genre.includes(genre),
       )
       setFilteredMovies(genreFilteredMovies)
@@ -78,7 +82,7 @@ const BookmarkedMovies = ({
       setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
     }
     if (genre !== 'All' && searchValue) {
-      console.log('zanr NIJE ALL ima SEARCHVALUE')
+      console.log('IMA genre IMA SearchValue')
       genreFilteredMovies = filteredMovies.filter((movie) =>
         movie.genre.includes(genre),
       )
@@ -88,12 +92,13 @@ const BookmarkedMovies = ({
     }
     if (genre === 'All' && searchValue) {
       console.log('NEMA genre, IMA searchValue')
-      // genreFilteredMovies = bookmarkedMovies.filter((movie) =>
-      //   movie.genre.includes(genre),
-      // )
-      // setFilteredMovies(genreFilteredMovies)
-      setCurrentMovies(filteredMovies.slice(0, pageSize))
-      setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
+      // ovo testiram
+      const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+        movie.title.includes(searchValue),
+      )
+      setFilteredMovies(searchFilteredMovies)
+      setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+      setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
     }
     setActivePageIndex(0)
   }
