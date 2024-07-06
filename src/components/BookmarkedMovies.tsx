@@ -49,59 +49,125 @@ const BookmarkedMovies = ({
   }
 
   const filterMoviesBySearchValue = (searchInput: string) => {
-    if (!searchInput && genre === 'All') {
-      setActivePageIndex(0)
-      setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
-      setCurrentMovies(filteredMovies.slice(0, pageSize))
-    } else {
-      const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+    let searchFilteredMovies = bookmarkedMovies
+
+    if (genre !== 'All') {
+      searchFilteredMovies = searchFilteredMovies.filter((movie) =>
+        movie.genre.includes(genre),
+      )
+    }
+
+    if (searchInput) {
+      searchFilteredMovies = searchFilteredMovies.filter((movie) =>
         movie.title.includes(searchInput),
       )
-      setFilteredMovies(searchFilteredMovies)
-      setCurrentMovies(searchFilteredMovies)
-      setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
     }
-  }
 
-  const filterMoviesByGenre = (genre: string) => {
-    let genreFilteredMovies
-    if (genre === 'All' && !searchValue) {
-      console.log('NEMA genre NEMA seachvalue')
-      setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
-      setFilteredMovies(bookmarkedMovies)
-      setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
-    }
-    if (genre !== 'All' && !searchValue) {
-      console.log('IMA genre NEMA SearchValue')
-      // problem nedje
-      genreFilteredMovies = bookmarkedMovies.filter((movie) =>
-        movie.genre.includes(genre),
-      )
-      setFilteredMovies(genreFilteredMovies)
-      setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
-      setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
-    }
-    if (genre !== 'All' && searchValue) {
-      console.log('IMA genre IMA SearchValue')
-      genreFilteredMovies = filteredMovies.filter((movie) =>
-        movie.genre.includes(genre),
-      )
-      setFilteredMovies(genreFilteredMovies)
-      setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
-      setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
-    }
-    if (genre === 'All' && searchValue) {
-      console.log('NEMA genre, IMA searchValue')
-      // ovo testiram
-      const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
-        movie.title.includes(searchValue),
-      )
-      setFilteredMovies(searchFilteredMovies)
-      setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
-      setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-    }
+    setFilteredMovies(searchFilteredMovies)
+    setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+    setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
     setActivePageIndex(0)
   }
+
+  // const filterMoviesBySearchValue = (searchInput: string) => {
+  //   let searchFilteredMovies
+  //   if (!searchInput && genre === 'All') {
+  //     console.log('NEMA searchValue NEMA genre')
+  //     searchFilteredMovies = bookmarkedMovies
+  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+  //     setFilteredMovies(searchFilteredMovies)
+  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+  //   }
+  //   if (searchInput && genre === 'All') {
+  //     console.log('IMA searchValue NEMA genre')
+  //     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+  //       movie.title.includes(searchInput),
+  //     )
+  //     setFilteredMovies(searchFilteredMovies)
+  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+  //   }
+  //   if (!searchInput && genre !== 'All') {
+  //     console.log('NEMA searchValue IMA genre')
+  //     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+  //       movie.genre.includes(genre),
+  //     )
+  //     setFilteredMovies(searchFilteredMovies)
+  //     setCurrentMovies(searchFilteredMovies.slice(0, 12))
+  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+  //   }
+  //   if (searchInput && genre !== 'All') {
+  //     console.log('IMA searchValue IMA genre')
+  //     searchFilteredMovies = filteredMovies.filter((movie) =>
+  //       movie.title.includes(searchInput),
+  //     )
+  //     setFilteredMovies(searchFilteredMovies)
+  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+  //   }
+  //   setActivePageIndex(0)
+  // }
+
+  const filterMoviesByGenre = (genre: string) => {
+    let genreFilteredMovies = bookmarkedMovies
+
+    if (genre !== 'All') {
+      genreFilteredMovies = genreFilteredMovies.filter((movie) =>
+        movie.genre.includes(genre),
+      )
+    }
+
+    if (searchValue) {
+      genreFilteredMovies = genreFilteredMovies.filter((movie) =>
+        movie.title.includes(searchValue),
+      )
+    }
+
+    setFilteredMovies(genreFilteredMovies)
+    setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
+    setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
+    setActivePageIndex(0)
+  }
+
+  // const filterMoviesByGenre = (genre: string) => {
+  //   let genreFilteredMovies
+  //   if (genre === 'All' && !searchValue) {
+  //     console.log('NEMA genre NEMA seachvalue')
+  //     setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
+  //     setFilteredMovies(bookmarkedMovies)
+  //     setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+  //   }
+  //   if (genre !== 'All' && !searchValue) {
+  //     console.log('IMA genre NEMA SearchValue')
+  //     // problem nedje
+  //     genreFilteredMovies = bookmarkedMovies.filter((movie) =>
+  //       movie.genre.includes(genre),
+  //     )
+  //     setFilteredMovies(genreFilteredMovies)
+  //     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
+  //     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
+  //   }
+  //   if (genre !== 'All' && searchValue) {
+  //     console.log('IMA genre IMA SearchValue')
+  //     genreFilteredMovies = filteredMovies.filter((movie) =>
+  //       movie.genre.includes(genre),
+  //     )
+  //     setFilteredMovies(genreFilteredMovies)
+  //     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
+  //     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
+  //   }
+  //   if (genre === 'All' && searchValue) {
+  //     console.log('NEMA genre, IMA searchValue')
+  //     // ovo testiram
+  //     const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+  //       movie.title.includes(searchValue),
+  //     )
+  //     setFilteredMovies(searchFilteredMovies)
+  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+  //   }
+  //   setActivePageIndex(0)
+  // }
 
   const nextPage = () => {
     if (activePageIndex < pagesCount.length - 1) {
