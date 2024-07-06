@@ -2,11 +2,12 @@ import MovieCard from './MovieCard'
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState } from 'react'
 
-
-const Slider = ({trendingMovies}) => {
+const Slider = ({ trendingMovies, bookmarkedMovies }) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
 
   const totalSlides = Math.ceil(trendingMovies.length / 4)
+
+  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
 
   const nextSlide = () => {
     if (activeSlideIndex < totalSlides - 1) {
@@ -29,7 +30,7 @@ const Slider = ({trendingMovies}) => {
   return (
     <div className="w-full py-16 flex flex-col gap-4 relative">
       <div className="w-[90%] mx-auto flex items-center justify-between">
-        <h2 className='text-xl font-semibold'>Currently Trending</h2>
+        <h2 className="text-xl font-semibold">Currently Trending</h2>
         <div className="flex gap-1 items-center">
           {dots.map((index) => {
             const color =
@@ -54,11 +55,18 @@ const Slider = ({trendingMovies}) => {
             className="relative h-full w-full flex transition-transform duration-500"
             style={{ transform: `translateX(-${activeSlideIndex * 100}%)` }}
           >
-            {trendingMovies.map((movie) => (
-              <div key={movie.id} className="w-1/4 flex-shrink-0">
-                <MovieCard {...movie} />
-              </div>
-            ))}
+            {trendingMovies.map((movie) => {
+              const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
+              return (
+                <div className="w-1/4 flex-shrink-0">
+                  <MovieCard
+                    key={movie.id}
+                    {...movie}
+                    isBookmarked={isBookmarked}
+                  />
+                </div>
+              )
+            })}
           </div>
         </div>
         <HiArrowCircleRight
@@ -72,3 +80,10 @@ const Slider = ({trendingMovies}) => {
 }
 
 export default Slider
+{
+  /* {trendingMovies.map((movie) => (
+              <div key={movie.id} className="w-1/4 flex-shrink-0">
+                <MovieCard {...movie} />
+              </div>
+            ))} */
+}

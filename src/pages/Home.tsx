@@ -94,7 +94,10 @@ const Home = () => {
         <LoadingSpinner />
       ) : (
         <>
-          <Slider trendingMovies={trendingMovies} />
+          <Slider
+            trendingMovies={trendingMovies}
+            bookmarkedMovies={bookmarkedMovies}
+          />
           <p className="py-4 text-lg font-medium">
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100 movies'}
           </p>

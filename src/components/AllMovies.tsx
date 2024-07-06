@@ -115,7 +115,6 @@ const AllMovies = ({
     filterMovies(debouncedSearch, genre)
   }, [debouncedSearch, setMovies, genre, setFirstVisible, setLastVisible])
 
-  console.log(bookmarkedMovies)
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
 
   const fetchInitialMovies = async () => {
