@@ -2,6 +2,7 @@ import { SlMagnifier } from 'react-icons/sl'
 import { FaBookmark } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
 import { allGenres } from '../utils/constants'
+import { MenuProps } from '../utils/types'
 const Menu = ({
   searchValue,
   searchMovies,
@@ -9,7 +10,7 @@ const Menu = ({
   genre,
   bookmarkedPage,
   setBookmarkedPage,
-}) => {
+}: MenuProps) => {
   return (
     <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
       <div className="relative w-[250px]">

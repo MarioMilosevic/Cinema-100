@@ -1,5 +1,3 @@
-import { SingleMovieType } from './types'
-
 export const initialUserState = {
   email: '',
   password: '',
@@ -24,7 +22,7 @@ export const initialGlobalUserState = {
 export const pageSize = 12
 export const field = 'rating'
 
-export const data: SingleMovieType[] = [
+export const data = [
   {
     rank: 1,
     title: 'the shawshank redemption',

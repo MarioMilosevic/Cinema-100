@@ -33,20 +33,18 @@ const AllMovies = ({
   setMovies,
   bookmarkedPage,
   setBookmarkedPage,
-  // fetchInitialMovies,
   firstVisible,
   setFirstVisible,
   lastVisible,
   setLastVisible,
 }: AllMoviesProps) => {
-  // const [movies, setMovies] = useState<SingleMovieType[]>([])
-  // const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
-  // const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const debouncedSearch = useDebounce(searchValue)
+
+  console.log(bookmarkedMovies)
 
   useEffect(() => {
     const setPagination = async () => {
@@ -85,9 +83,7 @@ const AllMovies = ({
           orderBy(field, 'desc'),
           limit(pageSize),
         )
-        // const moviesRef = await getDocs(collection(db, 'movies'))
-        // setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
-        // setActivePageIndex(0)
+
         const data = await getDocs(initialQuery)
         setMovies(
           data.docs.map((doc) => ({
@@ -117,15 +113,9 @@ const AllMovies = ({
     }
 
     filterMovies(debouncedSearch, genre)
-  }, [
-    debouncedSearch,
-    setMovies,
-    genre,
-    // fetchInitialMovies,
-    setFirstVisible,
-    setLastVisible,
-  ])
+  }, [debouncedSearch, setMovies, genre, setFirstVisible, setLastVisible])
 
+  console.log(bookmarkedMovies)
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
 
   const fetchInitialMovies = async () => {
@@ -134,9 +124,7 @@ const AllMovies = ({
       orderBy(field, 'desc'),
       limit(pageSize),
     )
-    // const moviesRef = await getDocs(collection(db, 'movies'))
-    // setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
-    // setActivePageIndex(0)
+
     const data = await getDocs(initialQuery)
     setMovies(
       data.docs.map((doc) => ({
@@ -178,25 +166,6 @@ const AllMovies = ({
     await fetchMovies(queryRef)
     setActivePageIndex((prev) => prev + 1)
   }
-
-  // const fetchInitialMovies = async () => {
-  //   const initialQuery = query(
-  //     moviesCollection,
-  //     orderBy(field, 'desc'),
-  //     limit(pageSize),
-  //   )
-  //   const moviesRef = await getDocs(collection(db, 'movies'))
-  //   setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
-  //   setActivePageIndex(0)
-  //   const data = await getDocs(initialQuery)
-  //   setMovies(
-  //     data.docs.map((doc) => ({
-  //       ...(doc.data() as SingleMovieType),
-  //     })),
-  //   )
-  //   setFirstVisible(data.docs[0])
-  //   setLastVisible(data.docs[data.docs.length - 1])
-  // }
 
   const fetchAndSetMovies = async (
     queryRef: Query<DocumentData>,
@@ -349,7 +318,6 @@ const AllMovies = ({
           const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (
             <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
-            // <MovieCard key={movie.id} {...movie} isBookmarked={true} />
           )
         })}
       </div>

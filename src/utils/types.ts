@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { DocumentData } from 'firebase/firestore'
 import { UseFormRegisterReturn } from 'react-hook-form'
 
 export type UserType = {
@@ -66,17 +67,29 @@ export type PageButtonOptions = {
 }
 
 export type AllMoviesProps = {
-  movies: SingleMovieType[]
-  nextPage: () => Promise<void>
-  previousPage: () => Promise<void>
-  goToPage: (pageIndex: number) => Promise<void>
-  pagesCount: number[]
-  activePageIndex: number
   bookmarkedMovies: SingleMovieType[]
+  movies: SingleMovieType[]
+  setMovies: React.Dispatch<React.SetStateAction<SingleMovieType[]>>
+  bookmarkedPage: boolean
+  setBookmarkedPage: React.Dispatch<React.SetStateAction<boolean>>
+  firstVisible: DocumentData | null
+  setFirstVisible: React.Dispatch<React.SetStateAction<DocumentData | null>>
+  lastVisible: DocumentData | null
+  setLastVisible: React.Dispatch<React.SetStateAction<DocumentData | null>>
+  fetchInitialMovies: () => Promise<void>
 }
 
 export type BookmarkedMoviesProps = {
   bookmarkedPage: boolean
   setBookmarkedPage: (page: boolean) => void
   bookmarkedMovies: SingleMovieType[]
+}
+
+export type MenuProps = {
+  searchValue: string
+  searchMovies: (e: React.ChangeEvent<HTMLInputElement>) => void
+  searchGenre: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  genre: string
+  bookmarkedPage: boolean
+  setBookmarkedPage: (value: boolean) => void
 }

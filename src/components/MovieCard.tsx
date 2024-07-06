@@ -58,7 +58,7 @@ const MovieCard = ({
         const updatedBookmarkedMovies = isAlreadyBookmarked
           ? arrayRemove(movieData)
           : arrayUnion(movieData)
-
+        console.log(updatedBookmarkedMovies)
         await updateDoc(userRef, {
           bookmarkedMovies: updatedBookmarkedMovies,
         })

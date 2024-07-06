@@ -121,19 +121,3 @@ export const fetchMovieDoc = async (
   const querySnapshot = await getDocs(q)
   return querySnapshot.docs[0]
 }
-
-export const fetchBookmarkedMovies = async (userId: string, db: Firestore) => {
-  try {
-    const userRef = doc(db, 'users', userId)
-    const userDoc = await getDoc(userRef)
-    if (userDoc.exists()) {
-      const userData = userDoc.data()
-      const bookmarkedMovies = userData.bookmarkedMovies
-      return bookmarkedMovies
-    } else {
-      console.log('No such document!')
-    }
-  } catch (error) {
-    console.error('Error fetching bookmarked movies:', error)
-  }
-}
