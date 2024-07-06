@@ -379,7 +379,6 @@ const Home = () => {
               bookmarkedPage={bookmarkedPage}
               setBookmarkedPage={setBookmarkedPage}
               bookmarkedMovies={bookmarkedMovies}
-              setBookmarkedMovies={setBookmarkedMovies}
             />
           ) : (
             <AllMovies

@@ -79,5 +79,4 @@ export type BookmarkedMoviesProps = {
   bookmarkedPage: boolean
   setBookmarkedPage: (page: boolean) => void
   bookmarkedMovies: SingleMovieType[]
-  setBookmarkedMovies: (movies: SingleMovieType[]) => void
 }

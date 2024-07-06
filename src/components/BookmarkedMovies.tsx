@@ -11,7 +11,6 @@ const BookmarkedMovies = ({
   bookmarkedPage,
   setBookmarkedPage,
   bookmarkedMovies,
-  setBookmarkedMovies,
 }: BookmarkedMoviesProps) => {
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
@@ -21,19 +20,48 @@ const BookmarkedMovies = ({
     useState<SingleMovieType[]>(bookmarkedMovies)
   const [filteredMovies, setFilteredMovies] = useState<SingleMovieType[]>([])
 
+  // useEffect(() => {
+  //   setCurrentMovies(
+  //     bookmarkedMovies.slice(
+  //       activePageIndex * pageSize,
+  //       (activePageIndex + 1) * pageSize,
+  //     ),
+  //   )
+  // }, [activePageIndex, bookmarkedMovies])
+
+  // useEffect(() => {
+  //   setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+  //   setFilteredMovies(bookmarkedMovies)
+  // }, [bookmarkedMovies.length, bookmarkedMovies])
   useEffect(() => {
-    setFilteredMovies(bookmarkedMovies)
+    const filtered = filterMovies(bookmarkedMovies, searchValue, genre)
+    setFilteredMovies(filtered)
+    setPagesCount(calculatePageButtons(filtered.length, pageSize))
+    setActivePageIndex(0)
+  }, [bookmarkedMovies, searchValue, genre])
+
+  useEffect(() => {
     setCurrentMovies(
-      bookmarkedMovies.slice(
+      filteredMovies.slice(
         activePageIndex * pageSize,
         (activePageIndex + 1) * pageSize,
       ),
     )
-  }, [activePageIndex, bookmarkedMovies])
+  }, [activePageIndex, filteredMovies])
 
-  useEffect(() => {
-    setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
-  }, [bookmarkedMovies.length])
+  const filterMovies = (movies, searchValue, genre) => {
+    let filtered = movies
+
+    if (genre !== 'All') {
+      filtered = filtered.filter((movie) => movie.genre.includes(genre))
+    }
+
+    if (searchValue) {
+      filtered = filtered.filter((movie) => movie.title.includes(searchValue))
+    }
+
+    return filtered
+  }
 
   const searchGenre = (e) => {
     // ova se pozove na promjenu zanra
@@ -69,45 +97,6 @@ const BookmarkedMovies = ({
     setActivePageIndex(0)
   }
 
-  // const filterMoviesBySearchValue = (searchInput: string) => {
-  //   let searchFilteredMovies
-  //   if (!searchInput && genre === 'All') {
-  //     console.log('NEMA searchValue NEMA genre')
-  //     searchFilteredMovies = bookmarkedMovies
-  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-  //     setFilteredMovies(searchFilteredMovies)
-  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
-  //   }
-  //   if (searchInput && genre === 'All') {
-  //     console.log('IMA searchValue NEMA genre')
-  //     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
-  //       movie.title.includes(searchInput),
-  //     )
-  //     setFilteredMovies(searchFilteredMovies)
-  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
-  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-  //   }
-  //   if (!searchInput && genre !== 'All') {
-  //     console.log('NEMA searchValue IMA genre')
-  //     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
-  //       movie.genre.includes(genre),
-  //     )
-  //     setFilteredMovies(searchFilteredMovies)
-  //     setCurrentMovies(searchFilteredMovies.slice(0, 12))
-  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-  //   }
-  //   if (searchInput && genre !== 'All') {
-  //     console.log('IMA searchValue IMA genre')
-  //     searchFilteredMovies = filteredMovies.filter((movie) =>
-  //       movie.title.includes(searchInput),
-  //     )
-  //     setFilteredMovies(searchFilteredMovies)
-  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
-  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-  //   }
-  //   setActivePageIndex(0)
-  // }
-
   const filterMoviesByGenre = (genre: string) => {
     let genreFilteredMovies = bookmarkedMovies
 
@@ -129,68 +118,17 @@ const BookmarkedMovies = ({
     setActivePageIndex(0)
   }
 
-  // const filterMoviesByGenre = (genre: string) => {
-  //   let genreFilteredMovies
-  //   if (genre === 'All' && !searchValue) {
-  //     console.log('NEMA genre NEMA seachvalue')
-  //     setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
-  //     setFilteredMovies(bookmarkedMovies)
-  //     setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
-  //   }
-  //   if (genre !== 'All' && !searchValue) {
-  //     console.log('IMA genre NEMA SearchValue')
-  //     // problem nedje
-  //     genreFilteredMovies = bookmarkedMovies.filter((movie) =>
-  //       movie.genre.includes(genre),
-  //     )
-  //     setFilteredMovies(genreFilteredMovies)
-  //     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
-  //     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
-  //   }
-  //   if (genre !== 'All' && searchValue) {
-  //     console.log('IMA genre IMA SearchValue')
-  //     genreFilteredMovies = filteredMovies.filter((movie) =>
-  //       movie.genre.includes(genre),
-  //     )
-  //     setFilteredMovies(genreFilteredMovies)
-  //     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
-  //     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
-  //   }
-  //   if (genre === 'All' && searchValue) {
-  //     console.log('NEMA genre, IMA searchValue')
-  //     // ovo testiram
-  //     const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
-  //       movie.title.includes(searchValue),
-  //     )
-  //     setFilteredMovies(searchFilteredMovies)
-  //     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
-  //     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
-  //   }
-  //   setActivePageIndex(0)
-  // }
-
+  console.log(filteredMovies)
   const nextPage = () => {
     if (activePageIndex < pagesCount.length - 1) {
       const nextPageIndex = activePageIndex + 1
       setActivePageIndex(nextPageIndex)
-      if (!searchValue && genre === 'All') {
-        setCurrentMovies(
-          bookmarkedMovies.slice(
-            nextPageIndex * pageSize,
-            (nextPageIndex + 1) * pageSize,
-          ),
-        )
-      }
-      // if (!searchValue && genre !== 'All') {
-      else {
-        console.log('next kada zanr nije all')
-        setCurrentMovies(
-          filteredMovies.slice(
-            nextPageIndex * pageSize,
-            (nextPageIndex + 1) * pageSize,
-          ),
-        )
-      }
+      setCurrentMovies(
+        filteredMovies.slice(
+          nextPageIndex * pageSize,
+          (nextPageIndex + 1) * pageSize,
+        ),
+      )
     }
   }
 
@@ -198,50 +136,20 @@ const BookmarkedMovies = ({
     if (activePageIndex > 0) {
       const prevPageIndex = activePageIndex - 1
       setActivePageIndex(prevPageIndex)
-      if (!searchValue && genre === 'All') {
-        setCurrentMovies(
-          bookmarkedMovies.slice(
-            prevPageIndex * pageSize,
-            (prevPageIndex + 1) * pageSize,
-          ),
-        )
-      }
-      // if (!searchValue && genre !== 'All') {
-      else {
-        console.log('prev kada zanr nije all')
-        setCurrentMovies(
-          filteredMovies.slice(
-            prevPageIndex * pageSize,
-            (prevPageIndex + 1) * pageSize,
-          ),
-        )
-      }
+      setCurrentMovies(
+        filteredMovies.slice(
+          prevPageIndex * pageSize,
+          (prevPageIndex + 1) * pageSize,
+        ),
+      )
     }
   }
 
   const goToPage = (pageIndex: number) => {
-    if (searchValue === '' && genre === 'All') {
-      console.log('ako je sve kako treba')
-      setActivePageIndex(pageIndex)
-      setCurrentMovies(
-        bookmarkedMovies.slice(
-          pageIndex * pageSize,
-          (pageIndex + 1) * pageSize,
-        ),
-      )
-    }
-    if (searchValue === '' && genre !== 'All') {
-      console.log('ukoliko je zanr mjenjan')
-
-      setActivePageIndex(pageIndex)
-      setPagesCount(calculatePageButtons(filteredMovies.length, pageSize))
-      setCurrentMovies((previousMovies) =>
-        previousMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
-      )
-    }
-    if (searchValue !== '' && genre === 'All') {
-      console.log('ukoliko je search mijenjan a genre ALL')
-    }
+    setActivePageIndex(pageIndex)
+    setCurrentMovies(
+      filteredMovies.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    )
   }
 
   return (
@@ -295,3 +203,82 @@ const BookmarkedMovies = ({
 }
 
 export default BookmarkedMovies
+
+// const filterMoviesBySearchValue = (searchInput: string) => {
+//   let searchFilteredMovies
+//   if (!searchInput && genre === 'All') {
+//     console.log('NEMA searchValue NEMA genre')
+//     searchFilteredMovies = bookmarkedMovies
+//     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+//     setFilteredMovies(searchFilteredMovies)
+//     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+//   }
+//   if (searchInput && genre === 'All') {
+//     console.log('IMA searchValue NEMA genre')
+//     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+//       movie.title.includes(searchInput),
+//     )
+//     setFilteredMovies(searchFilteredMovies)
+//     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+//     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+//   }
+//   if (!searchInput && genre !== 'All') {
+//     console.log('NEMA searchValue IMA genre')
+//     searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+//       movie.genre.includes(genre),
+//     )
+//     setFilteredMovies(searchFilteredMovies)
+//     setCurrentMovies(searchFilteredMovies.slice(0, 12))
+//     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+//   }
+//   if (searchInput && genre !== 'All') {
+//     console.log('IMA searchValue IMA genre')
+//     searchFilteredMovies = filteredMovies.filter((movie) =>
+//       movie.title.includes(searchInput),
+//     )
+//     setFilteredMovies(searchFilteredMovies)
+//     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+//     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+//   }
+//   setActivePageIndex(0)
+// }
+
+// const filterMoviesByGenre = (genre: string) => {
+//   let genreFilteredMovies
+//   if (genre === 'All' && !searchValue) {
+//     console.log('NEMA genre NEMA seachvalue')
+//     setCurrentMovies(bookmarkedMovies.slice(0, pageSize))
+//     setFilteredMovies(bookmarkedMovies)
+//     setPagesCount(calculatePageButtons(bookmarkedMovies.length, pageSize))
+//   }
+//   if (genre !== 'All' && !searchValue) {
+//     console.log('IMA genre NEMA SearchValue')
+//     // problem nedje
+//     genreFilteredMovies = bookmarkedMovies.filter((movie) =>
+//       movie.genre.includes(genre),
+//     )
+//     setFilteredMovies(genreFilteredMovies)
+//     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
+//     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
+//   }
+//   if (genre !== 'All' && searchValue) {
+//     console.log('IMA genre IMA SearchValue')
+//     genreFilteredMovies = filteredMovies.filter((movie) =>
+//       movie.genre.includes(genre),
+//     )
+//     setFilteredMovies(genreFilteredMovies)
+//     setCurrentMovies(genreFilteredMovies.slice(0, pageSize))
+//     setPagesCount(calculatePageButtons(genreFilteredMovies.length, pageSize))
+//   }
+//   if (genre === 'All' && searchValue) {
+//     console.log('NEMA genre, IMA searchValue')
+//     // ovo testiram
+//     const searchFilteredMovies = bookmarkedMovies.filter((movie) =>
+//       movie.title.includes(searchValue),
+//     )
+//     setFilteredMovies(searchFilteredMovies)
+//     setCurrentMovies(searchFilteredMovies.slice(0, pageSize))
+//     setPagesCount(calculatePageButtons(searchFilteredMovies.length, pageSize))
+//   }
+//   setActivePageIndex(0)
+// }
