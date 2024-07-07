@@ -1,5 +1,6 @@
+import { SignUpProps } from '../utils/types'
 import InputField from './InputField'
-const SignUp = ({ newUser, setNewUser, register }) => {
+const SignUp = ({ newUser, setNewUser, register }:SignUpProps) => {
   return (
     <>
       <InputField

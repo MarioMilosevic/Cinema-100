@@ -55,7 +55,6 @@ const BookmarkedMovies = ({
   }
 
   const searchGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // ova se pozove na promjenu zanra
     const searchInput = e.target.value
     setGenre(searchInput)
     filterMoviesByGenre(searchInput)

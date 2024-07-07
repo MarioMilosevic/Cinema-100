@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { DocumentData } from 'firebase/firestore'
-import { UseFormRegisterReturn } from 'react-hook-form'
+import { UseFormRegisterReturn, UseFormRegister } from 'react-hook-form'
 import { Dispatch } from 'redux'
 import { NavigateFunction } from 'react-router-dom'
 import { setGlobalUser } from '../redux/features/appSlice'
@@ -116,6 +116,7 @@ export type SignInUserProps = {
   dispatch: Dispatch
   navigate: NavigateFunction
   setGlobalUser: typeof setGlobalUser
+  setError: (error: string) => void
 }
 
 export type SignInGuestProps = {
@@ -127,4 +128,16 @@ export type SignInGuestProps = {
 export type SignOutUserProps = {
   dispatch: Dispatch
   globalUser: GlobalUserType
+}
+
+export type LogInProps = {
+  user: UserType
+  setUser: React.Dispatch<React.SetStateAction<UserType>>
+  register: UseFormRegister<UserFormFormValues>
+}
+
+export type SignUpProps = {
+  newUser: NewUserType
+  setNewUser: React.Dispatch<React.SetStateAction<NewUserType>>
+  register: UseFormRegister<UserFormFormValues>
 }

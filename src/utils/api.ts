@@ -35,54 +35,6 @@ import {
   GlobalUserType,
 } from './types'
 
-// export const createUser = async ({
-//   data,
-//   dispatch,
-//   navigate,
-//   setGlobalUser,
-//   setNewUser,
-// }: CreateUserProps) => {
-//   try {
-//     const newUser = await createUserWithEmailAndPassword(
-//       auth,
-//       data.email,
-//       data.password,
-//     )
-//     const userQuery = query(
-//       collection(db, 'users'),
-//       where('email', '==', newUser.user.email),
-//     )
-//     const querySnapshot = await getDocs(userQuery)
-//     console.log(querySnapshot)
-//     if (querySnapshot.empty) {
-//       const newUserData = {
-//         name: data.name,
-//         lastName: data.lastName,
-//         email: data.email,
-//         password: data.password,
-//         bookmarkedMovies: [],
-//       }
-//       await addDoc(collection(db, 'users'), newUserData)
-//       const userQuery = query(
-//         collection(db, 'users'),
-//         where('email', '==', data.email),
-//       )
-//       const querySnapshot = await getDocs(userQuery)
-//       const [user] = querySnapshot.docs.map((doc) => ({
-//         id: doc.id,
-//         ...doc.data(),
-//       }))
-//       dispatch(setGlobalUser(user))
-//       navigate('/home')
-//     } else {
-//       setNewUser(initialNewUserState)
-//       alert('User already exists')
-//     }
-//   } catch (error) {
-//     console.error('Error', error)
-//   }
-// }
-
 export const createUser = async ({
   data,
   dispatch,
@@ -101,7 +53,6 @@ export const createUser = async ({
       where('email', '==', newUser.user.email),
     )
     const querySnapshot = await getDocs(userQuery)
-    console.log(querySnapshot)
     if (querySnapshot.empty) {
       const newUserData: GlobalUserType = {
         id: '',
@@ -124,40 +75,12 @@ export const createUser = async ({
   }
 }
 
-// export const signInUser = async ({
-//   data,
-//   dispatch,
-//   navigate,
-//   setGlobalUser,
-// }: SignInUserProps) => {
-//   try {
-//     const existingUser = await signInWithEmailAndPassword(
-//       auth,
-//       data.email,
-//       data.password,
-//     )
-//     const userQuery = query(
-//       collection(db, 'users'),
-//       where('email', '==', data.email),
-//     )
-//     const querySnapshot = await getDocs(userQuery)
-//     const [user] = querySnapshot.docs.map((doc) => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     }))
-//     if (existingUser) {
-//       navigate('/home')
-//       dispatch(setGlobalUser(user))
-//     }
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
 export const signInUser = async ({
   data,
   dispatch,
   navigate,
   setGlobalUser,
+  setError,
 }: SignInUserProps) => {
   try {
     const existingUser = await signInWithEmailAndPassword(
@@ -179,40 +102,11 @@ export const signInUser = async ({
       dispatch(setGlobalUser(user))
     }
   } catch (error) {
+    setError('Invalid Credentials')
     console.error(error)
   }
 }
 
-// export const signInGuest = async ({
-//   dispatch,
-//   navigate,
-//   setGlobalUser,
-// }: SignInGuestProps) => {
-//   try {
-//     await signInAnonymously(auth)
-//     const guestUser = {
-//       name: 'Guest',
-//       lastName: '',
-//       email: 'guest@gmail.com',
-//       password: 'guest',
-//       bookmarkedMovies: [],
-//     }
-//     await addDoc(collection(db, 'users'), guestUser)
-//     const userQuery = query(
-//       collection(db, 'users'),
-//       where('email', '==', guestUser.email),
-//     )
-//     const querySnapshot = await getDocs(userQuery)
-//     const [user] = querySnapshot.docs.map((doc) => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     }))
-//     dispatch(setGlobalUser(user))
-//     navigate('/home')
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
 export const signInGuest = async ({
   dispatch,
   navigate,
@@ -259,8 +153,6 @@ export const signOutUser = async ({
     console.error('Error signing out', error)
   }
 }
-
-////////////////////////////////////////////////////////////////////////////
 
 export const buildPaginationQuery = async (
   pageIndex: number,

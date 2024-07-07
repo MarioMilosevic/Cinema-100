@@ -1,5 +1,6 @@
+import { LogInProps } from '../utils/types'
 import InputField from './InputField'
-const LogIn = ({ user, setUser, register }) => {
+const LogIn = ({ user, setUser, register }:LogInProps) => {
   return (
     <>
       <InputField
