@@ -2,22 +2,16 @@ import movieLogo from '../assets/movie-icon-vector.jpg'
 import { Outlet } from 'react-router'
 import { RiShutDownLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { auth } from '../config/firebase'
 import { useAppSlice } from '../hooks/useAppSlice'
 import { useDispatch } from 'react-redux'
-import { logOutUser } from '../redux/features/appSlice'
+import { signOutUser } from '../utils/api'
 
 const SharedLayout = () => {
   const { globalUser } = useAppSlice()
   const dispatch = useDispatch()
-  const signOutUser = async () => {
-    try {
-      await signOut(auth)
-      dispatch(logOutUser())
-    } catch (error) {
-      console.error('Error signing out ', error)
-    }
+
+  const handleSignOutUser = async () => {
+    signOutUser(dispatch, globalUser)
   }
   return (
     <>
@@ -36,16 +30,14 @@ const SharedLayout = () => {
           <div className="flex gap-12">
             <p className="flex gap-1">
               Welcome back,
-              <span className="capitalize">
-                {globalUser.name ? globalUser.name : 'Guest'}
-              </span>
+              <span className="capitalize">{globalUser.name}</span>
             </p>
             <div className="flex items-center gap-4">
               <span>Log Out</span>
               <Link to={'/'}>
                 <RiShutDownLine
                   className="cursor-pointer w-6 h-6"
-                  onClick={() => signOutUser()}
+                  onClick={() => handleSignOutUser()}
                 />
               </Link>
             </div>

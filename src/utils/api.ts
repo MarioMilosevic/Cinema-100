@@ -14,7 +14,142 @@ import {
   doc,
   getDoc,
   Firestore,
+  collection,
+  addDoc,
+  deleteDoc,
 } from 'firebase/firestore'
+import { logOutUser } from '../redux/features/appSlice'
+import { db, auth } from '../config/firebase'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInAnonymously,
+  signOut,
+} from 'firebase/auth'
+import { initialNewUserState } from './constants'
+import { GlobalUserType } from './types'
+
+export const createUser = async (
+  data,
+  dispatch,
+  navigate,
+  setGlobalUser,
+  setNewUser,
+) => {
+  try {
+    const newUser = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password,
+    )
+    const userQuery = query(
+      collection(db, 'users'),
+      where('email', '==', newUser.user.email),
+    )
+    const querySnapshot = await getDocs(userQuery)
+    console.log(querySnapshot)
+    if (querySnapshot.empty) {
+      const newUserData = {
+        name: data.name,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        bookmarkedMovies: [],
+      }
+      await addDoc(collection(db, 'users'), newUserData)
+      const userQuery = query(
+        collection(db, 'users'),
+        where('email', '==', data.email),
+      )
+      const querySnapshot = await getDocs(userQuery)
+      const [user] = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      dispatch(setGlobalUser(user))
+      navigate('/home')
+    } else {
+      setNewUser(initialNewUserState)
+      alert('User already exists')
+    }
+  } catch (error) {
+    console.error('Error', error)
+  }
+}
+
+export const signInUser = async (data, dispatch, navigate, setGlobalUser) => {
+  try {
+    const existingUser = await signInWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password,
+    )
+    const userQuery = query(
+      collection(db, 'users'),
+      where('email', '==', data.email),
+    )
+    const querySnapshot = await getDocs(userQuery)
+    const [user] = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    if (existingUser) {
+      navigate('/home')
+      dispatch(setGlobalUser(user))
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const signInGuest = async (dispatch, navigate, setGlobalUser) => {
+  try {
+    await signInAnonymously(auth)
+    const guestUser = {
+      name: 'Guest',
+      lastName: '',
+      email: 'guest@gmail.com',
+      password: 'guest',
+      bookmarkedMovies: [],
+    }
+    await addDoc(collection(db, 'users'), guestUser)
+    const userQuery = query(
+      collection(db, 'users'),
+      where('email', '==', guestUser.email),
+    )
+    const querySnapshot = await getDocs(userQuery)
+    const [user] = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    dispatch(setGlobalUser(user))
+    navigate('/home')
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const signOutUser = async (dispatch, globalUser: GlobalUserType) => {
+  try {
+    await signOut(auth)
+    if (globalUser.email === 'guest@gmail.com') {
+      const userQuery = query(
+        collection(db, 'users'),
+        where('email', '==', globalUser.email),
+      )
+      const querySnapshot = await getDocs(userQuery)
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0]
+        await deleteDoc(doc(db, 'users', userDoc.id))
+      }
+    }
+    dispatch(logOutUser())
+  } catch (error) {
+    console.error('Error signing out', error)
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////
 
 export const buildPaginationQuery = async (
   pageIndex: number,

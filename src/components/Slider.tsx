@@ -1,8 +1,9 @@
 import MovieCard from './MovieCard'
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState } from 'react'
+import { SliderProps } from '../utils/types'
 
-const Slider = ({ trendingMovies, bookmarkedMovies }) => {
+const Slider = ({ trendingMovies, bookmarkedMovies }: SliderProps) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
 
   const totalSlides = Math.ceil(trendingMovies.length / 4)
@@ -58,12 +59,8 @@ const Slider = ({ trendingMovies, bookmarkedMovies }) => {
             {trendingMovies.map((movie) => {
               const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
               return (
-                <div className="w-1/4 flex-shrink-0">
-                  <MovieCard
-                    key={movie.id}
-                    {...movie}
-                    isBookmarked={isBookmarked}
-                  />
+                <div className="w-1/4 flex-shrink-0" key={movie.id}>
+                  <MovieCard {...movie} isBookmarked={isBookmarked} />
                 </div>
               )
             })}
@@ -80,10 +77,3 @@ const Slider = ({ trendingMovies, bookmarkedMovies }) => {
 }
 
 export default Slider
-{
-  /* {trendingMovies.map((movie) => (
-              <div key={movie.id} className="w-1/4 flex-shrink-0">
-                <MovieCard {...movie} />
-              </div>
-            ))} */
-}

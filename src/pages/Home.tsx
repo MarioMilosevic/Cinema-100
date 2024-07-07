@@ -47,10 +47,7 @@ const Home = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data()
           const bookmarkedMoviesRefs = userData.bookmarkedMovies
-          console.log('Bookmarked Movies References: ', bookmarkedMoviesRefs)
           setBookmarkedMovies(bookmarkedMoviesRefs)
-        } else {
-          console.log('No such document!')
         }
       },
       (error) => {
@@ -58,7 +55,6 @@ const Home = () => {
       },
     )
 
-    // Cleanup subscription on unmount
     return () => unsubscribe()
   }, [globalUser.id])
 

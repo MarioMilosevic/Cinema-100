@@ -44,8 +44,6 @@ const AllMovies = ({
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const debouncedSearch = useDebounce(searchValue)
 
-  console.log(bookmarkedMovies)
-
   useEffect(() => {
     const setPagination = async () => {
       const moviesRef = await getDocs(collection(db, 'movies'))

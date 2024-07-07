@@ -85,6 +85,11 @@ export type BookmarkedMoviesProps = {
   bookmarkedMovies: SingleMovieType[]
 }
 
+export type SliderProps = {
+  bookmarkedMovies: SingleMovieType[]
+  trendingMovies: SingleMovieType[]
+}
+
 export type MenuProps = {
   searchValue: string
   searchMovies: (e: React.ChangeEvent<HTMLInputElement>) => void
