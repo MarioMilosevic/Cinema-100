@@ -11,7 +11,7 @@ const SharedLayout = () => {
   const dispatch = useDispatch()
 
   const handleSignOutUser = async () => {
-    signOutUser(dispatch, globalUser)
+    signOutUser({ dispatch, globalUser })
   }
   return (
     <>
@@ -37,7 +37,7 @@ const SharedLayout = () => {
               <Link to={'/'}>
                 <RiShutDownLine
                   className="cursor-pointer w-6 h-6"
-                  onClick={() => handleSignOutUser()}
+                  onClick={handleSignOutUser}
                 />
               </Link>
             </div>

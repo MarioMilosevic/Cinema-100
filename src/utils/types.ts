@@ -1,6 +1,10 @@
 import { ReactNode } from 'react'
 import { DocumentData } from 'firebase/firestore'
 import { UseFormRegisterReturn } from 'react-hook-form'
+import { Dispatch } from 'redux'
+import { NavigateFunction } from 'react-router-dom'
+import { setGlobalUser } from '../redux/features/appSlice'
+import { UserFormFormValues } from './zod'
 
 export type UserType = {
   email: string
@@ -8,18 +12,18 @@ export type UserType = {
 }
 
 export type NewUserType = {
-  email: string
-  password: string
-  name: string
-  lastName: string
+  email: string | undefined
+  password: string | undefined
+  name: string | undefined
+  lastName: string | undefined
   bookmarkedMovies: SingleMovieType[]
 }
 
 export type GlobalUserType = {
-  email: string
-  password: string
-  name: string
-  lastName: string
+  email: string | undefined
+  password: string | undefined
+  name: string | undefined
+  lastName: string | undefined
   bookmarkedMovies: SingleMovieType[]
   id: string
 }
@@ -97,4 +101,30 @@ export type MenuProps = {
   genre: string
   bookmarkedPage: boolean
   setBookmarkedPage: (value: boolean) => void
+}
+
+export type CreateUserProps = {
+  data: UserFormFormValues
+  dispatch: Dispatch
+  navigate: NavigateFunction
+  setGlobalUser: typeof setGlobalUser
+  setNewUser: (newUser: NewUserType) => void
+}
+
+export type SignInUserProps = {
+  data: UserFormFormValues
+  dispatch: Dispatch
+  navigate: NavigateFunction
+  setGlobalUser: typeof setGlobalUser
+}
+
+export type SignInGuestProps = {
+  dispatch: Dispatch
+  navigate: NavigateFunction
+  setGlobalUser: typeof setGlobalUser
+}
+
+export type SignOutUserProps = {
+  dispatch: Dispatch
+  globalUser: GlobalUserType
 }

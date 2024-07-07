@@ -20,23 +20,8 @@ export const appSlice = createSlice({
     logOutUser: (state) => {
       state.globalUser = initialGlobalUserState
     },
-    // addMovie: (state, action: PayloadAction<SingleMovieType>) => {
-    //   state.globalUser.bookmarkedMovies.push(action.payload)
-    // },
-    // removeMovie: (state, action: PayloadAction<string>) => {
-    //   state.globalUser.bookmarkedMovies =
-    //     state.globalUser.bookmarkedMovies.filter(
-    //       (movie) => movie !== action.payload,
-    //     )
-    // },
   },
 })
 
-export const {
-  toggleHasAccount,
-  setGlobalUser,
-  logOutUser,
-  // addMovie,
-  // removeMovie,
-} = appSlice.actions
+export const { toggleHasAccount, setGlobalUser, logOutUser } = appSlice.actions
 export default appSlice.reducer

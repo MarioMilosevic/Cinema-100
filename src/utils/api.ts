@@ -27,15 +27,69 @@ import {
   signOut,
 } from 'firebase/auth'
 import { initialNewUserState } from './constants'
-import { GlobalUserType } from './types'
+import {
+  CreateUserProps,
+  SignInGuestProps,
+  SignInUserProps,
+  SignOutUserProps,
+  GlobalUserType,
+} from './types'
 
-export const createUser = async (
+// export const createUser = async ({
+//   data,
+//   dispatch,
+//   navigate,
+//   setGlobalUser,
+//   setNewUser,
+// }: CreateUserProps) => {
+//   try {
+//     const newUser = await createUserWithEmailAndPassword(
+//       auth,
+//       data.email,
+//       data.password,
+//     )
+//     const userQuery = query(
+//       collection(db, 'users'),
+//       where('email', '==', newUser.user.email),
+//     )
+//     const querySnapshot = await getDocs(userQuery)
+//     console.log(querySnapshot)
+//     if (querySnapshot.empty) {
+//       const newUserData = {
+//         name: data.name,
+//         lastName: data.lastName,
+//         email: data.email,
+//         password: data.password,
+//         bookmarkedMovies: [],
+//       }
+//       await addDoc(collection(db, 'users'), newUserData)
+//       const userQuery = query(
+//         collection(db, 'users'),
+//         where('email', '==', data.email),
+//       )
+//       const querySnapshot = await getDocs(userQuery)
+//       const [user] = querySnapshot.docs.map((doc) => ({
+//         id: doc.id,
+//         ...doc.data(),
+//       }))
+//       dispatch(setGlobalUser(user))
+//       navigate('/home')
+//     } else {
+//       setNewUser(initialNewUserState)
+//       alert('User already exists')
+//     }
+//   } catch (error) {
+//     console.error('Error', error)
+//   }
+// }
+
+export const createUser = async ({
   data,
   dispatch,
   navigate,
   setGlobalUser,
   setNewUser,
-) => {
+}: CreateUserProps) => {
   try {
     const newUser = await createUserWithEmailAndPassword(
       auth,
@@ -49,24 +103,17 @@ export const createUser = async (
     const querySnapshot = await getDocs(userQuery)
     console.log(querySnapshot)
     if (querySnapshot.empty) {
-      const newUserData = {
+      const newUserData: GlobalUserType = {
+        id: '',
         name: data.name,
         lastName: data.lastName,
         email: data.email,
         password: data.password,
         bookmarkedMovies: [],
       }
-      await addDoc(collection(db, 'users'), newUserData)
-      const userQuery = query(
-        collection(db, 'users'),
-        where('email', '==', data.email),
-      )
-      const querySnapshot = await getDocs(userQuery)
-      const [user] = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      dispatch(setGlobalUser(user))
+      const docRef = await addDoc(collection(db, 'users'), newUserData)
+      newUserData.id = docRef.id
+      dispatch(setGlobalUser(newUserData))
       navigate('/home')
     } else {
       setNewUser(initialNewUserState)
@@ -77,7 +124,41 @@ export const createUser = async (
   }
 }
 
-export const signInUser = async (data, dispatch, navigate, setGlobalUser) => {
+// export const signInUser = async ({
+//   data,
+//   dispatch,
+//   navigate,
+//   setGlobalUser,
+// }: SignInUserProps) => {
+//   try {
+//     const existingUser = await signInWithEmailAndPassword(
+//       auth,
+//       data.email,
+//       data.password,
+//     )
+//     const userQuery = query(
+//       collection(db, 'users'),
+//       where('email', '==', data.email),
+//     )
+//     const querySnapshot = await getDocs(userQuery)
+//     const [user] = querySnapshot.docs.map((doc) => ({
+//       id: doc.id,
+//       ...doc.data(),
+//     }))
+//     if (existingUser) {
+//       navigate('/home')
+//       dispatch(setGlobalUser(user))
+//     }
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
+export const signInUser = async ({
+  data,
+  dispatch,
+  navigate,
+  setGlobalUser,
+}: SignInUserProps) => {
   try {
     const existingUser = await signInWithEmailAndPassword(
       auth,
@@ -89,10 +170,10 @@ export const signInUser = async (data, dispatch, navigate, setGlobalUser) => {
       where('email', '==', data.email),
     )
     const querySnapshot = await getDocs(userQuery)
-    const [user] = querySnapshot.docs.map((doc) => ({
+    const user = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }))
+    }))[0] as GlobalUserType
     if (existingUser) {
       navigate('/home')
       dispatch(setGlobalUser(user))
@@ -102,34 +183,64 @@ export const signInUser = async (data, dispatch, navigate, setGlobalUser) => {
   }
 }
 
-export const signInGuest = async (dispatch, navigate, setGlobalUser) => {
+// export const signInGuest = async ({
+//   dispatch,
+//   navigate,
+//   setGlobalUser,
+// }: SignInGuestProps) => {
+//   try {
+//     await signInAnonymously(auth)
+//     const guestUser = {
+//       name: 'Guest',
+//       lastName: '',
+//       email: 'guest@gmail.com',
+//       password: 'guest',
+//       bookmarkedMovies: [],
+//     }
+//     await addDoc(collection(db, 'users'), guestUser)
+//     const userQuery = query(
+//       collection(db, 'users'),
+//       where('email', '==', guestUser.email),
+//     )
+//     const querySnapshot = await getDocs(userQuery)
+//     const [user] = querySnapshot.docs.map((doc) => ({
+//       id: doc.id,
+//       ...doc.data(),
+//     }))
+//     dispatch(setGlobalUser(user))
+//     navigate('/home')
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
+export const signInGuest = async ({
+  dispatch,
+  navigate,
+  setGlobalUser,
+}: SignInGuestProps) => {
   try {
     await signInAnonymously(auth)
-    const guestUser = {
+    const guestUser: GlobalUserType = {
+      id: '',
       name: 'Guest',
       lastName: '',
       email: 'guest@gmail.com',
       password: 'guest',
       bookmarkedMovies: [],
     }
-    await addDoc(collection(db, 'users'), guestUser)
-    const userQuery = query(
-      collection(db, 'users'),
-      where('email', '==', guestUser.email),
-    )
-    const querySnapshot = await getDocs(userQuery)
-    const [user] = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-    dispatch(setGlobalUser(user))
+    const docRef = await addDoc(collection(db, 'users'), guestUser)
+    guestUser.id = docRef.id
+    dispatch(setGlobalUser(guestUser))
     navigate('/home')
   } catch (error) {
     console.error(error)
   }
 }
 
-export const signOutUser = async (dispatch, globalUser: GlobalUserType) => {
+export const signOutUser = async ({
+  dispatch,
+  globalUser,
+}: SignOutUserProps) => {
   try {
     await signOut(auth)
     if (globalUser.email === 'guest@gmail.com') {
