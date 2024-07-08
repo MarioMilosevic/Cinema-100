@@ -15,20 +15,20 @@ const SharedLayout = () => {
   }
   return (
     <>
-      <div className="bg-gray-900 px-24 py-4">
+      <div className="bg-gray-900 lg:px-24 py-4 text-sm px-4">
         <div className="flex justify-between items-center">
           <Link to={'/home'}>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center">
               <img
                 src={movieLogo}
                 alt={movieLogo}
                 className="w-[75px] h-[75px] cursor-pointer"
               />
-              <span className="text-xl">Cinema 100</span>
+              <span className="lg:text-xl">Cinema 100</span>
             </div>
           </Link>
-          <div className="flex gap-12">
-            <p className="flex gap-1">
+          <div className="flex lg:gap-12 gap-8">
+            <p className="flex gap-1 items-center">
               Welcome back,
               <span className="capitalize">{globalUser.name}</span>
             </p>
@@ -44,6 +44,7 @@ const SharedLayout = () => {
           </div>
         </div>
       </div>
+      {/*  */}
       <main>
         <Outlet />
       </main>
