@@ -70,12 +70,12 @@ const MovieCard = ({
   }
 
   return (
-    <div className="max-w-[300px] flex flex-col">
+    <div className="lg:max-w-[300px] flex flex-col">
       <div className="w-full h-[380px] relative">
         <img
           src={image}
           alt={image}
-          className="w-full h-full object-cover pb-4"
+          className="w-full h-full lg:object-cover pb-4"
         />
         <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
           <FaBookmark

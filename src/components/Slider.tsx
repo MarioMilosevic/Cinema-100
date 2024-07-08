@@ -7,7 +7,6 @@ const Slider = ({ trendingMovies, bookmarkedMovies }: SliderProps) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
 
   const totalSlides = Math.ceil(trendingMovies.length / 4)
-
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
 
   const nextSlide = () => {
@@ -29,9 +28,9 @@ const Slider = ({ trendingMovies, bookmarkedMovies }: SliderProps) => {
   const dots = [...Array(totalSlides).keys()]
 
   return (
-    <div className="w-full py-16 flex flex-col gap-4 relative">
+    <div className="w-full py-16 flex flex-col gap-4 relative lg:px-0 px-12">
       <div className="w-[90%] mx-auto flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Currently Trending</h2>
+        <h2 className="lg:text-xl text-lg font-semibold">Currently Trending</h2>
         <div className="flex gap-1 items-center">
           {dots.map((index) => {
             const color =
@@ -53,13 +52,13 @@ const Slider = ({ trendingMovies, bookmarkedMovies }: SliderProps) => {
         />
         <div className="relative h-[450px] w-full overflow-hidden">
           <div
-            className="relative h-full w-full flex transition-transform duration-500"
+            className="relative h-full w-full flex transition-transform duration-500 items-center"
             style={{ transform: `translateX(-${activeSlideIndex * 100}%)` }}
           >
             {trendingMovies.map((movie) => {
               const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
               return (
-                <div className="w-1/4 flex-shrink-0" key={movie.id}>
+                <div className="lg:w-1/4 flex-shrink-0 w-full" key={movie.id}>
                   <MovieCard {...movie} isBookmarked={isBookmarked} />
                 </div>
               )
