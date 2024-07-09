@@ -310,7 +310,7 @@ const AllMovies = ({
         bookmarkedPage={bookmarkedPage}
         setBookmarkedPage={setBookmarkedPage}
       />
-      <div className="lg:grid lg:grid-cols-4 flex flex-col items-center lg:gap-8 gap-8 lg:py-4 py-8">
+      <div className="lg:grid lg:grid-cols-4 flex flex-col items-center gap-8 lg:py-4 py-8">
         {movies.map((movie) => {
           const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (

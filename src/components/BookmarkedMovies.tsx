@@ -153,7 +153,7 @@ const BookmarkedMovies = ({
       />
       {currentMovies.length > 0 ? (
         <>
-          <div className="grid grid-cols-4 gap-8 py-4">
+          <div className="lg:grid lg:grid-cols-4 flex flex-col items-center gap-8 lg:py-4 py-8">
             {currentMovies.map((movie) => (
               <MovieCard key={movie.id} {...movie} isBookmarked={true} />
             ))}
