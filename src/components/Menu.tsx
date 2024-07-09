@@ -17,7 +17,7 @@ const Menu = ({
         <input
           type="text"
           placeholder="Search"
-          className="w-full px-2 py-1 rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
+          className="lg:w-full px-2 py-1 lg:text-base text-sm rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
           onChange={searchMovies}
           value={searchValue}
         />
@@ -30,7 +30,7 @@ const Menu = ({
         <select
           name="category"
           id="category"
-          className="text-black rounded-full px-2"
+          className="text-black rounded-full px-2 lg:text-base text-sm"
           value={genre}
           onChange={searchGenre}
         >

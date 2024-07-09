@@ -94,7 +94,7 @@ const Home = () => {
             trendingMovies={trendingMovies}
             bookmarkedMovies={bookmarkedMovies}
           />
-          <p className="py-4 text-lg font-medium">
+          <p className="py-4 lg:text-lg font-bold text-base">
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100 movies'}
           </p>
           {bookmarkedPage ? (
