@@ -8,7 +8,7 @@ const pageButtonOptions :PageButtonOptions = {
 }
 
   return (
-    <div className={`px-4 py-2 cursor-pointer rounded-lg  transition-all duration-100 ${pageButtonOptions[isActive]}`} onClick={clickHandler}>
+    <div className={`lg:text-base text-sm lg:px-4 lg:py-2 px-3 py-1 cursor-pointer rounded-lg transition-all duration-100 ${pageButtonOptions[isActive]}`} onClick={clickHandler}>
       {children}
     </div>
   )

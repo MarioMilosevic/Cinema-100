@@ -70,7 +70,7 @@ const MovieCard = ({
   }
 
   return (
-    <div className="lg:max-w-[300px] flex flex-col">
+    <div className="lg:max-w-[300px] flex flex-col w-[400px]">
       <div className="w-full h-[380px] relative">
         <img
           src={image}
