@@ -1,5 +1,5 @@
 import { FaStar, FaSearch, FaBookmark } from 'react-icons/fa'
-import { SingleMovieType } from '../utils/types'
+import { SingleMovieType, MovieCardSizeOptions, MovieCardProps } from '../utils/types'
 import { useNavigate } from 'react-router'
 import { db, moviesCollection } from '../config/firebase'
 import { fetchMovieDoc } from '../utils/api'
@@ -20,10 +20,17 @@ const MovieCard = ({
   genre,
   isBookmarked,
   id,
-}: SingleMovieType) => {
+  size
+}: MovieCardProps) => {
   const navigate = useNavigate()
   const { globalUser } = useAppSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
+
+  const movieCardSize: MovieCardSizeOptions = {
+    small: "lg:max-w-[300px] w-[400px]",
+    big:"w-full"
+  }
+
 
   const findMovie = async (id: string) => {
     const doc = await fetchMovieDoc(id, moviesCollection)
@@ -70,7 +77,8 @@ const MovieCard = ({
   }
 
   return (
-    <div className="lg:max-w-[300px] flex flex-col w-[400px]">
+    // <div className="lg:max-w-[300px] flex flex-col w-[400px] border">
+    <div className={`flex flex-col ${movieCardSize[size]} border`}>
       <div className="w-full h-[380px] relative">
         <img
           src={image}

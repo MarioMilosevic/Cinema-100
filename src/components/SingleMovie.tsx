@@ -4,12 +4,11 @@ import { FaStar } from 'react-icons/fa'
 import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
-import { FaBookmark } from 'react-icons/fa'
+import MovieCard from './MovieCard'
 import ReactPlayer from 'react-player'
 const SingleMovie = () => {
   const { movieId } = useParams()
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -21,11 +20,12 @@ const SingleMovie = () => {
   }, [movieId])
 
   if (!singleMovie) return
+  console.log(singleMovie)
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen py-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between border">
         <div className="py-4">
-          <h2 className="font-semibold capitalize text-xl">
+          <h2 className="font-semibold capitalize lg:text-xl text-lg">
             {singleMovie?.title}
           </h2>
           <h3>{`(${singleMovie?.year})`}</h3>
@@ -44,9 +44,11 @@ const SingleMovie = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-1 h-[500px]">
-        <div className="relative w-1/3">
-          <img
+      {/*  */}
+      <div className="flex lg:flex-row flex-col gap-1 h-[500px]">
+        <div className="relative lg:w-1/3 border">
+          <MovieCard {...singleMovie} isBookmarked={true} size='big'/>
+          {/* <img
             src={singleMovie.image}
             alt={singleMovie.image}
             className="w-full h-full"
@@ -56,9 +58,9 @@ const SingleMovie = () => {
               className={`absolute top-2 right-2 cursor-pointer z-10 w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
               onClick={() => setIsBookmarked((prev) => !prev)}
             />
-          </div>
+          </div> */}
         </div>
-        <div className="w-2/3">
+        <div className="lg:w-2/3">
           <ReactPlayer
             url={singleMovie.trailer}
             playing

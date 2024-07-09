@@ -27,7 +27,7 @@ const SharedLayout = () => {
               <span className="lg:text-xl">Cinema 100</span>
             </div>
           </Link>
-          <div className="flex lg:gap-12 gap-8">
+          <div className="flex lg:gap-12 gap-8 lg:text-lg">
             <p className="flex gap-1 items-center">
               Welcome back,
               <span className="capitalize">{globalUser.name}</span>

@@ -51,7 +51,17 @@ export type SingleMovieType = {
   writers: string[]
   imdbid: string
   isBookmarked: boolean
-  firebaseId: string
+}
+
+export type MovieCardProps = {
+  image: string
+  title: string
+  year: number
+  rating: string
+  genre: string[]
+  isBookmarked: boolean
+  id: string
+  size: keyof MovieCardSizeOptions
 }
 
 export type AppState = {
@@ -140,4 +150,9 @@ export type SignUpProps = {
   newUser: NewUserType
   setNewUser: React.Dispatch<React.SetStateAction<NewUserType>>
   register: UseFormRegister<UserFormFormValues>
+}
+
+export type MovieCardSizeOptions = {
+  small: string
+  big: string
 }
