@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router'
 import { db, moviesCollection } from '../config/firebase'
 import { fetchMovieDoc } from '../utils/api'
-import { useAppSlice } from '../hooks/useAppSlice'
+import { useUserSlice } from '../hooks/useUserSlice'
 import {
   arrayUnion,
   doc,
@@ -27,7 +27,7 @@ const MovieCard = ({
   size,
 }: MovieCardProps) => {
   const navigate = useNavigate()
-  const { globalUser } = useAppSlice()
+  const { globalUser } = useUserSlice()
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
   const movieCardSize: MovieCardSizeOptions = {

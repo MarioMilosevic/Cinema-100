@@ -2,12 +2,12 @@ import movieLogo from '../assets/movie-icon-vector.jpg'
 import { Outlet } from 'react-router'
 import { RiShutDownLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { useAppSlice } from '../hooks/useAppSlice'
+import { useUserSlice } from '../hooks/useUserSlice'
 import { useDispatch } from 'react-redux'
 import { signOutUser } from '../utils/api'
 
 const SharedLayout = () => {
-  const { globalUser } = useAppSlice()
+  const { globalUser } = useUserSlice()
   const dispatch = useDispatch()
 
   const handleSignOutUser = async () => {
@@ -33,7 +33,7 @@ const SharedLayout = () => {
               <span className="capitalize">{globalUser.name}</span>
             </p>
             <div className="lg:flex items-center gap-4">
-              <span className='lg:block hidden'>Log Out</span>
+              <span className="lg:block hidden">Log Out</span>
               <Link to={'/'}>
                 <RiShutDownLine
                   className="cursor-pointer w-6 h-6"

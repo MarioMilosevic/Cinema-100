@@ -18,7 +18,7 @@ import {
   addDoc,
   deleteDoc,
 } from 'firebase/firestore'
-import { logOutUser } from '../redux/features/appSlice'
+import { logOutUser } from '../redux/features/userSlice'
 import { db, auth } from '../config/firebase'
 import {
   createUserWithEmailAndPassword,

@@ -3,7 +3,7 @@ import { DocumentData } from 'firebase/firestore'
 import { UseFormRegisterReturn, UseFormRegister } from 'react-hook-form'
 import { Dispatch } from 'redux'
 import { NavigateFunction } from 'react-router-dom'
-import { setGlobalUser } from '../redux/features/appSlice'
+import { setGlobalUser } from '../redux/features/userSlice'
 import { UserFormFormValues } from './zod'
 
 export type UserType = {
@@ -64,7 +64,7 @@ export type MovieCardProps = {
   size: keyof MovieCardSizeOptions
 }
 
-export type AppState = {
+export type UserState = {
   hasAccount: boolean
   globalUser: GlobalUserType
 }

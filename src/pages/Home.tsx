@@ -15,7 +15,7 @@ import {
 } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
 import { pageSize, field } from '../utils/constants'
-import { useAppSlice } from '../hooks/useAppSlice'
+import { useUserSlice } from '../hooks/useUserSlice'
 import Slider from '../components/Slider'
 import LoadingSpinner from '../components/LoadingSpinner'
 import AllMovies from '../components/AllMovies'
@@ -31,7 +31,7 @@ const Home = () => {
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
 
   const [bookmarkedPage, setBookmarkedPage] = useState<boolean>(false)
-  const { globalUser } = useAppSlice()
+  const { globalUser } = useUserSlice()
 
   useEffect(() => {
     fetchInitialMovies()
