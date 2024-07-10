@@ -87,7 +87,6 @@ export type AllMoviesProps = {
   setFirstVisible: React.Dispatch<React.SetStateAction<DocumentData | null>>
   lastVisible: DocumentData | null
   setLastVisible: React.Dispatch<React.SetStateAction<DocumentData | null>>
-  fetchInitialMovies: () => Promise<void>
 }
 
 export type BookmarkedMoviesProps = {

@@ -35,13 +35,43 @@ const Home = () => {
   const { trendingMovies } = useMoviesSlice()
 
   useEffect(() => {
+    const fetchInitialMovies = async () => {
+      const initialQuery = query(
+        moviesCollection,
+        orderBy(field, 'desc'),
+        limit(pageSize),
+      )
+      const data = await getDocs(initialQuery)
+      dispatch(
+        setAllMovies(
+          data.docs.map((doc) => ({
+            ...(doc.data() as SingleMovieType),
+          })),
+        ),
+      )
+      setFirstVisible(data.docs[0])
+      setLastVisible(data.docs[data.docs.length - 1])
+    }
+
     fetchInitialMovies()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
-    fetchTrendingMovies()
-    const userRef = doc(db, 'users', globalUser.id)
+    const fetchTrendingMovies = async () => {
+      const trendingMoviesQuery = query(trendingMoviesCollection)
+      const trendingMoviesData = await getDocs(trendingMoviesQuery)
+      dispatch(
+        setTrendingMovies(
+          trendingMoviesData.docs.map((doc) => ({
+            ...(doc.data() as SingleMovieType),
+          })),
+        ),
+      )
+    }
 
+    fetchTrendingMovies()
+
+    const userRef = doc(db, 'users', globalUser.id)
     const unsubscribe = onSnapshot(
       userRef,
       (userDoc) => {
@@ -57,37 +87,7 @@ const Home = () => {
     )
 
     return () => unsubscribe()
-  }, [globalUser.id])
-
-  const fetchTrendingMovies = async () => {
-    const trendingMoviesQuery = query(trendingMoviesCollection)
-    const trendingMoviesData = await getDocs(trendingMoviesQuery)
-    dispatch(
-      setTrendingMovies(
-        trendingMoviesData.docs.map((doc) => ({
-          ...(doc.data() as SingleMovieType),
-        })),
-      ),
-    )
-  }
-
-  const fetchInitialMovies = async () => {
-    const initialQuery = query(
-      moviesCollection,
-      orderBy(field, 'desc'),
-      limit(pageSize),
-    )
-    const data = await getDocs(initialQuery)
-    dispatch(
-      setAllMovies(
-        data.docs.map((doc) => ({
-          ...(doc.data() as SingleMovieType),
-        })),
-      ),
-    )
-    setFirstVisible(data.docs[0])
-    setLastVisible(data.docs[data.docs.length - 1])
-  }
+  }, [dispatch, globalUser.id])
 
   return (
     <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">
@@ -112,7 +112,6 @@ const Home = () => {
               setFirstVisible={setFirstVisible}
               lastVisible={lastVisible}
               setLastVisible={setLastVisible}
-              fetchInitialMovies={fetchInitialMovies}
             />
           )}
         </>

@@ -14,7 +14,9 @@ const SingleMovie = () => {
     globalUser: { bookmarkedMovies },
   } = useUserSlice()
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
-  const isBookmarked = bookmarkedMoviesIds.includes(singleMovie?.id)
+  const isBookmarked = singleMovie
+    ? bookmarkedMoviesIds.includes(singleMovie.id)
+    : false
 
   useEffect(() => {
     const fetchMovie = async () => {
