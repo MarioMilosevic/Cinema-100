@@ -23,14 +23,14 @@ const SingleMovie = () => {
   console.log(singleMovie)
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen py-4">
-      <div className="flex justify-between border">
-        <div className="py-4">
+      <div className="flex justify-between">
+        <div className="py-4 lg:px-0 px-2">
           <h2 className="font-semibold capitalize lg:text-xl text-lg">
             {singleMovie?.title}
           </h2>
           <h3>{`(${singleMovie?.year})`}</h3>
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 lg:px-0 px-2">
           <div className="">
             <h2>Imdb rating</h2>
             <div className="flex items-center gap-2">
@@ -44,23 +44,11 @@ const SingleMovie = () => {
           </div>
         </div>
       </div>
-      {/*  */}
-      <div className="flex lg:flex-row flex-col gap-1 h-[500px]">
-        <div className="relative lg:w-1/3 border">
+      <div className="flex lg:flex-row flex-col lg:gap-1 lg:h-[500px] gap-4">
+        <div className="relative lg:w-1/3 flex justify-center">
           <MovieCard {...singleMovie} isBookmarked={true} size='big'/>
-          {/* <img
-            src={singleMovie.image}
-            alt={singleMovie.image}
-            className="w-full h-full"
-          />
-          <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0 hover:opacity-70">
-            <FaBookmark
-              className={`absolute top-2 right-2 cursor-pointer z-10 w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
-              onClick={() => setIsBookmarked((prev) => !prev)}
-            />
-          </div> */}
         </div>
-        <div className="lg:w-2/3">
+        <div className="lg:w-2/3 lg:h-full lg:px-0 px-2 h-[380px]">
           <ReactPlayer
             url={singleMovie.trailer}
             playing
@@ -70,8 +58,8 @@ const SingleMovie = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-4 py-4 w-1/2">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-4 py-4 lg:w-1/2 px-2">
+        <div className="flex gap-2 lg:pt-0 pt-4">
           {singleMovie.genre.map((el, index) => (
             <span key={index} className="font-semibold text-lg">
               {index === singleMovie.genre.length - 1 ? el : `${el},`}

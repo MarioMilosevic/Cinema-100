@@ -18,22 +18,22 @@ const SharedLayout = () => {
       <div className="bg-gray-900 lg:px-24 py-4 text-sm px-4">
         <div className="flex justify-between items-center">
           <Link to={'/home'}>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <img
                 src={movieLogo}
                 alt={movieLogo}
-                className="w-[75px] h-[75px] cursor-pointer"
+                className="lg:w-[75px] lg:h-[75px] w-[50px] h-[50px] cursor-pointer"
               />
-              <span className="lg:text-xl">Cinema 100</span>
+              <span className="lg:text-xl text-sm">Cinema 100</span>
             </div>
           </Link>
-          <div className="flex lg:gap-12 gap-8 lg:text-lg">
-            <p className="flex gap-1 items-center">
+          <div className="flex lg:gap-12 gap-8 lg:text-lg text-xs">
+            <p className="flex gap-1 items-center lg:text-base text-sm">
               Welcome back,
               <span className="capitalize">{globalUser.name}</span>
             </p>
-            <div className="flex items-center gap-4">
-              <span>Log Out</span>
+            <div className="lg:flex items-center gap-4">
+              <span className='lg:block hidden'>Log Out</span>
               <Link to={'/'}>
                 <RiShutDownLine
                   className="cursor-pointer w-6 h-6"
@@ -44,7 +44,6 @@ const SharedLayout = () => {
           </div>
         </div>
       </div>
-      {/*  */}
       <main>
         <Outlet />
       </main>

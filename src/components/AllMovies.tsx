@@ -310,17 +310,17 @@ const AllMovies = ({
         bookmarkedPage={bookmarkedPage}
         setBookmarkedPage={setBookmarkedPage}
       />
-      <div className="lg:grid lg:grid-cols-4 flex flex-col items-center gap-8 lg:py-4 py-8">
+      <div className="lg:grid lg:grid-cols-4 flex flex-col items-center gap-2 lg:py-4 py-8">
         {movies.map((movie) => {
           const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (
-            <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} />
+            <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} size='small'/>
           )
         })}
       </div>
-      <div className="py-8 flex justify-center items-center gap-2">
+      <div className="py-8 flex justify-center items-center lg:gap-2 gap-1">
         <button
-          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+          className="lg:px-4 lg:py-2 px-3 py-1 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
           onClick={previousPage}
         >
           <FaArrowLeft />
@@ -335,7 +335,7 @@ const AllMovies = ({
           </PageButton>
         ))}
         <button
-          className="px-4 py-2 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
+          className="lg:px-4 lg:py-2 px-3 py-1 rounded-lg transition-all duration-100 bg-gray-900 text-gray-300 hover:bg-gray-300 hover:text-gray-900"
           onClick={nextPage}
         >
           <FaArrowRight />

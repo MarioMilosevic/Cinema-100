@@ -22,11 +22,11 @@ const Menu = ({
           value={searchValue}
         />
         <SlMagnifier
-          className="absolute bottom-1/2 right-3 translate-y-1/2 cursor-pointer"
+          className="absolute bottom-1/2 lg:right-3 translate-y-1/2 cursor-pointer right-7"
           color="black"
         />
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center lg:gap-4 gap-2">
         <select
           name="category"
           id="category"
