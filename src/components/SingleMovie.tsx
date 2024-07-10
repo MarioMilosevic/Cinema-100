@@ -5,18 +5,41 @@ import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
 import { useUserSlice } from '../hooks/useUserSlice'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { setUserMovies } from '../redux/features/userSlice'
+import { useDispatch } from 'react-redux'
 import MovieCard from './MovieCard'
 import ReactPlayer from 'react-player'
 const SingleMovie = () => {
   const { movieId } = useParams()
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
+  const dispatch = useDispatch()
   const {
-    globalUser: { bookmarkedMovies },
+    globalUser: { bookmarkedMovies, id },
   } = useUserSlice()
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
   const isBookmarked = singleMovie
     ? bookmarkedMoviesIds.includes(singleMovie.id)
     : false
+
+  useEffect(() => {
+    const userRef = doc(db, 'users', id)
+    const unsubscribe = onSnapshot(
+      userRef,
+      (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data()
+          const bookmarkedMoviesRefs = userData.bookmarkedMovies
+          dispatch(setUserMovies(bookmarkedMoviesRefs))
+        }
+      },
+      (error) => {
+        console.error('Error fetching bookmarked movies: ', error)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [dispatch, id])
 
   useEffect(() => {
     const fetchMovie = async () => {
