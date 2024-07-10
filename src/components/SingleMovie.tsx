@@ -4,11 +4,17 @@ import { FaStar } from 'react-icons/fa'
 import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
+import { useUserSlice } from '../hooks/useUserSlice'
 import MovieCard from './MovieCard'
 import ReactPlayer from 'react-player'
 const SingleMovie = () => {
   const { movieId } = useParams()
   const [singleMovie, setSingleMovie] = useState<SingleMovieType | null>(null)
+  const {
+    globalUser: { bookmarkedMovies },
+  } = useUserSlice()
+  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
+  const isBookmarked = bookmarkedMoviesIds.includes(singleMovie?.id)
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -46,7 +52,7 @@ const SingleMovie = () => {
       </div>
       <div className="flex lg:flex-row flex-col lg:gap-1 lg:h-[500px] gap-4">
         <div className="relative lg:w-1/3 flex justify-center">
-          <MovieCard {...singleMovie} isBookmarked={true} size='big'/>
+          <MovieCard {...singleMovie} isBookmarked={isBookmarked} size="big" />
         </div>
         <div className="lg:w-2/3 lg:h-full lg:px-0 px-2 h-[380px]">
           <ReactPlayer

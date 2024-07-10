@@ -96,11 +96,6 @@ const AllMovies = ({
             })),
           ),
         )
-        // setMovies(
-        //   data.docs.map((doc) => ({
-        //     ...(doc.data() as SingleMovieType),
-        //   })),
-        // )
         setFirstVisible(data.docs[0])
         setLastVisible(data.docs[data.docs.length - 1])
         return
@@ -112,7 +107,6 @@ const AllMovies = ({
       }))
 
       dispatch(setAllMovies(filteredData.slice(0, pageSize)))
-      // setMovies(filteredData.slice(0, pageSize))
       setFirstVisible(data.docs[0])
 
       if (data.docs.length < pageSize) {
@@ -143,11 +137,6 @@ const AllMovies = ({
         })),
 
     ))
-    // setMovies(
-    //   data.docs.map((doc) => ({
-    //     ...(doc.data() as SingleMovieType),
-    //   })),
-    // )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
@@ -197,13 +186,6 @@ const AllMovies = ({
           }))
           .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
     ))
-    // setMovies(
-    //   data.docs
-    //     .map((doc) => ({
-    //       ...(doc.data() as SingleMovieType),
-    //     }))
-    //     .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
-    // )
     setPagesCount(calculatePageButtons(data.size, pageSize))
     setActivePageIndex(pageIndex)
   }
@@ -306,7 +288,6 @@ const AllMovies = ({
     }))
 
     dispatch(setAllMovies(filteredData.slice(0, pageSize)))
-    // setMovies(filteredData.slice(0, pageSize))
     setFirstVisible(data.docs[0])
 
     if (data.docs.length < pageSize) {
@@ -325,11 +306,6 @@ const AllMovies = ({
         ...(doc.data() as SingleMovieType),
       })),
     ))
-    // setMovies(
-    //   data.docs.map((doc) => ({
-    //     ...(doc.data() as SingleMovieType),
-    //   })),
-    // )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }

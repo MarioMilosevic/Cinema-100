@@ -26,11 +26,6 @@ import AllMovies from '../components/AllMovies'
 import BookmarkedMovies from '../components/BookmarkedMovies'
 
 const Home = () => {
-  // const [movies, setMovies] = useState<SingleMovieType[]>([])
-  // const [trendingMovies, setTrendingMovies] = useState<SingleMovieType[]>([])
-  // const [bookmarkedMovies, setBookmarkedMovies] = useState<SingleMovieType[]>(
-  //   [],
-  // )
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
 
@@ -54,7 +49,6 @@ const Home = () => {
           const userData = userDoc.data()
           const bookmarkedMoviesRefs = userData.bookmarkedMovies
           dispatch(setUserMovies(bookmarkedMoviesRefs))
-          // setBookmarkedMovies(bookmarkedMoviesRefs)
         }
       },
       (error) => {
@@ -75,11 +69,6 @@ const Home = () => {
         })),
       ),
     )
-    // setTrendingMovies(
-    //   trendingMoviesData.docs.map((doc) => ({
-    //     ...(doc.data() as SingleMovieType),
-    //   })),
-    // )
   }
 
   const fetchInitialMovies = async () => {
@@ -96,11 +85,6 @@ const Home = () => {
         })),
       ),
     )
-    // setMovies(
-    //   data.docs.map((doc) => ({
-    //     ...(doc.data() as SingleMovieType),
-    //   })),
-    // )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
