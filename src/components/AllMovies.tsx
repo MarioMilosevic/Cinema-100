@@ -23,14 +23,15 @@ import { pageSize, field } from '../utils/constants'
 import { calculatePageButtons } from '../utils/helperFunctions'
 import { baseQuery, moviesCollection, db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
+import { useUserSlice } from '../hooks/useUserSlice'
+import { useMoviesSlice } from '../hooks/useMovies'
 import { useState, useEffect } from 'react'
+import { setAllMovies } from '../redux/features/moviesSlice'
+import { useDispatch } from 'react-redux'
 import Menu from './Menu'
 import MovieCard from './MovieCard'
 import PageButton from './PageButton'
 const AllMovies = ({
-  bookmarkedMovies,
-  movies,
-  setMovies,
   bookmarkedPage,
   setBookmarkedPage,
   firstVisible,
@@ -41,7 +42,12 @@ const AllMovies = ({
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
   const [pagesCount, setPagesCount] = useState<number[]>([])
+  const {
+    globalUser: { bookmarkedMovies },
+  } = useUserSlice()
+  const { movies } = useMoviesSlice()
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
+  const dispatch = useDispatch()
   const debouncedSearch = useDebounce(searchValue)
 
   useEffect(() => {
@@ -83,11 +89,18 @@ const AllMovies = ({
         )
 
         const data = await getDocs(initialQuery)
-        setMovies(
-          data.docs.map((doc) => ({
-            ...(doc.data() as SingleMovieType),
-          })),
+        dispatch(
+          setAllMovies(
+            data.docs.map((doc) => ({
+              ...(doc.data() as SingleMovieType),
+            })),
+          ),
         )
+        // setMovies(
+        //   data.docs.map((doc) => ({
+        //     ...(doc.data() as SingleMovieType),
+        //   })),
+        // )
         setFirstVisible(data.docs[0])
         setLastVisible(data.docs[data.docs.length - 1])
         return
@@ -98,7 +111,8 @@ const AllMovies = ({
         ...(doc.data() as SingleMovieType),
       }))
 
-      setMovies(filteredData.slice(0, pageSize))
+      dispatch(setAllMovies(filteredData.slice(0, pageSize)))
+      // setMovies(filteredData.slice(0, pageSize))
       setFirstVisible(data.docs[0])
 
       if (data.docs.length < pageSize) {
@@ -111,7 +125,7 @@ const AllMovies = ({
     }
 
     filterMovies(debouncedSearch, genre)
-  }, [debouncedSearch, setMovies, genre, setFirstVisible, setLastVisible])
+  }, [debouncedSearch, dispatch, genre, setFirstVisible, setLastVisible])
 
   const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
 
@@ -123,11 +137,17 @@ const AllMovies = ({
     )
 
     const data = await getDocs(initialQuery)
-    setMovies(
-      data.docs.map((doc) => ({
-        ...(doc.data() as SingleMovieType),
-      })),
-    )
+    dispatch(setAllMovies(
+        data.docs.map((doc) => ({
+          ...(doc.data() as SingleMovieType),
+        })),
+
+    ))
+    // setMovies(
+    //   data.docs.map((doc) => ({
+    //     ...(doc.data() as SingleMovieType),
+    //   })),
+    // )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
@@ -170,13 +190,20 @@ const AllMovies = ({
     pageSize: number,
   ) => {
     const data = await getDocs(queryRef)
-    setMovies(
-      data.docs
-        .map((doc) => ({
-          ...(doc.data() as SingleMovieType),
-        }))
-        .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
-    )
+    dispatch(setAllMovies(
+        data.docs
+          .map((doc) => ({
+            ...(doc.data() as SingleMovieType),
+          }))
+          .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    ))
+    // setMovies(
+    //   data.docs
+    //     .map((doc) => ({
+    //       ...(doc.data() as SingleMovieType),
+    //     }))
+    //     .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    // )
     setPagesCount(calculatePageButtons(data.size, pageSize))
     setActivePageIndex(pageIndex)
   }
@@ -278,7 +305,8 @@ const AllMovies = ({
       ...(doc.data() as SingleMovieType),
     }))
 
-    setMovies(filteredData.slice(0, pageSize))
+    dispatch(setAllMovies(filteredData.slice(0, pageSize)))
+    // setMovies(filteredData.slice(0, pageSize))
     setFirstVisible(data.docs[0])
 
     if (data.docs.length < pageSize) {
@@ -292,11 +320,16 @@ const AllMovies = ({
 
   const fetchMovies = async (queryRef: Query<DocumentData>) => {
     const data = await getDocs(queryRef)
-    setMovies(
+    dispatch(setAllMovies(
       data.docs.map((doc) => ({
         ...(doc.data() as SingleMovieType),
       })),
-    )
+    ))
+    // setMovies(
+    //   data.docs.map((doc) => ({
+    //     ...(doc.data() as SingleMovieType),
+    //   })),
+    // )
     setFirstVisible(data.docs[0])
     setLastVisible(data.docs[data.docs.length - 1])
   }
@@ -314,7 +347,12 @@ const AllMovies = ({
         {movies.map((movie) => {
           const isBookmarked = bookmarkedMoviesIds.includes(movie.id)
           return (
-            <MovieCard key={movie.id} {...movie} isBookmarked={isBookmarked} size='small'/>
+            <MovieCard
+              key={movie.id}
+              {...movie}
+              isBookmarked={isBookmarked}
+              size="small"
+            />
           )
         })}
       </div>

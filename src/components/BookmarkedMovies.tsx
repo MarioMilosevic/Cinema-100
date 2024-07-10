@@ -6,16 +6,17 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { pageSize } from '../utils/constants'
 import { useState, useEffect } from 'react'
 import { calculatePageButtons } from '../utils/helperFunctions'
+import { useUserSlice } from '../hooks/useUserSlice'
 
 const BookmarkedMovies = ({
   bookmarkedPage,
   setBookmarkedPage,
-  bookmarkedMovies,
 }: BookmarkedMoviesProps) => {
   const [activePageIndex, setActivePageIndex] = useState<number>(0)
   const [pagesCount, setPagesCount] = useState<number[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [genre, setGenre] = useState<string>('All')
+  const {globalUser:{bookmarkedMovies}} = useUserSlice()
   const [currentMovies, setCurrentMovies] =
     useState<SingleMovieType[]>(bookmarkedMovies)
   const [filteredMovies, setFilteredMovies] = useState<SingleMovieType[]>([])

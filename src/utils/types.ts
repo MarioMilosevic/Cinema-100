@@ -81,9 +81,6 @@ export type PageButtonOptions = {
 }
 
 export type AllMoviesProps = {
-  bookmarkedMovies: SingleMovieType[]
-  movies: SingleMovieType[]
-  setMovies: React.Dispatch<React.SetStateAction<SingleMovieType[]>>
   bookmarkedPage: boolean
   setBookmarkedPage: React.Dispatch<React.SetStateAction<boolean>>
   firstVisible: DocumentData | null
@@ -96,13 +93,8 @@ export type AllMoviesProps = {
 export type BookmarkedMoviesProps = {
   bookmarkedPage: boolean
   setBookmarkedPage: (page: boolean) => void
-  bookmarkedMovies: SingleMovieType[]
 }
 
-export type SliderProps = {
-  bookmarkedMovies: SingleMovieType[]
-  trendingMovies: SingleMovieType[]
-}
 
 export type MenuProps = {
   searchValue: string
