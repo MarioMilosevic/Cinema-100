@@ -31,7 +31,7 @@ const MovieCard = ({
   const trimmedTitle = title.length > 36 ? `${title.slice(0, 36)}...` : title
 
   const movieCardSize: MovieCardSizeOptions = {
-    small: 'lg:max-w-[300px] w-[400px]',
+    small: 'lg:max-w-[300px] w-[300px]',
     big: 'w-[400px]',
   }
 

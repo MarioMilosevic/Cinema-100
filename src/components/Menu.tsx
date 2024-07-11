@@ -12,17 +12,17 @@ const Menu = ({
   setBookmarkedPage,
 }: MenuProps) => {
   return (
-    <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center justify-between">
-      <div className="relative w-[250px]">
+    <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center lg:justify-between gap-14">
+      <div className="relative lg:w-[250px] w-[150px]">
         <input
           type="text"
           placeholder="Search"
-          className="lg:w-full px-2 py-1 lg:text-base text-sm rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
+          className="lg:w-full w-[150px] px-2 py-1 lg:text-base text-sm rounded-lg text-gray-950 placeholder:text-gray-700 focus:ring-4 focus:outline-none focus:ring-red-500 focus:border-none transition-all duration-300"
           onChange={searchMovies}
           value={searchValue}
         />
         <SlMagnifier
-          className="absolute bottom-1/2 lg:right-3 translate-y-1/2 cursor-pointer right-7"
+          className="absolute bottom-1/2 lg:right-3 translate-y-1/2 cursor-pointer right-2"
           color="black"
         />
       </div>
@@ -30,7 +30,7 @@ const Menu = ({
         <select
           name="category"
           id="category"
-          className="text-black rounded-full px-2 lg:text-base text-sm"
+          className="text-black rounded-full pl-2 lg:text-base text-sm"
           value={genre}
           onChange={searchGenre}
         >
