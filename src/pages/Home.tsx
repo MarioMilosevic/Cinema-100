@@ -96,7 +96,7 @@ const Home = () => {
       ) : (
         <>
           <Slider />
-          <p className="py-4 lg:text-lg font-bold text-base lg:pl-0 pl-2">
+          <p className="py-4 lg:text-lg font-bold text-base lg:w-full w-[390px] lg:mx-0 mx-auto">
             {bookmarkedPage ? 'Your bookmarked movies' : 'Top 100 movies'}
           </p>
           {bookmarkedPage ? (

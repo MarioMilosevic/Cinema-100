@@ -12,7 +12,7 @@ const Menu = ({
   setBookmarkedPage,
 }: MenuProps) => {
   return (
-    <div className="bg-gray-900 px-3 py-4 rounded-lg flex items-center lg:justify-between gap-14">
+    <div className="bg-gray-900 p-2 rounded-lg flex items-center justify-between lg:w-full w-[390px] mx-auto">
       <div className="relative lg:w-[250px] w-[150px]">
         <input
           type="text"
