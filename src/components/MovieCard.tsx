@@ -35,6 +35,7 @@ const MovieCard = ({
     big: 'w-[400px]',
   }
 
+
   const findMovie = async (id: string) => {
     const doc = await fetchMovieDoc(id, moviesCollection)
     navigate(`/home/${doc.id}`)

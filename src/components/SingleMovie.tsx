@@ -5,10 +5,19 @@ import { getProduct } from '../utils/api'
 import { db } from '../config/firebase'
 import { SingleMovieType } from '../utils/types'
 import { useUserSlice } from '../hooks/useUserSlice'
-import { doc, onSnapshot } from 'firebase/firestore'
-import { setUserMovies } from '../redux/features/userSlice'
+import {
+  doc,
+  onSnapshot,
+  getDoc,
+  arrayUnion,
+  arrayRemove,
+  updateDoc,
+} from 'firebase/firestore'
+import {
+  setUserMovies,
+} from '../redux/features/userSlice'
 import { useDispatch } from 'react-redux'
-import MovieCard from './MovieCard'
+import { FaBookmark } from 'react-icons/fa'
 import ReactPlayer from 'react-player'
 const SingleMovie = () => {
   const { movieId } = useParams()
@@ -17,10 +26,6 @@ const SingleMovie = () => {
   const {
     globalUser: { bookmarkedMovies, id },
   } = useUserSlice()
-  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
-  const isBookmarked = singleMovie
-    ? bookmarkedMoviesIds.includes(singleMovie.id)
-    : false
 
   useEffect(() => {
     const userRef = doc(db, 'users', id)
@@ -48,14 +53,48 @@ const SingleMovie = () => {
       setSingleMovie(movie as SingleMovieType)
     }
     fetchMovie()
-  }, [movieId])
+  }, [singleMovie?.id, movieId])
+
+  const bookmarkedMoviesIds = bookmarkedMovies.map((movie) => movie.id)
+  const isBookmarked = singleMovie
+    ? bookmarkedMoviesIds.includes(singleMovie.id)
+    : false
+
+  
+  const bookmarkHandler = async (singleMovieId: string) => {
+    try {
+      if (!id || !db) {
+        console.error('User ID or Firestore DB is not defined')
+        return
+      }
+
+      const userRef = doc(db, 'users', id)
+      const userDoc = await getDoc(userRef)
+
+      if (!userDoc.exists()) {
+        console.error('User document does not exist')
+        return
+      }
+
+      const isAlreadyBookmarked = bookmarkedMovies.some(
+        (bookmarkedMovie) => bookmarkedMovie.id === singleMovieId,
+      )
+      const updatedBookmarkedMovies = isAlreadyBookmarked
+        ? arrayRemove(singleMovie)
+        : arrayUnion(singleMovie)
+      await updateDoc(userRef, {
+        bookmarkedMovies: updatedBookmarkedMovies,
+      })
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
 
   if (!singleMovie) return
-  console.log(singleMovie)
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen py-4">
-      <div className="flex justify-between">
-        <div className="py-4 lg:px-0 px-2">
+      <div className="flex justify-between lg:px-0 px-6 lg:pb-0 pb-4">
+        <div className="py-4">
           <h2 className="font-semibold capitalize lg:text-xl text-lg">
             {singleMovie?.title}
           </h2>
@@ -76,8 +115,17 @@ const SingleMovie = () => {
         </div>
       </div>
       <div className="flex lg:flex-row flex-col lg:gap-1 lg:h-[500px] gap-4">
-        <div className="relative lg:w-1/3 flex justify-center">
-          <MovieCard {...singleMovie} isBookmarked={isBookmarked} size="big" />
+        <div className="relative lg:w-1/3 flex justify-center lg:mx-0 mx-auto w-[350px]">
+          <img
+            src={singleMovie.image}
+            alt={singleMovie.image}
+            className="w-full h-full"
+          />
+          <div className="bg-gray-900 absolute top-0 right-0 w-full h-full transition-all duration-300 opacity-0"></div>
+          <FaBookmark
+            className={`absolute top-2 right-2 cursor-pointer z-10 w-5 h-5 hover:text-orange-500 ${isBookmarked ? 'text-orange-500' : 'text-gray-700'}`}
+            onClick={() => bookmarkHandler(singleMovie.id)}
+          />
         </div>
         <div className="lg:w-2/3 lg:h-full lg:px-0 px-2 h-[380px]">
           <ReactPlayer
