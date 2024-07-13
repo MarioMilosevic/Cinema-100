@@ -3,7 +3,7 @@ import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi'
 import { useState, useEffect } from 'react'
 import { useMoviesSlice } from '../hooks/useMovies'
 import { useUserSlice } from '../hooks/useUserSlice'
-
+import { BIG_SCREEN, BIG_SCREEN_BREAKPOINT, SMALL_SCREEN } from '../utils/constants'
 const Slider = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
   const [slidesPerDot, setSlidesPerDot] = useState(4)
@@ -12,10 +12,10 @@ const Slider = () => {
 
 
   const updateSlidesPerDot = () => {
-    if (window.innerWidth >= 1100) {
-      setSlidesPerDot(4)
+    if (window.innerWidth >= BIG_SCREEN_BREAKPOINT) {
+      setSlidesPerDot(BIG_SCREEN)
     } else {
-      setSlidesPerDot(1)
+      setSlidesPerDot(SMALL_SCREEN)
     }
   }
 
@@ -101,3 +101,5 @@ const Slider = () => {
 }
 
 export default Slider
+
+

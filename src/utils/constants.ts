@@ -2059,3 +2059,7 @@ export const allGenres = [
   'All',
   ...new Set(data.flatMap((movie) => movie.genre)),
 ]
+
+export const BIG_SCREEN = 4
+export const SMALL_SCREEN = 1
+export const BIG_SCREEN_BREAKPOINT = 1100
