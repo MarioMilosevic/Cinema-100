@@ -1,8 +1,3 @@
-export const initialUserState = {
-  email: '',
-  password: '',
-}
-
 export const initialNewUserState = {
   email: '',
   password: '',

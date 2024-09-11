@@ -26,7 +26,6 @@ import {
   signInAnonymously,
   signOut,
 } from 'firebase/auth'
-import { initialNewUserState } from './constants'
 import {
   CreateUserProps,
   SignInGuestProps,
@@ -40,7 +39,7 @@ export const createUser = async ({
   dispatch,
   navigate,
   setGlobalUser,
-  setNewUser,
+  // setNewUser,
 }: CreateUserProps) => {
   try {
     const newUser = await createUserWithEmailAndPassword(
@@ -67,7 +66,7 @@ export const createUser = async ({
       dispatch(setGlobalUser(newUserData))
       navigate('/home')
     } else {
-      setNewUser(initialNewUserState)
+      // setNewUser(initialNewUserState)
       alert('User already exists')
     }
   } catch (error) {

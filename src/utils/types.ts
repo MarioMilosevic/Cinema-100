@@ -31,8 +31,6 @@ export type GlobalUserType = {
 export type InputFieldProps = {
   type: string
   placeholder: string
-  value: string | undefined
-  changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
   zod: UseFormRegisterReturn
 }
 
@@ -109,7 +107,6 @@ export type CreateUserProps = {
   dispatch: Dispatch
   navigate: NavigateFunction
   setGlobalUser: typeof setGlobalUser
-  setNewUser: (newUser: NewUserType) => void
 }
 
 export type SignInUserProps = {
@@ -132,14 +129,10 @@ export type SignOutUserProps = {
 }
 
 export type LogInProps = {
-  user: UserType
-  setUser: React.Dispatch<React.SetStateAction<UserType>>
   register: UseFormRegister<UserFormFormValues>
 }
 
 export type SignUpProps = {
-  newUser: NewUserType
-  setNewUser: React.Dispatch<React.SetStateAction<NewUserType>>
   register: UseFormRegister<UserFormFormValues>
 }
 

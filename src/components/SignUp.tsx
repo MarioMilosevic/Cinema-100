@@ -1,15 +1,11 @@
 import { SignUpProps } from '../utils/types'
 import InputField from './InputField'
-const SignUp = ({ newUser, setNewUser, register }:SignUpProps) => {
+const SignUp = ({ register }:SignUpProps) => {
   return (
     <>
       <InputField
         type="text"
         placeholder="Name"
-        value={newUser.name}
-        changeHandler={(e) =>
-          setNewUser((prev) => ({ ...prev, name: e.target.value }))
-        }
         zod={{
           ...register('name', {
             required: {
@@ -22,10 +18,6 @@ const SignUp = ({ newUser, setNewUser, register }:SignUpProps) => {
       <InputField
         type="text"
         placeholder="Last Name"
-        value={newUser.lastName}
-        changeHandler={(e) =>
-          setNewUser((prev) => ({ ...prev, lastName: e.target.value }))
-        }
         zod={{
           ...register('lastName', {
             required: {
@@ -38,13 +30,6 @@ const SignUp = ({ newUser, setNewUser, register }:SignUpProps) => {
       <InputField
         type="text"
         placeholder="Email"
-        value={newUser.email}
-        changeHandler={(e) =>
-          setNewUser((prev) => ({
-            ...prev,
-            email: e.target.value,
-          }))
-        }
         zod={{
           ...register('email', {
             required: {
@@ -57,13 +42,6 @@ const SignUp = ({ newUser, setNewUser, register }:SignUpProps) => {
       <InputField
         type="password"
         placeholder="Password"
-        value={newUser.password}
-        changeHandler={(e) =>
-          setNewUser((prev) => ({
-            ...prev,
-            password: e.target.value,
-          }))
-        }
         zod={{
           ...register('password', {
             required: {

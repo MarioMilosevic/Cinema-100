@@ -6,16 +6,12 @@ import { createUser, signInUser, signInGuest } from '../utils/api'
 import { useUserSlice } from '../hooks/useUserSlice'
 import { toggleHasAccount, setGlobalUser } from '../redux/features/userSlice'
 import { useDispatch } from 'react-redux'
-import { UserType, NewUserType } from '../utils/types'
-import { initialUserState, initialNewUserState } from '../utils/constants'
 import { useNavigate } from 'react-router'
-import LogIn from './LogIn'
-import SignUp from './SignUp'
+import LogIn from '../components/LogIn'
+import SignUp from '../components/SignUp'
 import movieLogo from '../assets/movie-icon-vector.jpg'
 
 const Auth = () => {
-  const [user, setUser] = useState<UserType>(initialUserState)
-  const [newUser, setNewUser] = useState<NewUserType>(initialNewUserState)
   const [error, setError] = useState<string>('')
   const { hasAccount } = useUserSlice()
   const dispatch = useDispatch()
@@ -23,8 +19,8 @@ const Auth = () => {
 
   const form = useForm<UserFormFormValues>({
     defaultValues: {
-      email: user.email,
-      password: user.password,
+      email: '',
+      password: '',
     },
     resolver: zodResolver(authenticationSchema),
   })
@@ -45,7 +41,6 @@ const Auth = () => {
           dispatch,
           navigate,
           setGlobalUser,
-          setNewUser,
         })
       }
     } catch (error) {
@@ -63,13 +58,9 @@ const Auth = () => {
         <h2 className="text-2xl">{hasAccount ? 'Log In' : 'Sign Up'}</h2>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           {hasAccount ? (
-            <LogIn user={user} setUser={setUser} register={register} />
+            <LogIn register={register} />
           ) : (
-            <SignUp
-              newUser={newUser}
-              setNewUser={setNewUser}
-              register={register}
-            />
+            <SignUp register={register} />
           )}
           <button className="bg-red-500 rounded-lg p-2" type="submit">
             {hasAccount ? 'Log In' : 'Sign Up'}

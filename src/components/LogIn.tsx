@@ -1,18 +1,11 @@
 import { LogInProps } from '../utils/types'
 import InputField from './InputField'
-const LogIn = ({ user, setUser, register }:LogInProps) => {
+const LogIn = ({ register }:LogInProps) => {
   return (
     <>
       <InputField
         type="text"
         placeholder="Email"
-        value={user.email}
-        changeHandler={(e) =>
-          setUser((prev) => ({
-            ...prev,
-            email: e.target.value,
-          }))
-        }
         zod={{
           ...register('email', {
             required: {
@@ -25,13 +18,6 @@ const LogIn = ({ user, setUser, register }:LogInProps) => {
       <InputField
         type="password"
         placeholder="Password"
-        value={user.password}
-        changeHandler={(e) =>
-          setUser((prev) => ({
-            ...prev,
-            password: e.target.value,
-          }))
-        }
         zod={{
           ...register('password', {
             required: {
