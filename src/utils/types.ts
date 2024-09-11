@@ -6,18 +6,6 @@ import { NavigateFunction } from 'react-router-dom'
 import { setGlobalUser } from '../redux/features/userSlice'
 import { UserFormFormValues } from './zod'
 
-export type UserType = {
-  email: string
-  password: string
-}
-
-export type NewUserType = {
-  email: string | undefined
-  password: string | undefined
-  name: string | undefined
-  lastName: string | undefined
-  bookmarkedMovies: SingleMovieType[]
-}
 
 export type GlobalUserType = {
   email: string | undefined
