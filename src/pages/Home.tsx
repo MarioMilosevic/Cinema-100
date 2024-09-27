@@ -28,11 +28,11 @@ import BookmarkedMovies from '../components/BookmarkedMovies'
 const Home = () => {
   const [firstVisible, setFirstVisible] = useState<DocumentData | null>(null)
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
-
   const [bookmarkedPage, setBookmarkedPage] = useState<boolean>(false)
   const dispatch = useDispatch()
   const { globalUser } = useUserSlice()
   const { trendingMovies } = useMoviesSlice()
+
 
   useEffect(() => {
     const fetchInitialMovies = async () => {
@@ -88,6 +88,7 @@ const Home = () => {
 
     return () => unsubscribe()
   }, [dispatch, globalUser.id])
+
 
   return (
     <div className="max-w-[1300px] mx-auto flex flex-col min-h-screen">

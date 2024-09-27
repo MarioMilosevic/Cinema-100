@@ -17,6 +17,7 @@ import {
   endBefore,
   limitToLast,
   where,
+  getCountFromServer,
 } from 'firebase/firestore'
 import { useDebounce } from '../hooks/useDebounce'
 import { pageSize, field } from '../utils/constants'
@@ -52,8 +53,10 @@ const AllMovies = ({
 
   useEffect(() => {
     const setPagination = async () => {
-      const moviesRef = await getDocs(collection(db, 'movies'))
-      setPagesCount(calculatePageButtons(moviesRef.size, pageSize))
+      const coll = collection(db, 'movies')
+      const snapshot = await getCountFromServer(coll)
+      const totalMoviesCount = snapshot.data().count
+      setPagesCount(calculatePageButtons(totalMoviesCount, pageSize))
       setActivePageIndex(0)
     }
     setPagination()
