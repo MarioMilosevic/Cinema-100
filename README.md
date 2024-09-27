@@ -2,7 +2,7 @@
 
 Cinema 100 is a React application where you can browse through 100 movies, view detailed information, and watch trailers. You can also bookmark your favorite movies and access them later. The app utilizes Firebase for authentication, database storage, and other backend services.
 
-# FEATURES
+## Features
 
 - Signup/Login: User authentication using Firebase.
 - Bookmark Movies: Add movies to your bookmarks and view them later.
@@ -10,7 +10,7 @@ Cinema 100 is a React application where you can browse through 100 movies, view 
 - Server-side Filtering: Filter movies based on various criteria from the server.
 - Responsive Design: Optimized for mobile and desktop screen sizes.
 
-# ENVIRONMENT VARIABLES
+## Environment Variables
 To run this project, you will need to add the following environment variables to your .env.local file:
 
 - VITE_FIREBASE_API_KEY: Your Firebase API key.
@@ -21,7 +21,7 @@ To run this project, you will need to add the following environment variables to
 - VITE_FIREBASE_APP_ID: Your Firebase app ID.
 - VITE_FIREBASE_MEASUREMENT_ID: Your Firebase measurement ID.
 
-# TECHNOLOGIES USED
+## Technologies Used
 
 - React 
 - Redux Toolkit
